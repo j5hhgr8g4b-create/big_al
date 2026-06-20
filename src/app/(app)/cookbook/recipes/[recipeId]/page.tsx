@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { RecipeBookPicker } from "@/components/recipe-book-picker";
 import { RecipeImage } from "@/components/recipe-image";
 import { getRecipeDetail } from "@/lib/recipes/get-recipe";
+import { createClient } from "@/lib/supabase/server";
 
 type RecipePageProps = {
   params: Promise<{ recipeId: string }>;
@@ -22,6 +24,20 @@ export default async function RecipePage({ params }: RecipePageProps) {
   }
 
   const totalMinutes = (recipe.prep_minutes ?? 0) + (recipe.cook_minutes ?? 0);
+  const supabase = await createClient();
+  const [booksResult, membershipsResult] = await Promise.all([
+    supabase
+      .from("recipe_books")
+      .select("id, title")
+      .eq("restaurant_id", recipe.restaurantId)
+      .is("archived_at", null)
+      .order("title"),
+    supabase.from("recipe_book_recipes").select("recipe_book_id").eq("recipe_id", recipe.id),
+  ]);
+  const books = booksResult.data ?? [];
+  const selectedBookIds = new Set(
+    (membershipsResult.data ?? []).map((membership) => membership.recipe_book_id),
+  );
 
   return (
     <article>
@@ -90,6 +106,23 @@ export default async function RecipePage({ params }: RecipePageProps) {
           ))}
         </ol>
       </section>
+
+      {books.length ? (
+        <RecipeBookPicker books={books} recipeId={recipe.id} selectedIds={selectedBookIds} />
+      ) : (
+        <section className="mt-10 rounded-3xl border border-[var(--border)] p-5">
+          <h2 className="text-xl font-semibold tracking-tight">Recipe Books</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            Create a Recipe Book to organize this Recipe.
+          </p>
+          <Link
+            href="/cookbook/books/new"
+            className="mt-4 inline-block text-sm font-semibold text-[var(--accent)]"
+          >
+            New Recipe Book
+          </Link>
+        </section>
+      )}
 
       {recipe.source_url && (
         <p className="mt-10 border-t border-[var(--border)] pt-6 text-sm text-[var(--muted)]">

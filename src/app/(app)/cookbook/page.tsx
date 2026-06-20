@@ -1,9 +1,16 @@
 import Link from "next/link";
 
+import { RecipeCard, type RecipeCardValue } from "@/components/recipe-card";
 import { SectionIntro } from "@/components/section-intro";
 import { getCurrentRestaurant } from "@/lib/restaurants/current";
 
-export default async function CookbookPage() {
+type CookbookPageProps = {
+  searchParams: Promise<{ q?: string }>;
+};
+
+export default async function CookbookPage({ searchParams }: CookbookPageProps) {
+  const { q } = await searchParams;
+  const searchQuery = q?.trim().slice(0, 100) ?? "";
   const { restaurant, supabase } = await getCurrentRestaurant();
 
   if (!restaurant) {
@@ -29,8 +36,13 @@ export default async function CookbookPage() {
     .select("id")
     .eq("restaurant_id", restaurant.id)
     .maybeSingle();
-  const [recipesResult, importsResult] = await Promise.all([
-    cookbook
+  const [recipesResult, importsResult, booksResult] = await Promise.all([
+    searchQuery
+      ? supabase.rpc("search_recipes", {
+          target_restaurant_id: restaurant.id,
+          search_query: searchQuery,
+        })
+      : cookbook
       ? supabase
           .from("recipes")
           .select("id, title, description, prep_minutes, cook_minutes, servings, difficulty, created_at")
@@ -45,9 +57,16 @@ export default async function CookbookPage() {
       .eq("status", "needs_review")
       .is("archived_at", null)
       .order("created_at", { ascending: false }),
+    supabase
+      .from("recipe_books")
+      .select("id, title, description, cover_image_url, created_at")
+      .eq("restaurant_id", restaurant.id)
+      .is("archived_at", null)
+      .order("created_at", { ascending: false }),
   ]);
   const recipes = recipesResult.data;
   const pendingImports = importsResult.data;
+  const recipeBooks = booksResult.data;
 
   return (
     <>
@@ -64,6 +83,27 @@ export default async function CookbookPage() {
           Import recipe
         </Link>
       </div>
+
+      <form action="/cookbook" method="get" className="mt-8 flex gap-2">
+        <label className="sr-only" htmlFor="recipe-search">
+          Search Recipes
+        </label>
+        <input
+          id="recipe-search"
+          name="q"
+          type="search"
+          maxLength={100}
+          defaultValue={searchQuery}
+          placeholder="Search by title or ingredient"
+          className="min-w-0 flex-1 rounded-full border border-[var(--border)] bg-white px-5 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+        />
+        <button
+          type="submit"
+          className="rounded-full border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold"
+        >
+          Search
+        </button>
+      </form>
 
       {pendingImports?.length ? (
         <section className="mt-10" aria-labelledby="needs-review-heading">
@@ -99,38 +139,71 @@ export default async function CookbookPage() {
         </section>
       ) : null}
 
-      {recipes?.length ? (
-        <section className="mt-10 space-y-4" aria-label="Recipes">
-          {recipes.map((recipe) => {
-            const totalMinutes = (recipe.prep_minutes ?? 0) + (recipe.cook_minutes ?? 0);
-
-            return (
+      <section className="mt-10" aria-labelledby="recipe-books-heading">
+        <div className="flex items-center justify-between gap-4">
+          <h2 id="recipe-books-heading" className="text-2xl font-semibold tracking-tight">
+            Recipe Books
+          </h2>
+          <Link href="/cookbook/books/new" className="text-sm font-semibold text-[var(--accent)]">
+            New Book
+          </Link>
+        </div>
+        {recipeBooks?.length ? (
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {recipeBooks.map((book) => (
               <Link
-                key={recipe.id}
-                href={`/cookbook/recipes/${recipe.id}`}
-                className="block rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm transition-transform hover:-translate-y-0.5"
+                key={book.id}
+                href={`/cookbook/books/${book.id}`}
+                className="rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm"
               >
-                <h2 className="text-xl font-semibold tracking-tight">{recipe.title}</h2>
-                {recipe.description && (
-                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">
-                    {recipe.description}
+                <p className="font-semibold">{book.title}</p>
+                {book.description && (
+                  <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+                    {book.description}
                   </p>
                 )}
-                <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium text-[var(--muted)]">
-                  {totalMinutes > 0 && <span>{totalMinutes} min</span>}
-                  {recipe.servings && <span>Serves {recipe.servings}</span>}
-                  {recipe.difficulty && <span className="capitalize">{recipe.difficulty}</span>}
-                </div>
               </Link>
-            );
-          })}
+            ))}
+          </div>
+        ) : (
+          <p className="mt-3 text-sm text-[var(--muted)]">No Recipe Books yet.</p>
+        )}
+      </section>
+
+      {recipes?.length ? (
+        <section className="mt-10 space-y-4" aria-labelledby="recipes-heading">
+          <div className="flex items-center justify-between gap-4">
+            <h2 id="recipes-heading" className="text-2xl font-semibold tracking-tight">
+              {searchQuery ? `Results for “${searchQuery}”` : "All Recipes"}
+            </h2>
+            {searchQuery && (
+              <Link href="/cookbook" className="text-sm font-semibold text-[var(--accent)]">
+                Clear
+              </Link>
+            )}
+          </div>
+          {recipes.map((recipe: RecipeCardValue) => (
+            <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
         </section>
       ) : (
         <section className="mt-10 rounded-3xl border border-dashed border-[var(--border)] p-8 text-center">
-          <h2 className="text-xl font-semibold">Your Cookbook is ready</h2>
+          <h2 className="text-xl font-semibold">
+            {searchQuery ? "No matching Recipes" : "Your Cookbook is ready"}
+          </h2>
           <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-            Import your first recipe to start filling it.
+            {searchQuery
+              ? "Try a different Recipe title or Ingredient."
+              : "Import your first recipe to start filling it."}
           </p>
+          {searchQuery && (
+            <Link
+              href="/cookbook"
+              className="mt-4 inline-block text-sm font-semibold text-[var(--accent)]"
+            >
+              Clear search
+            </Link>
+          )}
         </section>
       )}
     </>

@@ -103,3 +103,19 @@ Decision: Store parser metadata and a manual-review message without fetching URL
 Reason: Milestone 3 calls for a parser placeholder. Pretending extraction occurred would obscure provenance and introduce unapproved network and AI behavior.
 
 Status: Approved as part of Milestone 3.
+
+## ADR-014 — Keep Recipe Books as Many-to-Many Organizers
+
+Decision: Link Recipe Books and Recipes through a join table without changing Recipe ownership.
+
+Reason: A Recipe can appear in multiple Books while remaining owned by its Restaurant Cookbook, matching the approved product model.
+
+Status: Approved as part of Milestone 4.
+
+## ADR-015 — Use Literal Restaurant-Scoped Recipe Search
+
+Decision: Search active Recipes using literal case-insensitive containment across Recipe titles and Ingredient names inside one Restaurant.
+
+Reason: This meets MVP search needs without wildcard surprises, cross-Restaurant exposure, or premature full-text infrastructure.
+
+Status: Approved as part of Milestone 4.

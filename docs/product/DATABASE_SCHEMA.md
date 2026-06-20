@@ -106,3 +106,23 @@ Restaurant-scoped capture records for a source URL, pasted recipe text, or both.
 - Conversion calls the existing atomic Recipe save inside the same database transaction, then links the Import to the Recipe.
 - Imports are readable only by members of their Restaurant through RLS.
 - App users receive no direct Import table write or delete privileges.
+
+## Milestone 4 Tables
+
+### recipe_books
+
+Restaurant-scoped organizing collections with title, description, optional cover image, creator, timestamps, and optional archive time.
+
+### recipe_book_recipes
+
+Many-to-many links between Recipe Books and Recipes. Recipe Books organize Recipes but never own them.
+
+## Milestone 4 Automation and Access
+
+- Authenticated functions create, edit, and archive Recipe Books.
+- One atomic membership function replaces the complete selected Book set for a Recipe.
+- The membership function rejects Books from another Restaurant and archived Books.
+- Search matches literal case-insensitive text within active Recipe titles and Ingredient names.
+- Search is restricted to the requesting member's Restaurant.
+- Recipe Books and membership links are readable only by Restaurant members through RLS.
+- App users receive no direct Book table writes or hard-delete privileges.

@@ -179,3 +179,25 @@ Retain second-user cross-Restaurant Import isolation in the regression checklist
 
 Known Issues:
 Automatic parsing is intentionally a placeholder. URL fetching, scraping, and AI extraction are not implemented.
+
+---
+
+### 2026-06-20 — Milestone 4
+
+Summary:
+Implemented Recipe Books, atomic Recipe organization, and private Recipe search by title or Ingredient.
+
+Files Changed:
+Added the Milestone 4 migration, Recipe Book actions and routes, Book form and picker components, reusable Recipe cards, Book reader, Cookbook search, and updated product and audit documentation.
+
+Commands Run:
+Ran lint, type checking, webpack production builds, Supabase REST/RPC schema checks, the production server, and authenticated Book and search lifecycle tests.
+
+Database Changes:
+Added `recipe_books`, `recipe_book_recipes`, Book access/save/archive/membership functions, Restaurant-scoped Recipe search, indexes, restricted grants, and RLS.
+
+Testing Required:
+Retain second-user cross-Restaurant Book/search isolation in the regression checklist. Exercise duplicate titles and larger Book memberships in later regression passes.
+
+Known Issues:
+No open Milestone 4 functional issues. Search is intentionally simple literal containment for MVP.

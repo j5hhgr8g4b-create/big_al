@@ -175,3 +175,25 @@ supabase/migrations/202606200003_milestone_3_imports.sql, src/app/(app)/cookbook
 
 Approved By:
 Founder, through approval to complete Milestone 3.
+
+---
+
+### 2026-06-20 — Milestone 4 Recipe Book Ownership and Search
+
+Decision:
+Model Recipe Books as many-to-many organizers and search literal title/Ingredient text within the current Restaurant.
+
+Reason:
+Allow Recipes to appear in multiple Books without transferring ownership, while providing predictable private MVP search.
+
+Alternatives Considered:
+Move Recipes into a single owning Book, duplicate Recipes between Books, or introduce global/full-text search infrastructure.
+
+Impact:
+Adds two tables, Book lifecycle and membership functions, Restaurant-scoped search, Book screens, Recipe organization controls, and Cookbook search.
+
+Files Affected:
+supabase/migrations/202606200004_milestone_4_recipe_books_search.sql, src/app/(app)/cookbook/*, src/components/*, src/lib/recipe-books/*, docs/*
+
+Approved By:
+Founder, through approval to move forward with Milestone 4.
