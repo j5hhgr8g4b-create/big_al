@@ -153,3 +153,25 @@ supabase/migrations/202606200002_milestone_2_cookbook_recipes.sql, src/app/(app)
 
 Approved By:
 Founder, through approval to move forward with Milestone 2.
+
+---
+
+### 2026-06-20 — Milestone 3 Import-First Conversion
+
+Decision:
+Capture every new Recipe source as an Import, retain it in Needs Review, and convert it through the existing atomic Recipe save only after human structuring.
+
+Reason:
+Preserve source provenance, enforce the approved Import-first product rule, and avoid partial Import/Recipe links.
+
+Alternatives Considered:
+Continue direct Recipe creation, fetch and scrape URLs immediately, or simulate parser results without real extraction.
+
+Impact:
+Adds the `imports` table, capture and conversion functions, a manual Import screen, Needs Review queue, review screen, and Import-first navigation.
+
+Files Affected:
+supabase/migrations/202606200003_milestone_3_imports.sql, src/app/(app)/cookbook/*, src/components/recipe-form.tsx, src/lib/imports/*, docs/*
+
+Approved By:
+Founder, through approval to complete Milestone 3.

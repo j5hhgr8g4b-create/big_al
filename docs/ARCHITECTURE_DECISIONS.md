@@ -87,3 +87,19 @@ Decision: Store normalized ingredient names per Restaurant and reuse matching ro
 Reason: This supports structured Recipe data and later ingredient search without exposing or coupling data across private Restaurants.
 
 Status: Approved as part of Milestone 2.
+
+## ADR-012 — Require Import-First Recipe Creation
+
+Decision: Route all new Recipe creation through an Import record while preserving direct editing of existing Recipes.
+
+Reason: This enforces the product rule that content enters as an Import and creates a durable source/review trail before Cookbook conversion.
+
+Status: Approved as part of Milestone 3.
+
+## ADR-013 — Keep Parsing an Explicit Placeholder
+
+Decision: Store parser metadata and a manual-review message without fetching URLs or automatically extracting Recipe content.
+
+Reason: Milestone 3 calls for a parser placeholder. Pretending extraction occurred would obscure provenance and introduce unapproved network and AI behavior.
+
+Status: Approved as part of Milestone 3.

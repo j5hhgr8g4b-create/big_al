@@ -43,6 +43,22 @@ export default async function KitchenPage() {
           </Link>
         </section>
       )}
+
+      {restaurant && (
+        <section className="mt-10 rounded-3xl border border-[var(--border)] bg-white p-6 shadow-sm">
+          <p className="text-sm font-semibold text-[var(--accent)]">Add something delicious</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Import a recipe</h2>
+          <p className="mt-3 leading-6 text-[var(--muted)]">
+            Save a recipe URL or paste recipe text, then review it before it enters your Cookbook.
+          </p>
+          <Link
+            href="/cookbook/imports/new"
+            className="mt-6 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white"
+          >
+            Import recipe
+          </Link>
+        </section>
+      )}
     </>
   );
 }

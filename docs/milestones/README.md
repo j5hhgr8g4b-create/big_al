@@ -5,7 +5,7 @@
 | 0 | Project Setup | Complete | [Milestone 0](MILESTONE_0.md) |
 | 1 | Auth + Restaurants | Complete | [Milestone 1](MILESTONE_1.md) |
 | 2 | Cookbook + Recipes | Complete | [Milestone 2](MILESTONE_2.md) |
-| 3 | Imports | Not started | — |
+| 3 | Imports | Complete | [Milestone 3](MILESTONE_3.md) |
 | 4 | Recipe Books + Search | Not started | — |
 | 5 | Menu | Not started | — |
 | 6 | Shopping | Not started | — |

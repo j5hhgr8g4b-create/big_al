@@ -26,6 +26,7 @@ type RecipeFormValue = {
 };
 
 type RecipeFormProps = {
+  importId?: string;
   initialValue?: RecipeFormValue;
   recipeId?: string;
   restaurantId: string;
@@ -57,7 +58,7 @@ const emptyValue: RecipeFormValue = {
 const inputClassName =
   "mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-base outline-none transition-shadow focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100";
 
-export function RecipeForm({ initialValue = emptyValue, recipeId, restaurantId }: RecipeFormProps) {
+export function RecipeForm({ importId, initialValue = emptyValue, recipeId, restaurantId }: RecipeFormProps) {
   const [ingredients, setIngredients] = useState<IngredientRow[]>(
     initialValue.ingredients.map((ingredient, index) => ({
       ...ingredient,
@@ -80,6 +81,7 @@ export function RecipeForm({ initialValue = emptyValue, recipeId, restaurantId }
     <form action={saveRecipe} className="mt-8 space-y-8">
       <input type="hidden" name="restaurantId" value={restaurantId} />
       <input type="hidden" name="recipeId" value={recipeId ?? ""} />
+      <input type="hidden" name="importId" value={importId ?? ""} />
 
       <section className="space-y-5 rounded-3xl border border-[var(--border)] bg-white p-6 shadow-sm">
         <h2 className="text-xl font-semibold">Recipe details</h2>

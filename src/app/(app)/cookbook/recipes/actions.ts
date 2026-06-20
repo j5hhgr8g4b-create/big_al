@@ -33,11 +33,14 @@ function optionalHttpUrl(value: string) {
 
 export async function saveRecipe(formData: FormData) {
   const existingRecipeId = field(formData, "recipeId");
+  const importId = field(formData, "importId");
   const recipeId = existingRecipeId || randomUUID();
   const restaurantId = field(formData, "restaurantId");
   const returnPath = existingRecipeId
     ? `/cookbook/recipes/${existingRecipeId}/edit`
-    : "/cookbook/recipes/new";
+    : importId
+      ? `/cookbook/imports/${importId}/review`
+      : "/cookbook/imports/new";
   const title = field(formData, "title");
   const description = field(formData, "description");
   const imageUrl = optionalHttpUrl(field(formData, "imageUrl"));
@@ -46,6 +49,10 @@ export async function saveRecipe(formData: FormData) {
   const cookMinutes = optionalNumber(field(formData, "cookMinutes"));
   const servings = optionalNumber(field(formData, "servings"));
   const difficulty = field(formData, "difficulty") || null;
+
+  if (!existingRecipeId && !importId) {
+    redirect("/cookbook/imports/new");
+  }
 
   if (!restaurantId || title.length < 1 || title.length > 160) {
     errorRedirect(returnPath, "Add a recipe title of no more than 160 characters.");
@@ -100,9 +107,8 @@ export async function saveRecipe(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.rpc("save_recipe", {
+  const recipePayload = {
     target_recipe_id: recipeId,
-    target_restaurant_id: restaurantId,
     recipe_title: title,
     recipe_description: description,
     recipe_image_url: imageUrl,
@@ -113,7 +119,16 @@ export async function saveRecipe(formData: FormData) {
     recipe_difficulty: difficulty,
     ingredients_payload: ingredients,
     steps_payload: steps,
-  });
+  };
+  const { error } = importId
+    ? await supabase.rpc("convert_import_to_recipe", {
+        ...recipePayload,
+        target_import_id: importId,
+      })
+    : await supabase.rpc("save_recipe", {
+        ...recipePayload,
+        target_restaurant_id: restaurantId,
+      });
 
   if (error) {
     errorRedirect(returnPath, "We could not save this recipe. Check the details and try again.");

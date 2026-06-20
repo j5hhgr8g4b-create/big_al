@@ -29,14 +29,25 @@ export default async function CookbookPage() {
     .select("id")
     .eq("restaurant_id", restaurant.id)
     .maybeSingle();
-  const { data: recipes } = cookbook
-    ? await supabase
-        .from("recipes")
-        .select("id, title, description, prep_minutes, cook_minutes, servings, difficulty, created_at")
-        .eq("cookbook_id", cookbook.id)
-        .is("archived_at", null)
-        .order("created_at", { ascending: false })
-    : { data: [] };
+  const [recipesResult, importsResult] = await Promise.all([
+    cookbook
+      ? supabase
+          .from("recipes")
+          .select("id, title, description, prep_minutes, cook_minutes, servings, difficulty, created_at")
+          .eq("cookbook_id", cookbook.id)
+          .is("archived_at", null)
+          .order("created_at", { ascending: false })
+      : Promise.resolve({ data: [] }),
+    supabase
+      .from("imports")
+      .select("id, source_type, source_url, raw_text, created_at")
+      .eq("restaurant_id", restaurant.id)
+      .eq("status", "needs_review")
+      .is("archived_at", null)
+      .order("created_at", { ascending: false }),
+  ]);
+  const recipes = recipesResult.data;
+  const pendingImports = importsResult.data;
 
   return (
     <>
@@ -47,12 +58,46 @@ export default async function CookbookPage() {
           description="Recipes saved for your Restaurant."
         />
         <Link
-          href="/cookbook/recipes/new"
+          href="/cookbook/imports/new"
           className="shrink-0 rounded-full bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-white"
         >
-          Add recipe
+          Import recipe
         </Link>
       </div>
+
+      {pendingImports?.length ? (
+        <section className="mt-10" aria-labelledby="needs-review-heading">
+          <div className="flex items-center justify-between">
+            <h2 id="needs-review-heading" className="text-2xl font-semibold tracking-tight">
+              Needs Review
+            </h2>
+            <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+              {pendingImports.length}
+            </span>
+          </div>
+          <div className="mt-4 space-y-3">
+            {pendingImports.map((recipeImport) => {
+              const summary =
+                recipeImport.source_url ??
+                recipeImport.raw_text?.split("\n").find((line: string) => line.trim()) ??
+                "Untitled Import";
+
+              return (
+                <Link
+                  key={recipeImport.id}
+                  href={`/cookbook/imports/${recipeImport.id}/review`}
+                  className="block rounded-2xl border border-orange-100 bg-orange-50/60 p-4"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">
+                    {recipeImport.source_type} Import
+                  </p>
+                  <p className="mt-1 truncate font-semibold">{summary}</p>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       {recipes?.length ? (
         <section className="mt-10 space-y-4" aria-label="Recipes">
@@ -84,7 +129,7 @@ export default async function CookbookPage() {
         <section className="mt-10 rounded-3xl border border-dashed border-[var(--border)] p-8 text-center">
           <h2 className="text-xl font-semibold">Your Cookbook is ready</h2>
           <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-            Add your first recipe to start filling it.
+            Import your first recipe to start filling it.
           </p>
         </section>
       )}

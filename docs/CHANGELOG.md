@@ -157,3 +157,25 @@ Retain second-user cross-Restaurant Recipe isolation in the regression checklist
 
 Known Issues:
 No open Milestone 2 functional issues. Search, Imports, Recipe Books, Cook Mode, and image storage remain later milestones.
+
+---
+
+### 2026-06-20 — Milestone 3
+
+Summary:
+Implemented Import-first Recipe capture, a Needs Review queue, explicit placeholder parsing, and atomic conversion into structured Recipes.
+
+Files Changed:
+Added the Milestone 3 migration, Import actions and routes, Import reader, Needs Review Cookbook section, Kitchen Import action, Recipe conversion support, and updated product and audit documentation.
+
+Commands Run:
+Ran lint, type checking, webpack production builds, Supabase REST/RPC schema checks, the production server, and an authenticated Import-to-Recipe lifecycle test.
+
+Database Changes:
+Added `imports`, an Import access helper, authenticated Import capture, atomic Import-to-Recipe conversion, indexes, restricted grants, and Restaurant-member RLS.
+
+Testing Required:
+Retain second-user cross-Restaurant Import isolation in the regression checklist. Exercise URL-only, text-only, and combined Imports during future regression passes.
+
+Known Issues:
+Automatic parsing is intentionally a placeholder. URL fetching, scraping, and AI extraction are not implemented.

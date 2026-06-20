@@ -91,3 +91,18 @@ Ordered recipe instructions. Cook Mode behavior remains a later milestone.
 - Cookbook and Recipe data is readable only by Restaurant members through RLS.
 - Recipe creator names are visible to members who share a Restaurant.
 - Manual recipe creation is supported now; Import-backed recipe creation is introduced in Milestone 3.
+
+## Milestone 3 Table
+
+### imports
+
+Restaurant-scoped capture records for a source URL, pasted recipe text, or both. Each Import records its creator, source type, parser metadata, review/conversion status, optional resulting Recipe, timestamps, and optional archive time.
+
+## Milestone 3 Automation and Access
+
+- New Recipe creation now starts with an Import.
+- The placeholder parser records an explicit manual-review message and does not fetch, scrape, or invent content.
+- Needs Review Imports remain separate from the Cookbook until a member structures and converts them.
+- Conversion calls the existing atomic Recipe save inside the same database transaction, then links the Import to the Recipe.
+- Imports are readable only by members of their Restaurant through RLS.
+- App users receive no direct Import table write or delete privileges.

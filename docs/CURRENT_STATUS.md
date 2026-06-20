@@ -2,13 +2,14 @@
 
 ## Current Milestone
 
-Milestone 2 — Cookbook + Recipes completed. Next: Milestone 3 — Imports.
+Milestone 3 — Imports completed. Next: Milestone 4 — Recipe Books + Search.
 
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
 - Milestone 1 — Auth + Restaurants
 - Milestone 2 — Cookbook + Recipes
+- Milestone 3 — Imports
 
 ## What Works
 
@@ -30,12 +31,18 @@ Milestone 2 — Cookbook + Recipes completed. Next: Milestone 3 — Imports.
 - Ordered Recipe Steps.
 - Atomic Recipe creation and editing plus archive-only removal.
 - Cookbook list and Recipe create, view, edit, and archive screens.
+- Restaurant-scoped URL/text Import capture.
+- Explicit placeholder parser metadata with manual review.
+- Cookbook Needs Review queue.
+- Atomic Import-to-Recipe conversion.
+- Import-first Recipe creation from Kitchen and Cookbook.
 
 ## Known Issues
 
 - Specials, Menu, and Pantry remain intentional placeholders for later milestones.
 - Turbopack production output produced client-manifest runtime errors; production builds use webpack.
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
+- Automatic Import parsing is intentionally a placeholder; URLs are stored but not fetched.
 
 ## Blocked Items
 
@@ -43,4 +50,4 @@ None.
 
 ## Next Task
 
-Begin Milestone 3 only after approval: Imports, manual import capture, parser placeholder, conversion to Recipe, and Needs Review.
+Begin Milestone 4 only after approval: Recipe Books, adding Recipes to Books, and Recipe search by title and Ingredient.
