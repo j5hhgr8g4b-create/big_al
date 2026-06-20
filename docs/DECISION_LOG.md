@@ -87,3 +87,25 @@ LOCAL_CODEX_START_PROMPT.md, README.md, docs/README.md, docs/product/*, docs/mil
 
 Approved By:
 Founder, through the request to organize created files before continuing.
+
+---
+
+### 2026-06-20 — Milestone 1 Auth and Restaurant Security Model
+
+Decision:
+Use Supabase cookie-based SSR sessions, automatically create one Profile and Chef for each Auth user, and create Restaurants atomically with an owner membership under RLS.
+
+Reason:
+Keep authentication consistent across browser and server rendering, guarantee the required user records, and prevent partial or unauthorized Restaurant creation.
+
+Alternatives Considered:
+Browser-only sessions, creating Profile and Chef rows in application code, and separate client inserts for Restaurant and membership.
+
+Impact:
+Adds `@supabase/ssr`, protected route groups, an Auth callback and proxy, four database tables, provisioning triggers, an authenticated Restaurant function, and membership-based policies.
+
+Files Affected:
+.env.example, package.json, src/app/*, src/lib/supabase/*, src/proxy.ts, supabase/*, docs/*
+
+Approved By:
+Founder, through approval to move forward with Milestone 1.

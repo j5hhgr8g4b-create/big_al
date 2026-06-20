@@ -33,9 +33,11 @@ Codex must not work outside this folder.
 Requirements: Node.js 22 and pnpm.
 
 1. Run `pnpm install`.
-2. Copy `.env.example` to `.env.local` and replace the placeholders with Supabase project values.
-3. Run `pnpm dev`.
-4. Open `http://localhost:3000`.
+2. Run the SQL files in `supabase/migrations` against the intended Supabase project, in filename order.
+3. Copy `.env.example` to `.env.local` and replace the placeholders with Supabase project values.
+4. Add `http://localhost:3000/auth/callback` to the Supabase Auth redirect URLs.
+5. Run `pnpm dev`.
+6. Open `http://localhost:3000`.
 
 Useful checks:
 
@@ -48,6 +50,7 @@ Useful checks:
 - `src/app` — App Router pages, layouts, and global styles.
 - `src/components` — Shared interface components.
 - `src/lib` — External service clients and shared application utilities.
+- `supabase/migrations` — Ordered database schema and security changes.
 - `docs/product` — Product specification, schema, screens, and build plan.
 - `docs/milestones` — Milestone index and completion records.
 - `docs` — Governance, decisions, changelog, and current status.

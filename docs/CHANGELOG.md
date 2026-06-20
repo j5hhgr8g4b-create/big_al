@@ -87,3 +87,25 @@ Confirm all document links resolve and project checks remain successful.
 
 Known Issues:
 None introduced.
+
+---
+
+### 2026-06-20 — Milestone 1 Implementation
+
+Summary:
+Implemented Supabase SSR authentication, automatic Profile and Chef provisioning, membership-secured Restaurants, and the Restaurant creation flow.
+
+Files Changed:
+Added protected and auth route groups, server actions, callback and session proxy, Supabase clients, submit UI, the Milestone 1 migration and setup guide, and updated project documentation.
+
+Commands Run:
+Installed `@supabase/ssr`; reviewed official Supabase SSR, Auth user, trigger, and RLS guidance; ran `pnpm lint`, `pnpm typecheck`, and `pnpm build`; started the production server and checked login, protected-root redirect, and invalid-callback behavior; reviewed Git status and project structure.
+
+Database Changes:
+Migration adds `profiles`, `chefs`, `restaurants`, and `restaurant_members`; Auth provisioning and timestamp triggers; membership helper functions; atomic Restaurant creation; indexes, grants, and RLS policies. The migration has not yet been applied to a Supabase project.
+
+Testing Required:
+Apply the migration, add local Supabase values, test sign-up and email confirmation, confirm automatic Profile and Chef rows, create a Restaurant, confirm owner membership, verify sign-in/sign-out, and test RLS with a second user.
+
+Known Issues:
+No Supabase project or `.env.local` is connected, so migration execution and authenticated end-to-end tests are pending.

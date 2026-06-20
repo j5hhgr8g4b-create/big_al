@@ -47,3 +47,19 @@ Decision: Store product reference documents in `docs/product` and milestone reco
 Reason: Keep the project root focused on required entry points and tool configuration while making product guidance and build progress easy to locate.
 
 Status: Approved after Milestone 0.
+
+## ADR-007 — Use Supabase Cookie-Based SSR Authentication
+
+Decision: Use `@supabase/ssr` with separate browser and server clients plus a Next.js proxy for session refresh.
+
+Reason: Protected Server Components need verified identity from shared cookies, and the proxy keeps refreshed tokens synchronized with the browser.
+
+Status: Approved as part of Milestone 1.
+
+## ADR-008 — Create Restaurants Through an Atomic Database Function
+
+Decision: Create a Restaurant and its owner membership through one authenticated, security-definer PostgreSQL function.
+
+Reason: The two records must succeed or fail together, while direct client inserts remain unavailable under RLS.
+
+Status: Approved as part of Milestone 1.
