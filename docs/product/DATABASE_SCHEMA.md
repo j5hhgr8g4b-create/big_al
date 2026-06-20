@@ -60,3 +60,34 @@ Links Profiles to Restaurants with an `owner` or `member` role. The Restaurant a
 - Restaurants are visible to members and editable by owners.
 - Restaurant memberships are visible to members of that Restaurant.
 - Direct table inserts and hard deletes are not granted to app users.
+
+## Milestone 2 Tables
+
+### cookbooks
+
+Exactly one Cookbook per Restaurant. Existing Restaurants are backfilled and future Restaurants receive one through a database trigger.
+
+### recipes
+
+Belongs to a Cookbook and records its creating Chef, title, description, image/source links, preparation and cooking times, servings, difficulty, timestamps, and optional archive time.
+
+### ingredients
+
+Restaurant-scoped ingredient names with a normalized value used to reuse equivalent names within that Restaurant.
+
+### recipe_ingredients
+
+Ordered structured links between Recipes and Ingredients with optional numeric quantity, unit, and preparation text.
+
+### recipe_steps
+
+Ordered recipe instructions. Cook Mode behavior remains a later milestone.
+
+## Milestone 2 Automation and Access
+
+- One authenticated database function creates or edits a complete Recipe and its ordered ingredients and steps in one transaction.
+- Ingredient names are normalized and reused within the Restaurant.
+- A separate authenticated function archives Recipes; app users receive no hard-delete permission.
+- Cookbook and Recipe data is readable only by Restaurant members through RLS.
+- Recipe creator names are visible to members who share a Restaurant.
+- Manual recipe creation is supported now; Import-backed recipe creation is introduced in Milestone 3.

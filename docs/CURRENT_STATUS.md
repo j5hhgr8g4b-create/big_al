@@ -2,12 +2,13 @@
 
 ## Current Milestone
 
-Milestone 1 — Auth + Restaurants completed. Next: Milestone 2 — Cookbook + Recipes.
+Milestone 2 — Cookbook + Recipes completed. Next: Milestone 3 — Imports.
 
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
 - Milestone 1 — Auth + Restaurants
+- Milestone 2 — Cookbook + Recipes
 
 ## What Works
 
@@ -23,10 +24,16 @@ Milestone 1 — Auth + Restaurants completed. Next: Milestone 2 — Cookbook + R
 - Profile and Chef provisioning migration for new and existing Auth users.
 - Membership-secured Restaurants and atomic Restaurant creation.
 - Empty-Restaurant onboarding from Kitchen.
+- Automatic one-per-Restaurant Cookbooks.
+- Structured Recipes with creator, details, timing, servings, and difficulty.
+- Restaurant-scoped normalized Ingredients and ordered Recipe Ingredients.
+- Ordered Recipe Steps.
+- Atomic Recipe creation and editing plus archive-only removal.
+- Cookbook list and Recipe create, view, edit, and archive screens.
 
 ## Known Issues
 
-- Cookbook, Specials, Menu, and Pantry remain intentional placeholders for later milestones.
+- Specials, Menu, and Pantry remain intentional placeholders for later milestones.
 - Turbopack production output produced client-manifest runtime errors; production builds use webpack.
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
 
@@ -36,4 +43,4 @@ None.
 
 ## Next Task
 
-Begin Milestone 2 only after approval: Cookbook and recipe data, creation, editing, viewing, and archiving.
+Begin Milestone 3 only after approval: Imports, manual import capture, parser placeholder, conversion to Recipe, and Needs Review.

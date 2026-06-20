@@ -71,3 +71,19 @@ Decision: Build production output with Next.js webpack rather than Turbopack.
 Reason: The Turbopack build compiled successfully but produced missing client-manifest entries at runtime. A webpack rebuild rendered all authenticated and unauthenticated routes without server errors.
 
 Status: Approved during Milestone 1 verification.
+
+## ADR-010 — Save Complete Recipes Atomically
+
+Decision: Create and edit a Recipe, its structured ingredients, and its ordered steps through one authenticated PostgreSQL function.
+
+Reason: Recipe child rows must remain consistent. A failed validation or write rolls back the entire save instead of leaving a partial Recipe.
+
+Status: Approved as part of Milestone 2.
+
+## ADR-011 — Scope Normalized Ingredients to Restaurants
+
+Decision: Store normalized ingredient names per Restaurant and reuse matching rows within that Restaurant.
+
+Reason: This supports structured Recipe data and later ingredient search without exposing or coupling data across private Restaurants.
+
+Status: Approved as part of Milestone 2.

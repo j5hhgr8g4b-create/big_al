@@ -135,3 +135,25 @@ Keep a two-user cross-Restaurant RLS isolation test in the regression checklist 
 
 Known Issues:
 No open Milestone 1 functional issues. Turbopack production output is not used because it produced client-manifest runtime errors.
+
+---
+
+### 2026-06-20 — Milestone 2
+
+Summary:
+Implemented automatic Cookbooks and complete structured Recipe creation, viewing, editing, and archiving.
+
+Files Changed:
+Added the Milestone 2 migration, Cookbook and Recipe routes, atomic Recipe server actions, dynamic Recipe form, Recipe data helpers, and updated product and audit documentation.
+
+Commands Run:
+Ran lint, type checking, webpack production builds, Supabase REST/RPC schema checks, the production server, public route checks, and an authenticated Recipe lifecycle test.
+
+Database Changes:
+Added `cookbooks`, `recipes`, `ingredients`, `recipe_ingredients`, and `recipe_steps`; Cookbook provisioning; atomic save/archive functions; indexes, grants, and Restaurant-scoped RLS policies.
+
+Testing Required:
+Retain second-user cross-Restaurant Recipe isolation in the regression checklist. Exercise unusual decimal quantities and long Recipe content during future regression passes.
+
+Known Issues:
+No open Milestone 2 functional issues. Search, Imports, Recipe Books, Cook Mode, and image storage remain later milestones.

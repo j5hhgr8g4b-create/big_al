@@ -131,3 +131,25 @@ package.json, docs/ARCHITECTURE_DECISIONS.md
 
 Approved By:
 Founder, through approval to complete Milestone 1.
+
+---
+
+### 2026-06-20 — Milestone 2 Recipe Write and Ingredient Model
+
+Decision:
+Save complete Recipes through an atomic database function and normalize Ingredients within each Restaurant.
+
+Reason:
+Keep Recipe details, ordered Ingredients, and ordered Steps consistent while preserving Restaurant data isolation and preparing for ingredient search.
+
+Alternatives Considered:
+Multiple client-side inserts without a transaction, global shared Ingredient rows, and unstructured ingredient text.
+
+Impact:
+Adds five tables, automatic Cookbooks, Restaurant-scoped Ingredient reuse, save/archive functions, RLS policies, and complete Cookbook Recipe screens.
+
+Files Affected:
+supabase/migrations/202606200002_milestone_2_cookbook_recipes.sql, src/app/(app)/cookbook/*, src/components/*, src/lib/recipes/*, src/lib/restaurants/*, docs/*
+
+Approved By:
+Founder, through approval to move forward with Milestone 2.
