@@ -109,3 +109,7 @@ Apply the migration, add local Supabase values, test sign-up and email confirmat
 
 Known Issues:
 No Supabase project or `.env.local` is connected, so migration execution and authenticated end-to-end tests are pending.
+
+#### Migration Setup Recovery
+
+Updated the Milestone 1 migration to restart safely after a partial SQL Editor run by preserving existing tables and indexes, replacing named triggers and policies, and retaining conflict-safe user backfills.

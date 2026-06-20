@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgcrypto;
 
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   display_name text not null check (char_length(btrim(display_name)) between 1 and 80),
   avatar_url text,
@@ -10,7 +10,7 @@ create table public.profiles (
   updated_at timestamptz not null default now()
 );
 
-create table public.chefs (
+create table if not exists public.chefs (
   id uuid primary key default gen_random_uuid(),
   profile_id uuid not null unique references public.profiles (id) on delete cascade,
   display_name text not null check (char_length(btrim(display_name)) between 1 and 80),
@@ -18,7 +18,7 @@ create table public.chefs (
   updated_at timestamptz not null default now()
 );
 
-create table public.restaurants (
+create table if not exists public.restaurants (
   id uuid primary key default gen_random_uuid(),
   name text not null check (char_length(btrim(name)) between 1 and 100),
   created_by uuid not null references public.profiles (id) on delete restrict,
@@ -27,7 +27,7 @@ create table public.restaurants (
   archived_at timestamptz
 );
 
-create table public.restaurant_members (
+create table if not exists public.restaurant_members (
   restaurant_id uuid not null references public.restaurants (id) on delete cascade,
   profile_id uuid not null references public.profiles (id) on delete cascade,
   role text not null check (role in ('owner', 'member')),
@@ -35,7 +35,7 @@ create table public.restaurant_members (
   primary key (restaurant_id, profile_id)
 );
 
-create index restaurant_members_profile_id_idx
+create index if not exists restaurant_members_profile_id_idx
   on public.restaurant_members (profile_id);
 
 create or replace function public.set_updated_at()
@@ -49,14 +49,17 @@ begin
 end;
 $$;
 
+drop trigger if exists profiles_set_updated_at on public.profiles;
 create trigger profiles_set_updated_at
 before update on public.profiles
 for each row execute function public.set_updated_at();
 
+drop trigger if exists chefs_set_updated_at on public.chefs;
 create trigger chefs_set_updated_at
 before update on public.chefs
 for each row execute function public.set_updated_at();
 
+drop trigger if exists restaurants_set_updated_at on public.restaurants;
 create trigger restaurants_set_updated_at
 before update on public.restaurants
 for each row execute function public.set_updated_at();
@@ -85,6 +88,7 @@ begin
 end;
 $$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
 after insert on auth.users
 for each row execute function public.handle_new_user();
@@ -174,39 +178,46 @@ alter table public.chefs enable row level security;
 alter table public.restaurants enable row level security;
 alter table public.restaurant_members enable row level security;
 
+drop policy if exists "Profiles are visible to their owner" on public.profiles;
 create policy "Profiles are visible to their owner"
 on public.profiles for select
 to authenticated
 using (id = (select auth.uid()));
 
+drop policy if exists "Profiles are editable by their owner" on public.profiles;
 create policy "Profiles are editable by their owner"
 on public.profiles for update
 to authenticated
 using (id = (select auth.uid()))
 with check (id = (select auth.uid()));
 
+drop policy if exists "Chefs are visible to their owner" on public.chefs;
 create policy "Chefs are visible to their owner"
 on public.chefs for select
 to authenticated
 using (profile_id = (select auth.uid()));
 
+drop policy if exists "Chefs are editable by their owner" on public.chefs;
 create policy "Chefs are editable by their owner"
 on public.chefs for update
 to authenticated
 using (profile_id = (select auth.uid()))
 with check (profile_id = (select auth.uid()));
 
+drop policy if exists "Restaurants are visible to members" on public.restaurants;
 create policy "Restaurants are visible to members"
 on public.restaurants for select
 to authenticated
 using (public.is_restaurant_member(id));
 
+drop policy if exists "Restaurants are editable by owners" on public.restaurants;
 create policy "Restaurants are editable by owners"
 on public.restaurants for update
 to authenticated
 using (public.is_restaurant_owner(id))
 with check (public.is_restaurant_owner(id));
 
+drop policy if exists "Restaurant memberships are visible to members" on public.restaurant_members;
 create policy "Restaurant memberships are visible to members"
 on public.restaurant_members for select
 to authenticated

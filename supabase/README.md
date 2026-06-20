@@ -10,4 +10,6 @@ Database changes are stored as ordered SQL files in `migrations`.
 4. Add the project URL and publishable key to `.env.local`.
 5. Add `http://localhost:3000/auth/callback` to the allowed Auth redirect URLs.
 
+The Milestone 1 migration is restartable during initial setup. It preserves tables that already exist and recreates its named triggers and policies consistently.
+
 Do not place service-role keys or database passwords in this repository.
