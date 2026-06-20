@@ -65,3 +65,25 @@ package.json, pnpm-lock.yaml, pnpm-workspace.yaml, src/*, README.md, docs/ARCHIT
 
 Approved By:
 Founder, through approval to complete Milestone 0 and maintain a clear file structure.
+
+---
+
+### 2026-06-20 — Organize Product and Milestone Documentation
+
+Decision:
+Move product reference files into `docs/product`, add a documentation index, and track milestone completion under `docs/milestones`.
+
+Reason:
+Keep the root directory neat and make the current state, product references, and milestone history easy to find.
+
+Alternatives Considered:
+Leave all reference documents at the project root or place every document in a single flat `docs` directory.
+
+Impact:
+Startup and README references now use the organized paths. Required framework configuration and safety entry files remain at the root.
+
+Files Affected:
+LOCAL_CODEX_START_PROMPT.md, README.md, docs/README.md, docs/product/*, docs/milestones/*
+
+Approved By:
+Founder, through the request to organize created files before continuing.

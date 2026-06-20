@@ -15,6 +15,7 @@ Milestone 0 — Project Setup completed. Next: Milestone 1 — Auth + Restaurant
 - Bottom navigation for Kitchen, Cookbook, Specials, Menu, and Pantry.
 - Supabase browser client with environment variable validation.
 - Lint, type checking, and production build checks.
+- Organized product documentation and milestone tracking indexes.
 
 ## Known Issues
 

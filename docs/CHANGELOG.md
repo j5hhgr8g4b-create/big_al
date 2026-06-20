@@ -65,3 +65,25 @@ Add real Supabase values to `.env.local`, run `pnpm dev`, and confirm the five n
 
 Known Issues:
 Supabase is not connected until local environment values are provided. Feature pages are intentional Milestone 0 placeholders.
+
+---
+
+### 2026-06-20 — Post-Milestone 0 File Organization
+
+Summary:
+Grouped product references and milestone records into clear documentation folders and added navigation indexes.
+
+Files Changed:
+Moved product reference files to `docs/product`; added `docs/README.md`, `docs/milestones/README.md`, and `docs/milestones/MILESTONE_0.md`; updated live references and audit records.
+
+Commands Run:
+Reviewed the project tree and document references; moved documentation files; ran lint and type checking; reran the production build with temporary local network permission required by Turbopack; ran Git verification.
+
+Database Changes:
+None.
+
+Testing Required:
+Confirm all document links resolve and project checks remain successful.
+
+Known Issues:
+None introduced.

@@ -48,6 +48,8 @@ Useful checks:
 - `src/app` — App Router pages, layouts, and global styles.
 - `src/components` — Shared interface components.
 - `src/lib` — External service clients and shared application utilities.
+- `docs/product` — Product specification, schema, screens, and build plan.
+- `docs/milestones` — Milestone index and completion records.
 - `docs` — Governance, decisions, changelog, and current status.
 
 ## Required Codex Reading Order
@@ -55,7 +57,7 @@ Useful checks:
 1. SAFE_CODEX_LOCAL_VSCODE_SETUP.md
 2. CODEX_RULES.md
 3. docs/PROJECT_GOVERNANCE.md
-4. PRODUCT_SPEC.md
-5. DATABASE_SCHEMA.md
-6. APP_SCREENS.md
-7. BUILD_PLAN.md
+4. docs/product/PRODUCT_SPEC.md
+5. docs/product/DATABASE_SCHEMA.md
+6. docs/product/APP_SCREENS.md
+7. docs/product/BUILD_PLAN.md

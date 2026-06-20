@@ -14,10 +14,10 @@ Before writing code, do these checks:
    - CODEX_RULES.md
    - docs/PROJECT_GOVERNANCE.md
    - README.md
-   - PRODUCT_SPEC.md
-   - DATABASE_SCHEMA.md
-   - APP_SCREENS.md
-   - BUILD_PLAN.md
+   - docs/product/PRODUCT_SPEC.md
+   - docs/product/DATABASE_SCHEMA.md
+   - docs/product/APP_SCREENS.md
+   - docs/product/BUILD_PLAN.md
 3. Check whether this is a Git repository.
 4. If it is not a Git repository, stop and ask permission before running git init.
 5. Do not install anything yet.
