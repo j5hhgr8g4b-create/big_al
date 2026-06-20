@@ -63,3 +63,11 @@ Decision: Create a Restaurant and its owner membership through one authenticated
 Reason: The two records must succeed or fail together, while direct client inserts remain unavailable under RLS.
 
 Status: Approved as part of Milestone 1.
+
+## ADR-009 — Use Webpack for Production Builds
+
+Decision: Build production output with Next.js webpack rather than Turbopack.
+
+Reason: The Turbopack build compiled successfully but produced missing client-manifest entries at runtime. A webpack rebuild rendered all authenticated and unauthenticated routes without server errors.
+
+Status: Approved during Milestone 1 verification.

@@ -3,7 +3,7 @@
 | Milestone | Scope | Status | Record |
 | --- | --- | --- | --- |
 | 0 | Project Setup | Complete | [Milestone 0](MILESTONE_0.md) |
-| 1 | Auth + Restaurants | Verification pending | [Milestone 1](MILESTONE_1.md) |
+| 1 | Auth + Restaurants | Complete | [Milestone 1](MILESTONE_1.md) |
 | 2 | Cookbook + Recipes | Not started | — |
 | 3 | Imports | Not started | — |
 | 4 | Recipe Books + Search | Not started | — |

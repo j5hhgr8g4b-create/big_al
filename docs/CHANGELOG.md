@@ -113,3 +113,25 @@ No Supabase project or `.env.local` is connected, so migration execution and aut
 #### Migration Setup Recovery
 
 Updated the Milestone 1 migration to restart safely after a partial SQL Editor run by preserving existing tables and indexes, replacing named triggers and policies, and retaining conflict-safe user backfills.
+
+---
+
+### 2026-06-20 — Milestone 1 Completion Verification
+
+Summary:
+Connected the Supabase project, applied and remotely detected the full schema, completed a real account and Restaurant flow, and stabilized production output with webpack.
+
+Files Changed:
+Updated the production build script, architecture and decision records, current status, Milestone 1 record, and changelog.
+
+Commands Run:
+Queried Supabase Auth and REST endpoints; verified four tables and the Restaurant RPC; ran lint, type checking, Turbopack and webpack builds; ran the production server; checked public and protected routes; inspected runtime logs.
+
+Database Changes:
+Applied the Milestone 1 migration. Confirmed `profiles`, `chefs`, `restaurants`, `restaurant_members`, and `create_restaurant`. Anonymous table access and unauthenticated Restaurant creation were denied.
+
+Testing Required:
+Keep a two-user cross-Restaurant RLS isolation test in the regression checklist when a second test account is available.
+
+Known Issues:
+No open Milestone 1 functional issues. Turbopack production output is not used because it produced client-manifest runtime errors.

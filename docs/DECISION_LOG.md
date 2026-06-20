@@ -109,3 +109,25 @@ Files Affected:
 
 Approved By:
 Founder, through approval to move forward with Milestone 1.
+
+---
+
+### 2026-06-20 — Use Webpack for Stable Production Output
+
+Decision:
+Run `next build --webpack` for production builds.
+
+Reason:
+Turbopack generated a successful build that failed at runtime with missing React client-manifest entries. The webpack output passed the same route checks without errors.
+
+Alternatives Considered:
+Keep the Turbopack output, ignore the runtime errors, or relocate the build directory without changing bundlers.
+
+Impact:
+Production builds are slightly slower but currently reliable. Development behavior is unchanged.
+
+Files Affected:
+package.json, docs/ARCHITECTURE_DECISIONS.md
+
+Approved By:
+Founder, through approval to complete Milestone 1.

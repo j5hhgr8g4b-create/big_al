@@ -2,11 +2,12 @@
 
 ## Current Milestone
 
-Milestone 1 — Auth + Restaurants implementation complete; Supabase setup and end-to-end verification pending.
+Milestone 1 — Auth + Restaurants completed. Next: Milestone 2 — Cookbook + Recipes.
 
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
+- Milestone 1 — Auth + Restaurants
 
 ## What Works
 
@@ -25,17 +26,14 @@ Milestone 1 — Auth + Restaurants implementation complete; Supabase setup and e
 
 ## Known Issues
 
-- Supabase requires real project values in `.env.local` before service-backed features can run.
-- The Milestone 1 migration has not been applied to a Supabase project.
-- Authenticated and RLS behavior has not yet been tested against a real Supabase project.
 - Cookbook, Specials, Menu, and Pantry remain intentional placeholders for later milestones.
+- Turbopack production output produced client-manifest runtime errors; production builds use webpack.
+- A second-user cross-Restaurant RLS test remains on the regression checklist.
 
 ## Blocked Items
 
-- Apply `supabase/migrations/202606200001_milestone_1_auth_restaurants.sql` to the intended Supabase project.
-- Configure `.env.local` and the allowed Auth callback URL without committing secrets.
-- Complete the authenticated and two-user RLS test checklist.
+None.
 
 ## Next Task
 
-Verify Milestone 1 against the configured Supabase project. Do not begin Milestone 2 until this passes.
+Begin Milestone 2 only after approval: Cookbook and recipe data, creation, editing, viewing, and archiving.

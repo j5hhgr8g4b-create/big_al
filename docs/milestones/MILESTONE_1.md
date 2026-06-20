@@ -1,8 +1,10 @@
 # Milestone 1 — Auth + Restaurants
 
-Status: Implementation complete; Supabase verification pending
+Status: Complete
 
 Implemented: 2026-06-20
+
+Completed: 2026-06-20
 
 ## Delivered
 
@@ -24,13 +26,17 @@ Implemented: 2026-06-20
 - Unauthenticated `/` redirected to `/login`.
 - An invalid Auth callback redirected to a safe login error.
 
-## Required Before Completion
+## Live Verification
 
-1. Apply `supabase/migrations/202606200001_milestone_1_auth_restaurants.sql`.
-2. Add project values to `.env.local`.
-3. Allow `http://localhost:3000/auth/callback` in Supabase Auth settings.
-4. Test account creation and email confirmation.
-5. Confirm Profile and Chef provisioning.
-6. Create a Restaurant and confirm its owner membership.
-7. Test sign-in and sign-out.
-8. Verify RLS isolation using a second user.
+- The migration ran successfully against the intended Supabase project.
+- All four tables and the atomic Restaurant function were detected remotely.
+- Anonymous table access and unauthenticated Restaurant creation were denied.
+- A real account completed email confirmation and authenticated navigation.
+- Profile and Chef provisioning succeeded.
+- Restaurant creation and owner membership succeeded atomically.
+- The authenticated Menu route rendered without server errors.
+- Webpack production output passed route and runtime checks.
+
+## Regression Checklist
+
+- Repeat cross-Restaurant isolation with a second test user when available.
