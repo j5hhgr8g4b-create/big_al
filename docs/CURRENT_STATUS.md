@@ -1,27 +1,33 @@
 # Current Status
 
 ## Current Milestone
-Milestone 0 — Project Setup implemented; verification and Git commit pending in the Codespace repository.
+Milestone 0 — Project Setup foundation is now present in GitHub and ready for Codex verification.
 
 ## Completed Milestones
-None until Milestone 0 verification and its required Git commit are complete.
+None until Codex opens the repository in Codespaces, installs dependencies, runs checks, fixes any setup issues, and creates a clean verification commit.
 
 ## What Works
-- Next.js App Router and TypeScript foundation.
-- Tailwind CSS global styling.
-- Mobile-first Kitchen screen and five-tab bottom navigation.
-- Placeholder routes for Cookbook, Specials, Menu, and Pantry.
-- Supabase browser client factory with environment validation.
+- GitHub repository is connected and editable.
+- Next.js App Router and TypeScript foundation files are present.
+- Tailwind CSS configuration and global styling are present.
+- Mobile-first app shell is present.
+- Five-tab primary navigation is present: Kitchen, Cookbook, Specials, Menu, Pantry.
+- Placeholder screens are present for Kitchen, Cookbook, Specials, Menu, and Pantry.
+- Supabase browser client factory is present with environment validation.
+- Codex repo instructions are present in AGENTS.md.
+- GitHub Actions CI workflow is present for lint, typecheck, and build.
+- Pull request template is present.
 
 ## Known Issues
+- Dependencies have not been installed in a Codespace yet, so no lockfile exists yet.
+- Quality checks have not been run in Codespaces yet.
 - Supabase is not connected until `.env.local` contains valid project values.
 - Authentication and database tables are not part of Milestone 0.
-- Manual browser testing in the Codespace remains to be completed.
-- The currently attached workspace has Node.js 12.14.1 instead of the required Node.js 20.9 or newer, so lint, type checking, and the production build cannot run here.
+- Milestone 0 should be treated as unverified until Codex runs checks in the real Codespace environment.
 
 ## Blocked Items
-- The requested `/workspaces/big_al` Codespace path is not mounted in the current environment.
-- Milestone completion requires a Git commit and push, but this attached workspace does not contain Git metadata or a configured remote.
+- Supabase project values are needed before Auth + Restaurants can be fully tested.
+- A Codespace verification run is needed before starting Milestone 1.
 
 ## Next Task
-Open the `/workspaces/big_al` Codespace repository with Node.js 22, run the three quality checks, create the Milestone 0 commit, and push it to `main` before beginning Milestone 1 — Auth + Restaurants.
+Ask Codex to read `docs/CODEX_START_HERE.md`, inspect the repo, run Milestone 0 verification only, and report any setup fixes required before beginning Milestone 1 — Auth + Restaurants.
