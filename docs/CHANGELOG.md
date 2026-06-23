@@ -11,6 +11,24 @@ Known Issues:
 
 ---
 
+### 2026-06-23 — GitHub Codex Setup
+Summary:
+Prepared the GitHub repository for Codex by adding the missing app foundation, repo-level Codex instructions, CI workflow, pull request template, and beginner start guide. This makes the repository suitable for a Codespaces verification pass before Milestone 1 begins.
+
+Files Changed:
+package.json, .nvmrc, .gitignore, .env.example, tsconfig.json, next.config.mjs, postcss.config.mjs, tailwind.config.ts, eslint.config.mjs, next-env.d.ts, src/app/*, src/components/bottom-nav.tsx, src/lib/supabase/client.ts, AGENTS.md, .github/workflows/ci.yml, .github/pull_request_template.md, docs/CODEX_START_HERE.md, docs/CURRENT_STATUS.md, docs/CHANGELOG.md
+
+Database Changes:
+None.
+
+Testing Required:
+Open the repository in GitHub Codespaces, run `pnpm install`, then run `pnpm lint`, `pnpm typecheck`, and `pnpm build`. Fix only setup issues found during those checks. Do not start Milestone 1 until verification passes.
+
+Known Issues:
+Dependencies have not been installed in Codespaces yet, so a lockfile has not been generated. Supabase requires real values in `.env.local` before data features can be tested.
+
+---
+
 ### 2026-06-20 — Project Setup Documents
 Summary:
 Initial Codex build pack, safety rules, and governance rules created.
