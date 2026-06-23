@@ -2,6 +2,12 @@
 
 Big Al must maintain a complete audit trail of product decisions, technical decisions, and implementation changes.
 
+## Source Of Truth
+
+Notion "App HQ" is the source of truth for project progress, decisions, work tracking, and validation. Use its Decision Tracker for direction changes, its Work Tracker for delivery work and progress, and its linked validation resources for validation status and evidence.
+
+The local audit files below are supporting repository snapshots. Keep them aligned with App HQ; where they differ, App HQ governs.
+
 ## Mandatory Audit Files
 
 - docs/DECISION_LOG.md

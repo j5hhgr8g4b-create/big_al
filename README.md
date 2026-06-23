@@ -14,7 +14,7 @@ Build this loop first.
 
 ## Local Project Folder
 
-/Users/Alex/Documents/Cookbook App
+/Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App
 
 Codex must not work outside this folder.
 

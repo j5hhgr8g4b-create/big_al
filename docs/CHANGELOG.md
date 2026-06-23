@@ -39,7 +39,7 @@ Database Changes:
 None.
 
 Testing Required:
-Confirm files are placed in /Users/Alex/Documents/Cookbook App.
+Confirm files are placed in /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App.
 
 Known Issues:
 Application not built yet.

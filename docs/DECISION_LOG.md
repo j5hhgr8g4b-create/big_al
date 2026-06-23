@@ -27,7 +27,7 @@ Approved By:
 ### 2026-06-20 — Use Local VS Code Project Folder
 
 Decision:
-Codex will work locally in /Users/Alex/Documents/Cookbook App using Visual Studio Code.
+Codex will work locally in /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App using Visual Studio Code.
 
 Reason:
 GitHub Codespaces did not connect properly.

@@ -16,7 +16,15 @@ Build efficiently with minimal token waste. Work milestone by milestone. Do not 
 - Do not create a blank AI chat homepage.
 - Do not over-engineer.
 - Do not skip audit log updates.
-- Do not work outside /Users/Alex/Documents/Cookbook App.
+- Do not work outside /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App.
+
+## Source Of Truth
+
+- Notion "App HQ" is the source of truth for project progress, decisions, work tracking, and validation.
+- Record direction changes in the App HQ Decision Tracker.
+- Record delivery tasks and progress in the App HQ Work Tracker.
+- Keep validation evidence and status aligned with the validation resources linked from App HQ.
+- Local audit documents are supporting snapshots and must not supersede or contradict App HQ.
 
 ## Response Format After Each Milestone
 

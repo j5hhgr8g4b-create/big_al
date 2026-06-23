@@ -4,11 +4,11 @@ You are working locally in Visual Studio Code for the Big Al project.
 
 The only allowed project folder is:
 
-/Users/Alex/Documents/Cookbook App
+/Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App
 
 Before writing code, do these checks:
 
-1. Confirm the current working directory is exactly /Users/Alex/Documents/Cookbook App.
+1. Confirm the current working directory is exactly /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App.
 2. Confirm these files exist:
    - SAFE_CODEX_LOCAL_VSCODE_SETUP.md
    - CODEX_RULES.md
@@ -26,7 +26,7 @@ Before writing code, do these checks:
 8. Wait for approval before making changes.
 
 Safety rules:
-- Work only inside /Users/Alex/Documents/Cookbook App.
+- Work only inside /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App.
 - Do not use sudo.
 - Do not run destructive commands.
 - Do not install global dependencies.

@@ -2,7 +2,7 @@
 
 ## ADR-001 — Use Local VS Code Folder
 
-Decision: Use /Users/Alex/Documents/Cookbook App as the local development folder.
+Decision: Use /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App as the local development folder.
 
 Reason: GitHub Codespaces did not connect properly.
 
