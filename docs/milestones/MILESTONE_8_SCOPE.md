@@ -6,6 +6,14 @@ M8 is Basic Big Al, not a generic AI assistant.
 
 Big Al should help a Restaurant member make better use of their saved Recipes, Menu, Shopping list and cooking history.
 
+## Cost principle
+
+M8 must be free to run in the current MVP version.
+
+Do not add a paid AI model, paid API key, paid provider account, billing setup, paid usage plan, or subscription-gated dependency.
+
+Paid AI upgrades can be considered later after the MVP loop is proven.
+
 ## Acceptable M8 behaviours
 
 - Find saved Recipes.
@@ -20,6 +28,8 @@ Big Al should help a Restaurant member make better use of their saved Recipes, M
 
 - Open internet search.
 - Scraping Recipes from the web.
+- Paid AI model or paid API dependency.
+- Billing-gated provider setup.
 - Nutritional or calorie tracking.
 - Grocery pricing or store comparison.
 - Inventory management.
@@ -29,6 +39,7 @@ Big Al should help a Restaurant member make better use of their saved Recipes, M
 
 ## Future phase, not M8
 
+- Paid AI subscriptions or usage-based model upgrades.
 - Advanced AI meal planning.
 - Personalised adaptation engine.
 - Ingredient substitution intelligence.
