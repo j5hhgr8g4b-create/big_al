@@ -24,6 +24,28 @@ Known Issues:
 
 ---
 
+### 2026-06-27 — Milestone 6 Live Verification
+
+Summary:
+Applied and manually verified Milestone 6 Shopping against the connected Supabase project. Menu to Pantry generation works, manual item add works, purchased tick/untick works, and Shopping state persists after refresh.
+
+Files Changed:
+Updated `docs/CURRENT_STATUS.md`, `docs/milestones/MILESTONE_6.md`, and `docs/CHANGELOG.md` to record live verification and prepare Milestone 7.
+
+Commands Run:
+Supabase migration application and verification queries were run through the Supabase connector. App manual verification was completed by the founder.
+
+Database Changes:
+Applied `202606200006_milestone_6_shopping.sql` to the connected Supabase project. Confirmed `shopping_lists` and `shopping_items` exist, RLS is enabled, and Shopping RPC functions exist.
+
+Testing Required:
+Retain second-user cross-Restaurant Shopping isolation in the regression checklist. Keep Menu → Pantry → Refresh as a smoke test before M7 work.
+
+Known Issues:
+Shopping consolidation is intentionally MVP-simple: same normalized Ingredient name and same unit only. Unit conversion, grocery price comparison, full pantry inventory, AI meal generation, and social mechanics remain out of scope.
+
+---
+
 ### 2026-06-27 — Milestone 6
 
 Summary:
@@ -38,10 +60,10 @@ Commands Run:
 - `pnpm exec next build --webpack`
 
 Database Changes:
-Added `shopping_lists` and `shopping_items`; active-list helper, generation, manual-add, and purchased-toggle functions; indexes, update triggers, restricted grants, and Restaurant-member RLS. The migration was created locally and still needs to be applied to the connected Supabase project.
+Added `shopping_lists` and `shopping_items`; active-list helper, generation, manual-add, and purchased-toggle functions; indexes, update triggers, restricted grants, and Restaurant-member RLS. The migration has now been applied to the connected Supabase project and live verified.
 
 Testing Required:
-Apply the Milestone 6 migration to Supabase, plan meals, generate a shopping list from Pantry, confirm generated Ingredient consolidation, manually add an item, tick and untick purchased items, refresh, and confirm persistence. Repeat cross-Restaurant isolation with a second user when available.
+Retain the Menu → Pantry → Refresh smoke test and repeat cross-Restaurant isolation with a second user when available.
 
 Known Issues:
 MVP consolidation only combines matching normalized Ingredient names with the same unit; it does not convert units or compare grocery prices. Pantry remains Shopping support only, not full pantry inventory.
@@ -122,7 +144,7 @@ Summary:
 Grouped product references and milestone records into clear documentation folders and added navigation indexes.
 
 Files Changed:
-Moved product reference files to `docs/product`; added `docs/README.md`, `docs/milestones/README.md`, and `docs/milestones/MILESTONE_0.md`; updated live references and audit records.
+Moved product reference files to `docs/product`; added `docs/README.md`, `docs/milestones/README.md`, and updated live references and audit records.
 
 Commands Run:
 Reviewed the project tree and document references; moved documentation files; ran lint and type checking; reran the production build with temporary local network permission required by Turbopack; ran Git verification.
