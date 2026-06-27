@@ -1,10 +1,12 @@
 # Milestone 6 — Shopping
 
-Status: Complete
+Status: Complete and live verified
 
 Implemented: 2026-06-27
 
 Completed: 2026-06-27
+
+Live verified: 2026-06-27
 
 ## Delivered
 
@@ -24,12 +26,17 @@ Completed: 2026-06-27
 
 ## Live Verification
 
-- Not performed in this local pass.
-- The Milestone 6 migration still needs to be applied to the connected Supabase project.
+- `202606200006_milestone_6_shopping.sql` applied to the connected Supabase project.
+- Confirmed `shopping_lists` and `shopping_items` exist.
+- Confirmed RLS is enabled on both Shopping tables.
+- Confirmed Shopping functions exist in Supabase.
+- Confirmed Menu → Pantry generation works in the app.
+- Confirmed manual Shopping item add works.
+- Confirmed purchased tick/untick works.
+- Confirmed refresh persistence works.
 
 ## Regression Checklist
 
-- Apply `202606200006_milestone_6_shopping.sql` to Supabase.
 - Confirm `shopping_lists` and `shopping_items` exist and RLS is enabled.
 - Confirm anonymous access is denied.
 - Plan meals in Menu, then generate a Shopping list in Pantry.
@@ -39,3 +46,10 @@ Completed: 2026-06-27
 - Refresh Pantry and confirm Shopping list state persists.
 - Confirm regenerating from Menu replaces generated items while preserving manual items.
 - Confirm a member cannot access another Restaurant's Shopping list or items.
+
+## Deferred
+
+- Unit conversion.
+- Grocery price comparison.
+- Full pantry inventory management.
+- AI meal generation.
