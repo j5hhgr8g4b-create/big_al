@@ -24,6 +24,30 @@ Known Issues:
 
 ---
 
+### 2026-06-27 — Milestone 6 Readiness Checkpoint
+
+Summary:
+Recorded the current post-M5 checkpoint before beginning Milestone 6 — Shopping. Existing user login works and the app passes lint, type checking, and webpack production build from Codespaces.
+
+Files Changed:
+Updated `docs/CURRENT_STATUS.md` and `docs/CHANGELOG.md`. Created GitHub issue #3 for M6 Shopping readiness and build scope.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm tsc --noEmit`
+- `pnpm exec next build --webpack`
+
+Database Changes:
+None in this checkpoint.
+
+Testing Required:
+Before implementing M6, confirm Menu behaviour manually: plan meals, refresh, check persistence, and confirm the Supabase project has the Milestone 5 migration needed for meal events. During M6, test Plan meals → Generate shopping list → Tick off items → Refresh → Confirm persistence.
+
+Known Issues:
+Specials remains placeholder. Pantry should become Shopping support only, not full pantry inventory. Turbopack production build remains a watch item; webpack build is the validated production build path.
+
+---
+
 ### 2026-06-20 — Local VS Code Safety Setup
 
 Summary:
@@ -39,7 +63,7 @@ Database Changes:
 None.
 
 Testing Required:
-Confirm files are placed in /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App.
+Confirm files are placed in the intended local project folder.
 
 Known Issues:
 Application not built yet.
@@ -222,4 +246,4 @@ Testing Required:
 Apply the Milestone 5 migration to Supabase, add a Recipe to this week and next week, confirm people eating and serving context display, remove a planned meal, verify archived Recipes are not offered, and repeat cross-Restaurant isolation with a second user.
 
 Known Issues:
-`pnpm` script wrappers currently stop on dependency build-script approval for `sharp` and `unrs-resolver`; the same lint, typecheck, and build commands passed through direct local binaries.
+`pnpm` script wrappers previously stopped on dependency build-script approval for `sharp` and `unrs-resolver`; the latest Codespaces checkpoint passed `pnpm lint`, `pnpm tsc --noEmit`, and `pnpm exec next build --webpack`.
