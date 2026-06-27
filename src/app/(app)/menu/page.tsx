@@ -22,10 +22,10 @@ const mealTypes = ["breakfast", "lunch", "dinner", "snack", "other"];
 
 function MealEventCard({ event }: { event: MenuMealEvent }) {
   return (
-    <article className="rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm">
+    <article className="visual-card p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
+          <p className="section-kicker text-sm">
             {formatMenuDate(event.planned_for)}
             {event.meal_type ? ` · ${event.meal_type}` : ""}
           </p>
@@ -40,13 +40,15 @@ function MealEventCard({ event }: { event: MenuMealEvent }) {
           <input type="hidden" name="mealEventId" value={event.id} />
           <button
             type="submit"
-            className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-semibold text-[var(--muted)]"
+            className="btn-secondary min-h-0 px-3 py-1.5 text-xs"
           >
             Remove
           </button>
         </form>
       </div>
-      <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{servingsContext(event)}</p>
+      <p className="mt-3 text-sm leading-6 text-[var(--color-text-muted)]">
+        {servingsContext(event)}
+      </p>
       {event.notes && <p className="mt-3 text-sm leading-6">{event.notes}</p>}
     </article>
   );
@@ -62,17 +64,17 @@ function AddMealForm({
   restaurantId: string;
 }) {
   return (
-    <form action={saveMealEvent} className="mt-8 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm">
+    <form action={saveMealEvent} className="visual-card mt-8 p-5">
       <input type="hidden" name="restaurantId" value={restaurantId} />
       <input type="hidden" name="returnPath" value="/menu" />
-      <h2 className="text-xl font-semibold tracking-tight">Add Recipe to Menu</h2>
+      <h2 className="section-kicker text-xl">Add Recipe to Menu</h2>
       <div className="mt-5 space-y-4">
         <label className="block">
           <span className="text-sm font-semibold">Recipe</span>
           <select
             name="recipeId"
             required
-            className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+            className="input-control mt-2 px-4 py-3 text-sm"
           >
             <option value="">Choose a Recipe</option>
             {recipes.map((recipe) => (
@@ -92,7 +94,7 @@ function AddMealForm({
               type="date"
               required
               defaultValue={defaultDate}
-              className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+                className="input-control mt-2 px-4 py-3 text-sm"
             />
           </label>
           <label className="block">
@@ -104,7 +106,7 @@ function AddMealForm({
               max={100}
               required
               defaultValue={2}
-              className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+                className="input-control mt-2 px-4 py-3 text-sm"
             />
           </label>
         </div>
@@ -114,7 +116,7 @@ function AddMealForm({
           <select
             name="mealType"
             defaultValue="dinner"
-            className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm capitalize outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+            className="input-control mt-2 px-4 py-3 text-sm capitalize"
           >
             {mealTypes.map((mealType) => (
               <option key={mealType} value={mealType}>
@@ -131,7 +133,7 @@ function AddMealForm({
             rows={3}
             maxLength={1000}
             placeholder="Optional, like 'double the rice'"
-            className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+            className="input-control mt-2 px-4 py-3 text-sm"
           />
         </label>
       </div>
@@ -157,7 +159,7 @@ export default async function MenuPage({ searchParams }: MenuPageProps) {
         />
         <Link
           href="/restaurants/new"
-          className="mt-8 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white"
+          className="btn-primary mt-8"
         >
           Create Restaurant
         </Link>
@@ -191,14 +193,14 @@ export default async function MenuPage({ searchParams }: MenuPageProps) {
           restaurantId={restaurant.id}
         />
       ) : (
-        <section className="mt-8 rounded-3xl border border-dashed border-[var(--border)] p-8 text-center">
+        <section className="warm-section mt-8 border-dashed p-8 text-center">
           <h2 className="text-xl font-semibold">No Recipes to plan yet</h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
             Add a Recipe to your Cookbook, then it can come over here for dinner duty.
           </p>
           <Link
             href="/cookbook/imports/new"
-            className="mt-4 inline-block text-sm font-semibold text-[var(--accent)]"
+            className="btn-secondary mt-4 min-h-0 px-3 py-2 text-xs"
           >
             Import Recipe
           </Link>
@@ -210,14 +212,14 @@ export default async function MenuPage({ searchParams }: MenuPageProps) {
           <section key={week.label} aria-labelledby={`${week.label.toLowerCase().replace(" ", "-")}-heading`}>
             <div className="flex items-end justify-between gap-4">
               <div>
-                <h2 id={`${week.label.toLowerCase().replace(" ", "-")}-heading`} className="text-2xl font-semibold tracking-tight">
+                <h2 id={`${week.label.toLowerCase().replace(" ", "-")}-heading`} className="section-kicker text-2xl">
                   {week.label}
                 </h2>
-                <p className="mt-1 text-sm text-[var(--muted)]">
+                <p className="mt-1 text-sm text-[var(--color-text-muted)]">
                   {formatMenuDate(week.start)} to {formatMenuDate(week.end)}
                 </p>
               </div>
-              <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold text-[var(--muted)]">
+              <span className="warm-pill">
                 {week.events.length} planned
               </span>
             </div>
@@ -229,7 +231,7 @@ export default async function MenuPage({ searchParams }: MenuPageProps) {
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-3xl border border-dashed border-[var(--border)] p-6 text-sm leading-6 text-[var(--muted)]">
+              <p className="warm-section mt-4 border-dashed p-6 text-sm leading-6 text-[var(--color-text-muted)]">
                 Nothing planned yet. Pick a Recipe above and give future-you a small win.
               </p>
             )}
@@ -238,7 +240,7 @@ export default async function MenuPage({ searchParams }: MenuPageProps) {
       </div>
 
       <section className="mt-10" aria-labelledby="unplanned-heading">
-        <h2 id="unplanned-heading" className="text-2xl font-semibold tracking-tight">
+        <h2 id="unplanned-heading" className="section-kicker text-2xl">
           Unplanned
         </h2>
         {unplannedRecipes.length ? (
@@ -247,17 +249,17 @@ export default async function MenuPage({ searchParams }: MenuPageProps) {
               <Link
                 key={recipe.id}
                 href={`/cookbook/recipes/${recipe.id}`}
-                className="block rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm"
+                className="visual-card block p-5"
               >
                 <h3 className="text-lg font-semibold">{recipe.title}</h3>
-                <p className="mt-2 text-sm text-[var(--muted)]">
+                <p className="mt-2 text-sm text-[var(--color-text-muted)]">
                   {recipe.servings ? `Serves ${recipe.servings}` : "Servings not set yet"}
                 </p>
               </Link>
             ))}
           </div>
         ) : (
-          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-3 text-sm leading-6 text-[var(--color-text-muted)]">
             No loose meal ideas right now. Tidy, but suspiciously hungry.
           </p>
         )}

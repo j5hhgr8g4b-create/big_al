@@ -12,13 +12,13 @@ type RecipeBookFormProps = {
 };
 
 const inputClassName =
-  "mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-base outline-none transition-shadow focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100";
+  "input-control mt-2 px-4 py-3 text-base";
 
 export function RecipeBookForm({ initialValue, recipeBookId, restaurantId }: RecipeBookFormProps) {
   return (
     <form
       action={saveRecipeBook}
-      className="mt-8 space-y-5 rounded-3xl border border-[var(--border)] bg-white p-6 shadow-sm"
+      className="visual-card mt-8 space-y-5 p-6"
     >
       <input type="hidden" name="restaurantId" value={restaurantId} />
       <input type="hidden" name="recipeBookId" value={recipeBookId ?? ""} />

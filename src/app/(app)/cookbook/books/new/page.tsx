@@ -17,11 +17,11 @@ export default async function NewRecipeBookPage({ searchParams }: NewRecipeBookP
 
   return (
     <section>
-      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
+      <p className="section-kicker">
         {restaurant.name}
       </p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-tight">New Recipe Book</h1>
-      <p className="mt-4 leading-7 text-[var(--muted)]">
+      <h1 className="screen-title mt-2 inline-block">New Recipe Book</h1>
+      <p className="mt-6 leading-7 text-[var(--color-text-muted)]">
         Group related Recipes without removing them from your main Cookbook.
       </p>
       {error && (

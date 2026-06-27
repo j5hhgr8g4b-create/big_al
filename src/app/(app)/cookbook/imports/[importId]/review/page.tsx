@@ -18,18 +18,18 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
 
   return (
     <section>
-      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
+      <p className="section-kicker">
         Needs Review
       </p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-tight">Structure this recipe</h1>
-      <p className="mt-4 leading-7 text-[var(--muted)]">
+      <h1 className="screen-title mt-2 inline-block">Structure this recipe</h1>
+      <p className="mt-6 leading-7 text-[var(--color-text-muted)]">
         Check the source below, then add clean ingredients and ordered steps before saving it to your
         Cookbook.
       </p>
 
-      <aside className="mt-6 rounded-3xl bg-orange-50 p-5 text-sm leading-6">
+      <aside className="note-card mt-6 p-5 text-sm leading-6">
         <p className="font-semibold">Parser placeholder</p>
-        <p className="mt-1 text-[var(--muted)]">
+        <p className="mt-1 text-[var(--color-text-soft)]">
           {recipeImport.parser_output.message ??
             "Automatic parsing is not enabled. Review this Import manually."}
         </p>
@@ -38,7 +38,7 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
             href={recipeImport.source_url}
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-block font-semibold text-[var(--accent)]"
+            className="btn-secondary mt-3 min-h-0 px-3 py-2 text-xs"
           >
             Open source recipe
           </a>
@@ -46,7 +46,7 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
         {recipeImport.raw_text && (
           <details className="mt-4">
             <summary className="cursor-pointer font-semibold">View pasted text</summary>
-            <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap rounded-2xl bg-white p-4 font-sans text-xs leading-5 text-[var(--muted)]">
+            <pre className="mt-3 max-h-72 overflow-auto whitespace-pre-wrap rounded-2xl bg-[var(--color-surface)] p-4 font-sans text-xs leading-5 text-[var(--color-text-muted)]">
               {recipeImport.raw_text}
             </pre>
           </details>

@@ -21,10 +21,10 @@ export default async function EditRecipeBookPage({ params, searchParams }: EditR
     <section>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
+          <p className="section-kicker">
             Cookbook
           </p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight">Edit Recipe Book</h1>
+          <h1 className="screen-title mt-2 inline-block">Edit Recipe Book</h1>
         </div>
         <ArchiveRecipeBookButton recipeBookId={recipeBook.id} />
       </div>

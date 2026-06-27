@@ -23,10 +23,10 @@ export function CookTimer() {
   }, [isRunning]);
 
   return (
-    <section className="rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm">
+    <section className="rounded-[var(--radius-2xl)] border border-white/10 bg-white/8 p-5 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold text-[var(--accent)]">Timer</p>
+          <p className="section-kicker text-[var(--color-honey)]">Timer</p>
           <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight">
             {formatSeconds(seconds)}
           </p>
@@ -35,7 +35,7 @@ export function CookTimer() {
           <button
             type="button"
             onClick={() => setIsRunning((current) => !current)}
-            className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white"
+            className="btn-primary"
           >
             {isRunning ? "Pause" : "Start"}
           </button>
@@ -45,7 +45,7 @@ export function CookTimer() {
               setIsRunning(false);
               setSeconds(0);
             }}
-            className="rounded-full border border-[var(--border)] px-5 py-3 text-sm font-semibold"
+            className="btn-secondary border-white/20 bg-white/10 text-[var(--color-text-inverse)]"
           >
             Reset
           </button>

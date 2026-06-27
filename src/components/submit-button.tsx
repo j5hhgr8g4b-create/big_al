@@ -15,7 +15,7 @@ export function SubmitButton({ children, pendingLabel }: SubmitButtonProps) {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
+      className="btn-primary disabled:cursor-wait disabled:opacity-60"
     >
       {pending ? pendingLabel : children}
     </button>

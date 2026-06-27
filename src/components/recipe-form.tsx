@@ -56,7 +56,7 @@ const emptyValue: RecipeFormValue = {
 };
 
 const inputClassName =
-  "mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-base outline-none transition-shadow focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100";
+  "input-control mt-2 px-4 py-3 text-base";
 
 export function RecipeForm({ importId, initialValue = emptyValue, recipeId, restaurantId }: RecipeFormProps) {
   const [ingredients, setIngredients] = useState<IngredientRow[]>(
@@ -83,8 +83,8 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
       <input type="hidden" name="recipeId" value={recipeId ?? ""} />
       <input type="hidden" name="importId" value={importId ?? ""} />
 
-      <section className="space-y-5 rounded-3xl border border-[var(--border)] bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold">Recipe details</h2>
+      <section className="visual-card space-y-5 p-6">
+        <h2 className="section-kicker text-xl">Recipe details</h2>
         <label className="block text-sm font-medium">
           Title
           <input
@@ -166,9 +166,9 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
         </label>
       </section>
 
-      <section className="rounded-3xl border border-[var(--border)] bg-white p-6 shadow-sm">
+      <section className="visual-card p-6">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-xl font-semibold">Ingredients</h2>
+          <h2 className="section-kicker text-xl">Ingredients</h2>
           <button
             type="button"
             onClick={() =>
@@ -177,14 +177,17 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
                 { ...emptyIngredient, key: globalThis.crypto.randomUUID() },
               ])
             }
-            className="text-sm font-semibold text-[var(--accent)]"
+            className="btn-secondary min-h-0 px-3 py-2 text-xs"
           >
             Add ingredient
           </button>
         </div>
         <div className="mt-5 space-y-5">
           {ingredients.map((ingredient, index) => (
-            <div key={ingredient.key} className="rounded-2xl bg-stone-50 p-4">
+            <div
+              key={ingredient.key}
+              className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-4"
+            >
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold">Ingredient {index + 1}</p>
                 {ingredients.length > 1 && (
@@ -193,7 +196,7 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
                     onClick={() =>
                       setIngredients((current) => current.filter((_, itemIndex) => itemIndex !== index))
                     }
-                    className="text-xs font-medium text-red-700"
+                    className="text-xs font-semibold text-red-700"
                   >
                     Remove
                   </button>
@@ -251,9 +254,9 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[var(--border)] bg-white p-6 shadow-sm">
+      <section className="visual-card p-6">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-xl font-semibold">Method</h2>
+          <h2 className="section-kicker text-xl">Method</h2>
           <button
             type="button"
             onClick={() =>
@@ -262,14 +265,17 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
                 { instruction: "", key: globalThis.crypto.randomUUID() },
               ])
             }
-            className="text-sm font-semibold text-[var(--accent)]"
+            className="btn-secondary min-h-0 px-3 py-2 text-xs"
           >
             Add step
           </button>
         </div>
         <div className="mt-5 space-y-4">
           {steps.map((step, index) => (
-            <div key={step.key} className="rounded-2xl bg-stone-50 p-4">
+            <div
+              key={step.key}
+              className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-4"
+            >
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold">Step {index + 1}</p>
                 {steps.length > 1 && (
@@ -278,7 +284,7 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
                     onClick={() =>
                       setSteps((current) => current.filter((_, itemIndex) => itemIndex !== index))
                     }
-                    className="text-xs font-medium text-red-700"
+                    className="text-xs font-semibold text-red-700"
                   >
                     Remove
                   </button>

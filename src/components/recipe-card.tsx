@@ -16,16 +16,18 @@ export function RecipeCard({ recipe }: { recipe: RecipeCardValue }) {
   return (
     <Link
       href={`/cookbook/recipes/${recipe.id}`}
-      className="block rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm transition-transform hover:-translate-y-0.5"
+      className="visual-card block p-5 transition-transform hover:-translate-y-0.5"
     >
       <h3 className="text-xl font-semibold tracking-tight">{recipe.title}</h3>
       {recipe.description && (
-        <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">{recipe.description}</p>
+        <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--color-text-muted)]">
+          {recipe.description}
+        </p>
       )}
-      <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium text-[var(--muted)]">
-        {totalMinutes > 0 && <span>{totalMinutes} min</span>}
-        {recipe.servings && <span>Serves {recipe.servings}</span>}
-        {recipe.difficulty && <span className="capitalize">{recipe.difficulty}</span>}
+      <div className="mt-4 flex flex-wrap gap-2">
+        {totalMinutes > 0 && <span className="warm-pill">{totalMinutes} min</span>}
+        {recipe.servings && <span className="warm-pill">Serves {recipe.servings}</span>}
+        {recipe.difficulty && <span className="warm-pill capitalize">{recipe.difficulty}</span>}
       </div>
     </Link>
   );

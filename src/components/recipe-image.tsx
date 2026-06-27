@@ -5,7 +5,7 @@ export function RecipeImage({ src, title }: { src: string; title: string }) {
     <img
       src={src}
       alt={title}
-      className="aspect-[4/3] w-full rounded-3xl object-cover"
+      className="aspect-[4/3] w-full rounded-[var(--radius-2xl)] border border-[var(--color-border)] object-cover shadow-[var(--shadow-card)]"
       referrerPolicy="no-referrer"
     />
   );

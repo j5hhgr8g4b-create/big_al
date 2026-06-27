@@ -13,7 +13,7 @@ export function ArchiveRecipeBookButton({ recipeBookId }: { recipeBookId: string
       }}
     >
       <input type="hidden" name="recipeBookId" value={recipeBookId} />
-      <button type="submit" className="text-sm font-semibold text-red-700">
+      <button type="submit" className="btn-danger min-h-0 px-3 py-2 text-xs">
         Archive Recipe Book
       </button>
     </form>

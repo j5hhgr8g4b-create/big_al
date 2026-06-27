@@ -8,7 +8,7 @@ type NewImportPageProps = {
 };
 
 const inputClassName =
-  "mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-base outline-none transition-shadow focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100";
+  "input-control mt-2 px-4 py-3 text-base";
 
 export default async function NewImportPage({ searchParams }: NewImportPageProps) {
   const { error } = await searchParams;
@@ -20,11 +20,11 @@ export default async function NewImportPage({ searchParams }: NewImportPageProps
 
   return (
     <section>
-      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
+      <p className="section-kicker">
         {restaurant.name}
       </p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-tight">Import a recipe</h1>
-      <p className="mt-4 leading-7 text-[var(--muted)]">
+      <h1 className="screen-title mt-2 inline-block">Import a recipe</h1>
+      <p className="mt-6 leading-7 text-[var(--color-text-muted)]">
         Save a recipe link, paste recipe text, or add both. You will review and structure it next.
       </p>
 
@@ -36,7 +36,7 @@ export default async function NewImportPage({ searchParams }: NewImportPageProps
 
       <form
         action={createImport}
-        className="mt-8 space-y-5 rounded-3xl border border-[var(--border)] bg-white p-6 shadow-sm"
+        className="visual-card mt-8 space-y-5 p-6"
       >
         <input type="hidden" name="restaurantId" value={restaurant.id} />
         <label className="block text-sm font-medium">
@@ -49,10 +49,10 @@ export default async function NewImportPage({ searchParams }: NewImportPageProps
             placeholder="https://example.com/recipe"
           />
         </label>
-        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">
-          <span className="h-px flex-1 bg-[var(--border)]" />
+        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-text-muted)]">
+          <span className="h-px flex-1 bg-[var(--color-border)]" />
           and/or
-          <span className="h-px flex-1 bg-[var(--border)]" />
+          <span className="h-px flex-1 bg-[var(--color-border)]" />
         </div>
         <label className="block text-sm font-medium">
           Recipe text
@@ -63,7 +63,7 @@ export default async function NewImportPage({ searchParams }: NewImportPageProps
             placeholder="Paste ingredients and method here…"
           />
         </label>
-        <p className="rounded-2xl bg-orange-50 px-4 py-3 text-sm leading-6 text-[var(--muted)]">
+        <p className="note-card px-4 py-3 text-sm leading-6 text-[var(--color-text-soft)]">
           Automatic parsing is a placeholder in this milestone. Big Al stores the source safely and
           asks you to review the structured recipe before conversion.
         </p>

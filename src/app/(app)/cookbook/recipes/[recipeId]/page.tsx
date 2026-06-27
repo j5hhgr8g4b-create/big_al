@@ -49,7 +49,7 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
     <article>
       {recipe.image_url && <RecipeImage src={recipe.image_url} title={recipe.title} />}
       <div className={recipe.image_url ? "mt-7" : ""}>
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
+        <p className="section-kicker">
           By {recipe.creatorName}
         </p>
         <div className="mt-2 flex items-start justify-between gap-4">
@@ -57,32 +57,32 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
           <div className="flex shrink-0 flex-col gap-2">
             <Link
               href={`/cookbook/recipes/${recipe.id}/cook`}
-              className="rounded-full bg-[var(--accent)] px-4 py-2 text-center text-sm font-semibold text-white"
+              className="btn-primary px-4 py-2 text-sm"
             >
               Cook
             </Link>
             <Link
               href={`/cookbook/recipes/${recipe.id}/edit`}
-              className="rounded-full border border-[var(--border)] px-4 py-2 text-center text-sm font-semibold"
+              className="btn-secondary px-4 py-2 text-sm"
             >
               Edit
             </Link>
           </div>
         </div>
         {recipe.description && (
-          <p className="mt-4 leading-7 text-[var(--muted)]">{recipe.description}</p>
+          <p className="mt-4 leading-7 text-[var(--color-text-muted)]">{recipe.description}</p>
         )}
         <dl className="mt-6 grid grid-cols-3 gap-3 text-center">
-          <div className="rounded-2xl bg-stone-50 p-3">
-            <dt className="text-xs text-[var(--muted)]">Time</dt>
+          <div className="visual-card rounded-2xl p-3">
+            <dt className="text-xs text-[var(--color-text-muted)]">Time</dt>
             <dd className="mt-1 text-sm font-semibold">{totalMinutes ? `${totalMinutes} min` : "—"}</dd>
           </div>
-          <div className="rounded-2xl bg-stone-50 p-3">
-            <dt className="text-xs text-[var(--muted)]">Servings</dt>
+          <div className="visual-card rounded-2xl p-3">
+            <dt className="text-xs text-[var(--color-text-muted)]">Servings</dt>
             <dd className="mt-1 text-sm font-semibold">{recipe.servings ?? "—"}</dd>
           </div>
-          <div className="rounded-2xl bg-stone-50 p-3">
-            <dt className="text-xs text-[var(--muted)]">Difficulty</dt>
+          <div className="visual-card rounded-2xl p-3">
+            <dt className="text-xs text-[var(--color-text-muted)]">Difficulty</dt>
             <dd className="mt-1 text-sm font-semibold capitalize">{recipe.difficulty ?? "—"}</dd>
           </div>
         </dl>
@@ -94,8 +94,8 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
         </p>
       )}
 
-      <section className="mt-10 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm">
-        <h2 className="text-xl font-semibold tracking-tight">Add to Menu</h2>
+      <section className="visual-card mt-10 p-5">
+        <h2 className="section-kicker text-xl">Add to Menu</h2>
         <form action={saveMealEvent} className="mt-5 space-y-4">
           <input type="hidden" name="restaurantId" value={recipe.restaurantId} />
           <input type="hidden" name="recipeId" value={recipe.id} />
@@ -108,7 +108,7 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
                 type="date"
                 required
                 defaultValue={menuRange.thisWeekStart}
-                className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+                className="input-control mt-2 px-4 py-3 text-sm"
               />
             </label>
             <label className="block">
@@ -120,7 +120,7 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
                 max={100}
                 required
                 defaultValue={recipe.servings ? Math.ceil(Number(recipe.servings)) : 2}
-                className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+                className="input-control mt-2 px-4 py-3 text-sm"
               />
             </label>
           </div>
@@ -129,7 +129,7 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
             <select
               name="mealType"
               defaultValue="dinner"
-              className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm capitalize outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+              className="input-control mt-2 px-4 py-3 text-sm capitalize"
             >
               <option value="breakfast">breakfast</option>
               <option value="lunch">lunch</option>
@@ -143,8 +143,8 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
       </section>
 
       <section className="mt-10">
-        <h2 className="text-2xl font-semibold tracking-tight">Ingredients</h2>
-        <ul className="mt-4 divide-y divide-[var(--border)]">
+        <h2 className="section-kicker text-2xl">Ingredients</h2>
+        <ul className="visual-card mt-4 divide-y divide-[var(--color-border)] px-4">
           {recipe.ingredients.map((ingredient) => (
             <li key={ingredient.id} className="flex gap-3 py-3 leading-6">
               <span className="min-w-16 font-semibold">
@@ -153,7 +153,7 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
               <span>
                 {ingredient.name}
                 {ingredient.preparation && (
-                  <span className="text-[var(--muted)]">, {ingredient.preparation}</span>
+                  <span className="text-[var(--color-text-muted)]">, {ingredient.preparation}</span>
                 )}
               </span>
             </li>
@@ -162,11 +162,11 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
       </section>
 
       <section className="mt-10">
-        <h2 className="text-2xl font-semibold tracking-tight">Method</h2>
+        <h2 className="section-kicker text-2xl">Method</h2>
         <ol className="mt-5 space-y-5">
           {recipe.steps.map((step) => (
             <li key={step.id} className="flex gap-4">
-              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[var(--accent)] text-sm font-semibold text-white">
+              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[var(--color-purple-800)] text-sm font-semibold text-[var(--color-text-inverse)]">
                 {step.position}
               </span>
               <p className="pt-1 leading-7">{step.instruction}</p>
@@ -178,14 +178,14 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
       {books.length ? (
         <RecipeBookPicker books={books} recipeId={recipe.id} selectedIds={selectedBookIds} />
       ) : (
-        <section className="mt-10 rounded-3xl border border-[var(--border)] p-5">
-          <h2 className="text-xl font-semibold tracking-tight">Recipe Books</h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+        <section className="visual-card mt-10 p-5">
+          <h2 className="section-kicker text-xl">Recipe Books</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
             Create a Recipe Book to organize this Recipe.
           </p>
           <Link
             href="/cookbook/books/new"
-            className="mt-4 inline-block text-sm font-semibold text-[var(--accent)]"
+            className="btn-secondary mt-4 min-h-0 px-3 py-2 text-xs"
           >
             New Recipe Book
           </Link>
@@ -193,7 +193,7 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
       )}
 
       {recipe.source_url && (
-        <p className="mt-10 border-t border-[var(--border)] pt-6 text-sm text-[var(--muted)]">
+        <p className="mt-10 border-t border-[var(--color-border)] pt-6 text-sm text-[var(--color-text-muted)]">
           Source: {" "}
           <a
             href={recipe.source_url}

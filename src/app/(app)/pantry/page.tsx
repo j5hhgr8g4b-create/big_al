@@ -28,7 +28,7 @@ function ShoppingItemRow({ item }: { item: ShoppingItem }) {
   const amount = itemAmount(item);
 
   return (
-    <article className="rounded-3xl border border-[var(--border)] bg-white p-4 shadow-sm">
+    <article className="visual-card p-4">
       <div className="flex items-start gap-3">
         <form action={toggleShoppingItemPurchased}>
           <input type="hidden" name="itemId" value={item.id} />
@@ -38,8 +38,8 @@ function ShoppingItemRow({ item }: { item: ShoppingItem }) {
             aria-label={item.is_purchased ? `Put ${item.name} back on the list` : `Mark ${item.name} purchased`}
             className={`mt-0.5 grid size-7 place-items-center rounded-full border text-sm font-bold ${
               item.is_purchased
-                ? "border-[var(--accent)] bg-[var(--accent)] text-white"
-                : "border-[var(--border)] bg-white text-transparent"
+                ? "border-[var(--color-green-600)] bg-[var(--color-green-600)] text-white"
+                : "border-[var(--color-border)] bg-[var(--color-surface)] text-transparent"
             }`}
           >
             ✓
@@ -47,15 +47,17 @@ function ShoppingItemRow({ item }: { item: ShoppingItem }) {
         </form>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <h3 className={`font-semibold ${item.is_purchased ? "text-[var(--muted)] line-through" : ""}`}>
+            <h3 className={`font-semibold ${item.is_purchased ? "text-[var(--color-text-muted)] line-through" : ""}`}>
               {item.name}
             </h3>
-            {amount && <span className="text-sm font-medium text-[var(--muted)]">{amount}</span>}
+            {amount && <span className="text-sm font-medium text-[var(--color-text-muted)]">{amount}</span>}
           </div>
-          <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent)]">
+          <p className="section-kicker mt-1 text-sm">
             {item.source === "generated" ? "From Menu" : "Added by hand"}
           </p>
-          {item.notes && <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{item.notes}</p>}
+          {item.notes && (
+            <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">{item.notes}</p>
+          )}
         </div>
       </div>
     </article>
@@ -76,7 +78,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
         />
         <Link
           href="/restaurants/new"
-          className="mt-8 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white"
+          className="btn-primary mt-8"
         >
           Create Restaurant
         </Link>
@@ -103,18 +105,18 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
         </p>
       )}
 
-      <section className="mt-8 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm">
+      <section className="visual-card mt-8 p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-[var(--accent)]">Plan → Shop → Cook</p>
+            <p className="section-kicker">Plan → Shop → Cook</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">Generate from Menu</h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+            <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
               {plannedMealCount
                 ? `${plannedMealCount} planned meals between ${formatMenuDate(range.thisWeekStart)} and ${formatMenuDate(range.nextWeekEnd)}.`
                 : "Plan meals in Menu first, then Big Al can gather the ingredients here."}
             </p>
             {list?.generated_at && list.source_start_date && list.source_end_date && (
-              <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+              <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
                 Last generated for {formatMenuDate(list.source_start_date)} to {formatMenuDate(list.source_end_date)}
               </p>
             )}
@@ -130,9 +132,9 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
         </div>
       </section>
 
-      <form action={addManualShoppingItem} className="mt-6 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm">
+      <form action={addManualShoppingItem} className="visual-card mt-6 p-5">
         <input type="hidden" name="restaurantId" value={restaurant.id} />
-        <h2 className="text-xl font-semibold tracking-tight">Add item</h2>
+        <h2 className="section-kicker text-xl">Add item</h2>
         <div className="mt-4 grid gap-3">
           <label className="block">
             <span className="text-sm font-semibold">Item</span>
@@ -141,7 +143,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
               required
               maxLength={120}
               placeholder="Milk, lemons, foil..."
-              className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+              className="input-control mt-2 px-4 py-3 text-sm"
             />
           </label>
           <div className="grid grid-cols-2 gap-3">
@@ -152,7 +154,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
                 type="number"
                 min="0.001"
                 step="0.001"
-                className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+                className="input-control mt-2 px-4 py-3 text-sm"
               />
             </label>
             <label className="block">
@@ -161,7 +163,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
                 name="unit"
                 maxLength={40}
                 placeholder="g, tin, bunch"
-                className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+                className="input-control mt-2 px-4 py-3 text-sm"
               />
             </label>
           </div>
@@ -171,7 +173,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
               name="notes"
               maxLength={500}
               placeholder="Optional"
-              className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+              className="input-control mt-2 px-4 py-3 text-sm"
             />
           </label>
         </div>
@@ -183,13 +185,18 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
       <section className="mt-10" aria-labelledby="shopping-list-heading">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <h2 id="shopping-list-heading" className="text-2xl font-semibold tracking-tight">
+            <h2 id="shopping-list-heading" className="section-kicker text-2xl">
               Shopping list
             </h2>
-            <p className="mt-1 text-sm text-[var(--muted)]">
+            <p className="mt-1 text-sm text-[var(--color-text-muted)]">
               {activeItems.length} to buy · {purchasedItems.length} purchased
             </p>
           </div>
+          <span className="warm-pill">
+            {activeItems.length + purchasedItems.length
+              ? `${purchasedItems.length}/${activeItems.length + purchasedItems.length} done`
+              : "No list yet"}
+          </span>
         </div>
 
         {activeItems.length ? (
@@ -199,7 +206,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-3xl border border-dashed border-[var(--border)] p-6 text-sm leading-6 text-[var(--muted)]">
+          <p className="warm-section mt-4 border-dashed p-6 text-sm leading-6 text-[var(--color-text-muted)]">
             {list
               ? "Nothing left to buy. Add an item by hand or regenerate from the Menu when plans change."
               : "No shopping list yet. Generate one from planned meals or add a quick item by hand."}
@@ -209,7 +216,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
 
       {purchasedItems.length > 0 && (
         <section className="mt-10" aria-labelledby="purchased-heading">
-          <h2 id="purchased-heading" className="text-2xl font-semibold tracking-tight">
+          <h2 id="purchased-heading" className="section-kicker text-2xl">
             Purchased
           </h2>
           <div className="mt-4 space-y-3">

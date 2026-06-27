@@ -6,18 +6,18 @@ type LoginPageProps = {
 };
 
 const inputClassName =
-  "mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-base outline-none transition-shadow focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100";
+  "input-control mt-2 px-4 py-3 text-base";
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { error, message } = await searchParams;
 
   return (
     <div>
-      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
+      <p className="section-kicker">
         Welcome to
       </p>
-      <h1 className="mt-2 text-5xl font-semibold tracking-tight">Big Al</h1>
-      <p className="mt-3 leading-7 text-[var(--muted)]">Your private cooking companion.</p>
+      <h1 className="screen-title mt-2 inline-block text-5xl">Big Al</h1>
+      <p className="mt-6 leading-7 text-[var(--color-text-muted)]">Your private cooking companion.</p>
 
       {(error || message) && (
         <p
@@ -30,8 +30,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </p>
       )}
 
-      <section className="mt-8 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
-        <h2 className="text-2xl font-semibold tracking-tight">Sign in</h2>
+      <section className="visual-card mt-8 p-6">
+        <h2 className="section-kicker text-2xl">Sign in</h2>
         <form action={signIn} className="mt-5 space-y-4">
           <label className="block text-sm font-medium">
             Email
@@ -51,8 +51,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </form>
       </section>
 
-      <section className="mt-5 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
-        <h2 className="text-2xl font-semibold tracking-tight">Create account</h2>
+      <section className="visual-card mt-5 p-6">
+        <h2 className="section-kicker text-2xl">Create account</h2>
         <form action={signUp} className="mt-5 space-y-4">
           <label className="block text-sm font-medium">
             Display name

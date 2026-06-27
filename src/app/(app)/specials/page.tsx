@@ -32,27 +32,33 @@ function BigAlRecipeCard({ recipe }: { recipe: BigAlRecipe }) {
   return (
     <Link
       href={`/cookbook/recipes/${recipe.id}`}
-      className="block rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm"
+      className="visual-card block p-5"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="text-xl font-semibold tracking-tight">{recipe.title}</h3>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{recipeReason(recipe)}</p>
+          <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
+            {recipeReason(recipe)}
+          </p>
         </div>
         {recipe.cookAgainCount > 0 && (
-          <span className="shrink-0 rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+          <span className="warm-pill shrink-0 text-[var(--color-accent)]">
             Cook again
           </span>
         )}
       </div>
       {recipe.description && (
-        <p className="mt-3 line-clamp-2 text-sm leading-6 text-[var(--muted)]">{recipe.description}</p>
+        <p className="mt-3 line-clamp-2 text-sm leading-6 text-[var(--color-text-muted)]">
+          {recipe.description}
+        </p>
       )}
-      <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium text-[var(--muted)]">
-        {time > 0 && <span>{time} min</span>}
-        {recipe.servings && <span>Serves {recipe.servings}</span>}
+      <div className="mt-4 flex flex-wrap gap-2">
+        {time > 0 && <span className="warm-pill">{time} min</span>}
+        {recipe.servings && <span className="warm-pill">Serves {recipe.servings}</span>}
         {recipe.ingredients.slice(0, 3).map((ingredient) => (
-          <span key={ingredient}>{ingredient}</span>
+          <span className="warm-pill" key={ingredient}>
+            {ingredient}
+          </span>
         ))}
       </div>
     </Link>
@@ -75,7 +81,7 @@ export default async function SpecialsPage({ searchParams }: SpecialsPageProps) 
         />
         <Link
           href="/restaurants/new"
-          className="mt-8 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white"
+          className="btn-primary mt-8"
         >
           Create Restaurant
         </Link>
@@ -98,8 +104,8 @@ export default async function SpecialsPage({ searchParams }: SpecialsPageProps) 
         description="Basic Big Al helps with your saved Recipes, Menu and cook history. No internet, no paid AI, no made-up dinner wizardry."
       />
 
-      <section className="mt-8 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm">
-        <p className="text-sm font-semibold text-[var(--accent)]">Ask from stored data</p>
+      <section className="visual-card mt-8 p-5">
+        <p className="section-kicker">Tasting board</p>
         <form action="/specials" method="get" className="mt-4 flex gap-2">
           <input type="hidden" name="mode" value="find" />
           <label className="sr-only" htmlFor="big-al-search">
@@ -112,22 +118,22 @@ export default async function SpecialsPage({ searchParams }: SpecialsPageProps) 
             maxLength={80}
             defaultValue={query}
             placeholder="Find chicken, pasta, rice..."
-            className="min-w-0 flex-1 rounded-full border border-[var(--border)] bg-white px-5 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+            className="input-control min-w-0 flex-1 rounded-[var(--radius-full)] px-5 py-3 text-sm"
           />
           <button
             type="submit"
-            className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white"
+            className="btn-primary px-5 py-3 text-sm"
           >
             Ask
           </button>
         </form>
-        <p className="mt-3 text-xs leading-5 text-[var(--muted)]">
+        <p className="mt-3 text-xs leading-5 text-[var(--color-text-muted)]">
           Big Al searches titles, Ingredients and method steps already saved in this Restaurant.
         </p>
       </section>
 
       <section className="mt-6" aria-labelledby="suggested-prompts-heading">
-        <h2 id="suggested-prompts-heading" className="text-lg font-semibold tracking-tight">
+        <h2 id="suggested-prompts-heading" className="section-kicker text-lg">
           Suggested prompts
         </h2>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -137,8 +143,8 @@ export default async function SpecialsPage({ searchParams }: SpecialsPageProps) 
               href={prompt.href}
               className={`rounded-full border px-4 py-2 text-sm font-semibold ${
                 mode === prompt.mode
-                  ? "border-[var(--accent)] bg-orange-50 text-[var(--accent)]"
-                  : "border-[var(--border)] bg-white"
+                  ? "border-[var(--color-purple-800)] bg-[var(--color-purple-800)] text-[var(--color-text-inverse)]"
+                  : "border-[var(--color-border)] bg-[var(--color-surface)]"
               }`}
             >
               {prompt.label}
@@ -147,22 +153,22 @@ export default async function SpecialsPage({ searchParams }: SpecialsPageProps) 
         </div>
       </section>
 
-      <section className="mt-8 rounded-3xl border border-[var(--border)] bg-orange-50/60 p-6">
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--accent)]">
+      <section className="note-card mt-8 p-6">
+        <p className="section-kicker">
           Big Al says
         </p>
         <h2 className="mt-2 text-3xl font-semibold tracking-tight">{answer.title}</h2>
-        <p className="mt-3 leading-7 text-[var(--muted)]">{answer.summary}</p>
-        <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-[var(--muted)]">
-          <span className="rounded-full bg-white px-3 py-1">{recipeCount} saved Recipes</span>
-          <span className="rounded-full bg-white px-3 py-1">{shoppingTodoCount} Shopping items open</span>
-          <span className="rounded-full bg-white px-3 py-1">No paid AI provider</span>
+        <p className="mt-3 leading-7 text-[var(--color-text-soft)]">{answer.summary}</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="warm-pill bg-[var(--color-surface)]">{recipeCount} saved Recipes</span>
+          <span className="warm-pill bg-[var(--color-surface)]">{shoppingTodoCount} Shopping items open</span>
+          <span className="warm-pill bg-[var(--color-surface)]">No paid AI provider</span>
         </div>
       </section>
 
       {answer.recipes.length ? (
         <section className="mt-8 space-y-3" aria-labelledby="big-al-results-heading">
-          <h2 id="big-al-results-heading" className="text-2xl font-semibold tracking-tight">
+          <h2 id="big-al-results-heading" className="section-kicker text-2xl">
             Grounded picks
           </h2>
           {answer.recipes.map((recipe) => (
@@ -170,14 +176,14 @@ export default async function SpecialsPage({ searchParams }: SpecialsPageProps) 
           ))}
         </section>
       ) : (
-        <section className="mt-8 rounded-3xl border border-dashed border-[var(--border)] p-8 text-center">
+        <section className="warm-section mt-8 border-dashed p-8 text-center">
           <h2 className="text-xl font-semibold">Not enough to go on yet</h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
             {answer.emptyLabel ?? "Add Recipes, plan meals or cook something first. I will keep it honest."}
           </p>
           <Link
             href="/cookbook/imports/new"
-            className="mt-4 inline-block text-sm font-semibold text-[var(--accent)]"
+            className="btn-secondary mt-4 min-h-0 px-3 py-2 text-xs"
           >
             Import a Recipe
           </Link>

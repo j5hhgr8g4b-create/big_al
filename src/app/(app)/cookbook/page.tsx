@@ -23,7 +23,7 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
         />
         <Link
           href="/restaurants/new"
-          className="mt-8 inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white"
+          className="btn-primary mt-8"
         >
           Create Restaurant
         </Link>
@@ -78,13 +78,13 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
         />
         <Link
           href="/cookbook/imports/new"
-          className="shrink-0 rounded-full bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-white"
+          className="btn-primary shrink-0 px-4 py-2.5 text-sm"
         >
           Import recipe
         </Link>
       </div>
 
-      <form action="/cookbook" method="get" className="mt-8 flex gap-2">
+      <form action="/cookbook" method="get" className="visual-card mt-8 flex gap-2 p-3">
         <label className="sr-only" htmlFor="recipe-search">
           Search Recipes
         </label>
@@ -95,11 +95,11 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
           maxLength={100}
           defaultValue={searchQuery}
           placeholder="Search by title or ingredient"
-          className="min-w-0 flex-1 rounded-full border border-[var(--border)] bg-white px-5 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+          className="input-control min-w-0 flex-1 rounded-[var(--radius-full)] px-5 py-3 text-sm"
         />
         <button
           type="submit"
-          className="rounded-full border border-[var(--border)] bg-white px-4 py-3 text-sm font-semibold"
+          className="btn-secondary px-4 py-3 text-sm"
         >
           Search
         </button>
@@ -108,10 +108,10 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
       {pendingImports?.length ? (
         <section className="mt-10" aria-labelledby="needs-review-heading">
           <div className="flex items-center justify-between">
-            <h2 id="needs-review-heading" className="text-2xl font-semibold tracking-tight">
+            <h2 id="needs-review-heading" className="section-kicker text-2xl">
               Needs Review
             </h2>
-            <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+            <span className="warm-pill">
               {pendingImports.length}
             </span>
           </div>
@@ -126,7 +126,7 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
                 <Link
                   key={recipeImport.id}
                   href={`/cookbook/imports/${recipeImport.id}/review`}
-                  className="block rounded-2xl border border-orange-100 bg-orange-50/60 p-4"
+                  className="note-card block p-4"
                 >
                   <p className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">
                     {recipeImport.source_type} Import
@@ -141,10 +141,10 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
 
       <section className="mt-10" aria-labelledby="recipe-books-heading">
         <div className="flex items-center justify-between gap-4">
-          <h2 id="recipe-books-heading" className="text-2xl font-semibold tracking-tight">
+          <h2 id="recipe-books-heading" className="section-kicker text-2xl">
             Recipe Books
           </h2>
-          <Link href="/cookbook/books/new" className="text-sm font-semibold text-[var(--accent)]">
+          <Link href="/cookbook/books/new" className="btn-secondary min-h-0 px-3 py-2 text-xs">
             New Book
           </Link>
         </div>
@@ -154,11 +154,11 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
               <Link
                 key={book.id}
                 href={`/cookbook/books/${book.id}`}
-                className="rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm"
+                className="visual-card rounded-[var(--radius-xl)] p-4"
               >
                 <p className="font-semibold">{book.title}</p>
                 {book.description && (
-                  <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--muted)]">
+                  <p className="mt-1 line-clamp-2 text-xs leading-5 text-[var(--color-text-muted)]">
                     {book.description}
                   </p>
                 )}
@@ -166,18 +166,18 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
             ))}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-[var(--muted)]">No Recipe Books yet.</p>
+          <p className="mt-3 text-sm text-[var(--color-text-muted)]">No Recipe Books yet.</p>
         )}
       </section>
 
       {recipes?.length ? (
         <section className="mt-10 space-y-4" aria-labelledby="recipes-heading">
           <div className="flex items-center justify-between gap-4">
-            <h2 id="recipes-heading" className="text-2xl font-semibold tracking-tight">
+            <h2 id="recipes-heading" className="section-kicker text-2xl">
               {searchQuery ? `Results for “${searchQuery}”` : "All Recipes"}
             </h2>
             {searchQuery && (
-              <Link href="/cookbook" className="text-sm font-semibold text-[var(--accent)]">
+              <Link href="/cookbook" className="btn-secondary min-h-0 px-3 py-2 text-xs">
                 Clear
               </Link>
             )}
@@ -187,11 +187,11 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
           ))}
         </section>
       ) : (
-        <section className="mt-10 rounded-3xl border border-dashed border-[var(--border)] p-8 text-center">
+        <section className="warm-section mt-10 border-dashed p-8 text-center">
           <h2 className="text-xl font-semibold">
             {searchQuery ? "No matching Recipes" : "Your Cookbook is ready"}
           </h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+          <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
             {searchQuery
               ? "Try a different Recipe title or Ingredient."
               : "Import your first recipe to start filling it."}
@@ -199,7 +199,7 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
           {searchQuery && (
             <Link
               href="/cookbook"
-              className="mt-4 inline-block text-sm font-semibold text-[var(--accent)]"
+              className="btn-secondary mt-4 min-h-0 px-3 py-2 text-xs"
             >
               Clear search
             </Link>
