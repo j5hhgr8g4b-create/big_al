@@ -1,6 +1,10 @@
 # Milestone 8 — Basic Big Al
 
-Status: Not started
+Status: Complete
+
+Implemented: 2026-06-27
+
+Completed: 2026-06-27
 
 ## Objective
 
@@ -47,9 +51,52 @@ If an AI provider is proposed, it must be free to run in the current MVP setup a
 
 M8 is successful if Big Al gives useful, grounded cooking help from the Restaurant’s own data without adding friction, pretending to know things it does not know, or requiring a paid AI service.
 
+## Delivered
+
+- Basic Big Al entry point in Specials.
+- Suggested prompt buttons for saved Recipes, suggestions, planned Recipes, recently cooked Recipes, and cook-again Recipes.
+- Deterministic search over stored Recipe titles, descriptions, Ingredients and Recipe Steps.
+- Simple recommendation explanations based on planned, cooked, cook-again and quick Recipe signals.
+- Restaurant-scoped reads through existing Supabase RLS-protected data.
+- Honest empty states when there is not enough stored data.
+- Clear copy that Big Al does not use internet search or paid AI in M8.
+
+## Local Verification
+
+- `pnpm lint` passed.
+- `pnpm tsc --noEmit` passed.
+- `pnpm exec next build --webpack` passed.
+
+## Live Verification
+
+- Not performed in this local pass.
+
+## Regression Checklist
+
+- Open Specials as an existing user.
+- Confirm Big Al entry point is visible and understandable.
+- Search for a saved Recipe title or Ingredient.
+- Ask what to cook from stored data.
+- Confirm planned Recipes appear when Menu data exists.
+- Confirm recently cooked Recipes appear when `recipe_cooks` data exists.
+- Confirm cook-again Recipes appear when `cook_again` feedback exists.
+- Confirm responses are grounded in the current Restaurant only.
+- Confirm empty state when there is not enough data.
+- Confirm no internet, generic AI or unsupported external claims appear.
+- Confirm no paid AI setup is required.
+
 ## Watch Items
 
 - Keep the experience scoped and practical.
 - Prefer a small set of reliable helper actions over a freeform assistant that can drift.
 - Do not let Big Al become a generic AI product.
 - Do not introduce paid AI infrastructure during M8.
+
+## Deferred
+
+- Paid or provider-backed AI.
+- Advanced AI meal planning.
+- Ingredient substitution intelligence.
+- Unit conversion.
+- Internet search.
+- Social or public discovery mechanics.

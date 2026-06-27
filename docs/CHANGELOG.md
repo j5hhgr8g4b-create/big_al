@@ -24,6 +24,30 @@ Known Issues:
 
 ---
 
+### 2026-06-27 — Milestone 8
+
+Summary:
+Implemented Basic Big Al as a deterministic, Restaurant-scoped helper in Specials. Big Al can search saved Recipe data, suggest Recipes from stored signals, surface planned Recipes, surface recently cooked Recipes, and show cook-again Recipes without adding a paid AI provider.
+
+Files Changed:
+Added `src/lib/big-al/get-big-al.ts`. Updated `src/app/(app)/specials/page.tsx` and M8 product/audit documentation.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm tsc --noEmit`
+- `pnpm exec next build --webpack`
+
+Database Changes:
+None. M8 reads existing Restaurant-scoped tables: Recipes, Ingredients, Recipe Steps, Menu Meal Events, Shopping Items, and Recipe Cook history. No migration was added.
+
+Testing Required:
+Open Specials as an existing user, confirm the Big Al entry point is understandable, search saved Recipes, use suggested prompts, confirm planned/recent/cook-again sections are grounded in the current Restaurant, confirm honest empty states, and confirm no paid AI setup is required.
+
+Known Issues:
+Basic Big Al is deterministic and intentionally limited. It does not use internet search, paid AI, advanced meal planning, ingredient substitution, unit conversion, calorie tracking, or unsupported external knowledge.
+
+---
+
 ### 2026-06-27 — Milestone 7
 
 Summary:

@@ -10,4 +10,4 @@
 | 5 | Menu | Complete | [Milestone 5](MILESTONE_5.md) |
 | 6 | Shopping | Complete | [Milestone 6](MILESTONE_6.md) |
 | 7 | Cook Mode | Complete | [Milestone 7](MILESTONE_7.md) |
-| 8 | Basic Big Al | Not started | — |
+| 8 | Basic Big Al | Complete | [Milestone 8](MILESTONE_8.md) |

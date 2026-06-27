@@ -175,3 +175,10 @@ Restaurant-scoped cook history. Each row records the Recipe cooked, who cooked i
 - Cook-again feedback updates the cook record through an authenticated function and is limited to the Profile that created the cook record.
 - Recipe cook records are readable only by Restaurant members through RLS.
 - App users receive no direct Recipe cook write or hard-delete privileges.
+
+## Milestone 8 Automation and Access
+
+- Basic Big Al adds no tables and no migration.
+- Basic Big Al uses deterministic reads from existing Restaurant-scoped Recipes, Ingredients, Recipe Steps, Meal Events, Shopping Items, and Recipe Cooks.
+- Existing RLS policies and Restaurant membership checks keep results scoped to the current Restaurant.
+- M8 adds no AI provider, model, API key, billing setup, or paid dependency.

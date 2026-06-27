@@ -22,3 +22,6 @@ Generate from planned Menu meals, Shopping items, checkbox/tick state, quantity/
 
 ## Cook Mode
 Recipe title, step number, progress, large instruction, timer, previous/next, ingredient list access, mark cooked, cook again feedback.
+
+## Specials / Basic Big Al
+Deterministic helper entry point, suggested prompts, saved Recipe search, grounded Recipe suggestions, planned Recipes, recently cooked Recipes, cook-again Recipes, honest empty states.

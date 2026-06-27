@@ -2,9 +2,9 @@
 
 ## Current Milestone
 
-Milestone 8 — Basic Big Al is next.
+Milestone 8 — Basic Big Al is completed for the current build path, with manual verification required in a connected app session.
 
-Milestone 7 — Cook Mode is completed for the current build path, with manual verification required in a connected app session.
+The remaining work is post-MVP polish, hardening, and validation unless a new milestone is explicitly approved.
 
 ## Completed Milestones
 
@@ -16,6 +16,7 @@ Milestone 7 — Cook Mode is completed for the current build path, with manual v
 - Milestone 5 — Menu
 - Milestone 6 — Shopping
 - Milestone 7 — Cook Mode
+- Milestone 8 — Basic Big Al
 
 ## Latest Verification Checkpoint
 
@@ -73,10 +74,14 @@ Milestone 7 — Cook Mode is completed for the current build path, with manual v
 - Cook Mode shows one large readable Recipe step at a time with previous/next navigation.
 - Cook Mode includes progress, Recipe context, Ingredients access, a simple timer, screen-awake guidance, and a persisted mark-cooked completion flow.
 - Cook Mode records Recipe cook history and cook-again feedback for future Recipe trust signals.
+- Specials now hosts a Basic Big Al entry point.
+- Basic Big Al uses deterministic Restaurant-scoped reads from saved Recipes, Ingredients, Steps, Menu, Shopping, and cook history.
+- Basic Big Al can find saved Recipes, suggest Recipes, surface planned Recipes, surface recently cooked Recipes, and show cook-again Recipes.
+- Basic Big Al requires no paid AI provider, API key, model, billing setup, usage plan, or subscription.
 
 ## Known Issues / Watch Items
 
-- Specials remains an intentional placeholder for later discovery work.
+- Specials is now Basic Big Al; it should remain grounded helper behaviour, not a generic chatbot.
 - Pantry is now the Shopping area; it should remain Shopping support and not become full pantry inventory management.
 - Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
@@ -84,6 +89,7 @@ Milestone 7 — Cook Mode is completed for the current build path, with manual v
 - Recipe search uses simple literal containment rather than ranked full-text search.
 - Shopping consolidation only combines matching normalized Ingredient names with the same unit. Unit conversion is intentionally deferred.
 - Cook Mode records cook history but does not yet display Times Cooked or Cook Again Rate in the UI.
+- Basic Big Al is deterministic and intentionally simple. It does not generate new meal plans, search the internet, use paid AI, convert units, or make unsupported claims.
 
 ## Blocked Items
 
@@ -91,9 +97,9 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 ## Next Task
 
-Manually verify Milestone 7 — Cook Mode in the connected app, then begin Milestone 8 — Basic Big Al only after explicit approval and a short readiness review.
+Manually verify Milestone 8 — Basic Big Al in the connected app, then proceed only with explicitly approved post-MVP polish, hardening, or validation.
 
-M8 scope remains contextual help, Recipe search/recommendations, and simple answers from stored Recipe data. Do not build grocery price comparison, full pantry inventory management, calorie tracking, AI meal generation beyond the approved M8 scope, or social mechanics.
+Do not build paid AI integration, grocery price comparison, full pantry inventory management, calorie tracking, unscoped meal generation, social mechanics, or features beyond M8 without explicit approval.
 
 ## Codex Working Directory Rule
 

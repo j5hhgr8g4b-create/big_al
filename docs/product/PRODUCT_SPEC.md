@@ -42,6 +42,8 @@ One step at a time, previous/next, progress, ingredient list, timer support, per
 
 ## Big Al
 
-Search existing recipes, recommend existing recipes, answer basic recipe questions from stored recipe data.
+Search existing recipes, recommend existing recipes, surface planned and recently cooked recipes, show cook-again recipes, and answer basic recipe questions from stored recipe data.
 
 Big Al must not automatically invent recipes.
+
+The MVP Basic Big Al implementation is deterministic and must not require paid AI access.
