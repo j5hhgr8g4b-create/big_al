@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Big Al — Kitchen Reference v18 Optimised Hero Buttons</title>
+  <style>
+    :root {
+      /* Option 4 base palette + Option 2 accent replacement */
+      --purple-900: #291939;
+      --purple-800: #352347;
+      --purple-700: #433056;
+
+      --cream-000: #FFFCF6;
+      --cream-050: #FAF6EE;
+      --cream-100: #F6F3EA;
+      --cream-200: #EEF0E4;
+
+      --tan-300: #DDD7CA;
+      --tan-400: #CFC9BB;
+
+      --ink-900: #211C18;
+      --ink-700: #2D2621;
+      --ink-500: #6A655D;
+      --ink-400: #8A857C;
+
+      --green-600: #70824C;
+      --green-700: #5D6D41;
+      --green-100: #E6EBD8;
+
+      --accent: #B9543C;      /* Option 2 replacement */
+      --accent-soft: #D98A77;
+      --honey: #D8A85B;
+
+      --note: #F4E7B7;
+      --note-border: #D7B96C;
+
+      --shadow-card: 0 4px 14px rgba(43, 23, 65, 0.08);
+      --shadow-hero: 0 14px 30px rgba(43, 23, 65, 0.20);
+
+      --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Nunito Sans", system-ui, sans-serif;
+      --font-hand: "Marker Felt", "Bradley Hand", "Segoe Print", "Comic Sans MS", cursive;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: #EDE3D5; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: start center;
+      padding: 24px 14px;
+      background:
+        radial-gradient(circle at 14% -10%, rgba(185,84,60,.16), transparent 340px),
+        radial-gradient(circle at 100% 86%, rgba(53,35,71,.10), transparent 360px),
+        #EDE3D5;
+      font-family: var(--font-ui);
+      color: var(--ink-900);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .phone {
+      position: relative;
+      width: min(100%, 430px);
+      min-height: 932px;
+      overflow: hidden;
+      border-radius: 36px;
+      background: var(--cream-100);
+      border: 1px solid rgba(207,201,187,.9);
+      box-shadow: 0 30px 80px rgba(43, 23, 65, .18);
+      isolation: isolate;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .20;
+      background-image: radial-gradient(rgba(91, 51, 24, .09) .5px, transparent .5px);
+      background-size: 12px 12px;
+      mix-blend-mode: multiply;
+      z-index: 0;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 18px 6px;
+    }
+
+    .header-icon {
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(207,201,187,.85);
+      border-radius: 14px;
+      background: rgba(255,252,246,.72);
+      color: var(--ink-700);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      line-height: 1;
+      box-shadow: 0 2px 8px rgba(43,23,65,.05);
+    }
+
+    .topbar-spacer { width: 38px; height: 38px; }
+
+    .screen-title {
+      justify-self: center;
+      margin: 0;
+      color: #3f2b24;
+      font-family: var(--font-hand);
+      font-size: 40px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: .01em;
+      transform: rotate(-1.1deg) translateY(1px);
+      text-shadow: 0 1px 0 rgba(255,255,255,.55);
+      position: relative;
+    }
+
+    .screen-title::after {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 6%;
+      bottom: -8px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(216,168,91,.95);
+      transform: rotate(-1.2deg);
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 6px 16px 104px;
+    }
+
+    .bistro-card {
+      position: relative;
+      margin: 8px 0 14px;
+      padding: 18px 18px 16px;
+      border-radius: 26px;
+      background:
+        linear-gradient(180deg, rgba(255,252,246,.96), rgba(250,246,238,.92)),
+        var(--cream-000);
+      border: 1px solid rgba(207,201,187,.92);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .bistro-card::before,
+    .bistro-card::after {
+      content: "";
+      position: absolute;
+      top: 28px;
+      width: 44px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(185,84,60,.36), transparent);
+    }
+
+    .bistro-card::before { left: 22px; }
+    .bistro-card::after { right: 22px; }
+
+    .bistro-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--cream-000);
+      box-shadow: 0 8px 20px rgba(185,84,60,.18);
+      font-size: 15px;
+      line-height: 17px;
+      font-weight: 860;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .bistro-eyebrow::before,
+    .bistro-eyebrow::after {
+      content: "•";
+      color: var(--honey);
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .bistro-copy-card {
+      margin: 2px auto 0;
+      max-width: 328px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(238,240,228,.72);
+      border: 1px solid rgba(207,201,187,.68);
+      color: var(--ink-500);
+      text-align: center;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 570;
+      letter-spacing: -.014em;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 218px;
+      padding: 18px;
+      overflow: hidden;
+      border-radius: 24px;
+      margin: 0 0 14px;
+      background:
+        radial-gradient(circle at 86% 22%, rgba(216,168,91,.18), transparent 80px),
+        linear-gradient(135deg, var(--purple-800), var(--purple-900));
+      color: var(--cream-000);
+      box-shadow: var(--shadow-hero);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 126px;
+      gap: 16px;
+      align-items: center;
+      min-height: 182px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-label {
+      margin: 0 0 8px;
+      font-family: var(--font-hand);
+      font-size: 16px;
+      line-height: 17px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: rgba(255,252,246,.82);
+      transform: rotate(-.7deg);
+    }
+
+    .hero h2 {
+      margin: 0;
+      max-width: 160px;
+      font-family: var(--font-hand);
+      font-size: 39px;
+      line-height: 39px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      color: var(--cream-000);
+      transform: rotate(-.35deg);
+      text-shadow: 0 2px 0 rgba(0,0,0,.08);
+      white-space: nowrap;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 10px 0 0;
+      max-width: 158px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 23px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      background: rgba(255,252,246,.10);
+      color: rgba(255,252,246,.86);
+      font-family: var(--font-ui);
+      font-size: 10.5px;
+      line-height: 12px;
+      font-weight: 720;
+      border: 1px solid rgba(255,252,246,.13);
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 15px;
+      max-width: 158px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      min-height: 40px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-family: var(--font-ui);
+      font-size: 13px;
+      line-height: 15px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      text-decoration: none;
+      border: 0;
+      white-space: nowrap;
+      cursor: default;
+    }
+
+    .btn-primary {
+      background: var(--cream-000);
+      color: var(--purple-800);
+      box-shadow: 0 6px 16px rgba(0,0,0,.18);
+    }
+
+    .btn-primary::after {
+      content: "›";
+      margin-left: 2px;
+      font-size: 18px;
+      line-height: 10px;
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      min-height: 34px;
+      background: transparent;
+      color: rgba(255,252,246,.84);
+      border: 1px solid rgba(255,252,246,.18);
+      box-shadow: inset 0 0 0 1px rgba(255,252,246,.04);
+      font-size: 12px;
+      font-weight: 740;
+    }
+
+    .plate-wrap {
+      position: relative;
+      height: 126px;
+      justify-self: end;
+    }
+
+    .plate {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, #FFF7EA 0 35%, #E9E6D5 36% 39%, #FFFCF6 40% 62%, #D9D4C6 63% 66%, transparent 67%),
+        #FFFCF6;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      border: 3px solid rgba(246,243,234,.92);
+    }
+
+    .sausage {
+      position: absolute;
+      width: 66px;
+      height: 20px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+      box-shadow: inset 0 -3px 0 rgba(77,37,29,.16);
+      transform: rotate(-16deg);
+      left: 29px;
+      top: 47px;
+    }
+
+    .sausage.two { width: 58px; transform: rotate(19deg); top: 65px; left: 40px; }
+
+    .greens {
+      position: absolute;
+      width: 31px;
+      height: 20px;
+      border-radius: 54% 46% 48% 52%;
+      background: var(--green-600);
+      left: 25px;
+      top: 68px;
+      transform: rotate(-18deg);
+      opacity: .95;
+    }
+
+    .stamp {
+      position: absolute;
+      right: 4px;
+      bottom: 1px;
+      transform: rotate(-10deg);
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: var(--cream-000);
+      border: 2px solid var(--green-600);
+      color: var(--green-700);
+      font-size: 9px;
+      line-height: 10px;
+      font-weight: 850;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      box-shadow: 0 5px 14px rgba(0,0,0,.13);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .card {
+      border-radius: 22px;
+      border: 1px solid var(--tan-300);
+      background: rgba(255,252,246,.92);
+      box-shadow: var(--shadow-card);
+      padding: 15px 14px;
+      min-height: 132px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card-wide { grid-column: 1 / -1; }
+
+    .card-kicker {
+      margin: 0 0 7px;
+      font-family: var(--font-hand);
+      font-size: 16px;
+      line-height: 18px;
+      font-weight: 700;
+      letter-spacing: .01em;
+      color: var(--accent);
+      transform: rotate(-.6deg);
+    }
+
+    .card-title {
+      margin: 2px auto 0;
+      max-width: 300px;
+      font-size: 18px;
+      line-height: 22px;
+      font-weight: 820;
+      letter-spacing: -.028em;
+      color: var(--ink-900);
+    }
+
+    .card-text {
+      margin: 8px auto 0;
+      max-width: 292px;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 520;
+      color: var(--ink-500);
+    }
+
+    .week-dots {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 13px;
+      width: 100%;
+    }
+
+    .day-dot {
+      width: 25px; height: 25px; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 10px; font-weight: 800;
+      background: var(--cream-200); color: var(--ink-500);
+      border: 1px solid rgba(207,201,187,.65);
+    }
+
+    .day-dot.active { background: var(--green-600); color: var(--cream-000); border-color: var(--green-600); }
+
+    .paper-card { background: rgba(238,240,228,.86); }
+
+    .note {
+      grid-column: 1 / -1;
+      border-radius: 20px;
+      border: 1px solid var(--note-border);
+      background: var(--note);
+      box-shadow: 0 3px 10px rgba(91,51,24,.12);
+      padding: 15px;
+      transform: rotate(-.4deg);
+      text-align: center;
+    }
+
+    .note-row {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ba-dot {
+      flex: 0 0 auto;
+      width: 36px; height: 36px; border-radius: 13px;
+      display: grid; place-items: center;
+      background: var(--purple-800); color: var(--cream-000);
+      font-weight: 850; font-size: 12px;
+      box-shadow: 0 3px 8px rgba(43,23,65,.18);
+    }
+
+    .note h3 {
+      margin: 0 0 4px;
+      font-family: var(--font-hand);
+      font-size: 22px;
+      line-height: 22px;
+      font-weight: 700;
+      color: var(--ink-900);
+      transform: rotate(-.6deg);
+    }
+
+    .note p {
+      margin: 0 auto;
+      max-width: 292px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 540;
+      color: var(--ink-700);
+    }
+
+    .secondary-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px;
+      min-height: 34px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--tan-400);
+      color: var(--purple-800);
+      background: var(--cream-000);
+      font-size: 12px;
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 78px;
+      padding: 8px 10px 10px;
+      background: rgba(255,252,246,.96);
+      border-top: 1px solid var(--tan-300);
+      box-shadow: 0 -8px 26px rgba(43,23,65,.08);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-inner {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      height: 100%;
+      align-items: center;
+    }
+
+    .nav-item {
+      height: 57px;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--ink-500);
+      font-size: 11px;
+      line-height: 12px;
+      font-family: var(--font-hand);
+      font-weight: 700;
+      letter-spacing: .01em;
+      text-decoration: none;
+      transform: rotate(-.15deg);
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      line-height: 1;
+      opacity: .9;
+      font-family: var(--font-ui);
+      color: var(--ink-500);
+    }
+
+    .nav-item span:last-child {
+      transform: rotate(-.45deg);
+      text-shadow: 0 1px 0 rgba(255,255,255,.45);
+    }
+
+    .nav-item.active {
+      background: var(--purple-800);
+      color: var(--cream-000);
+      box-shadow: 0 5px 14px rgba(53,35,71,.18);
+      transform: rotate(-.35deg) translateY(-1px);
+    }
+
+    .nav-item.active .nav-icon {
+      color: var(--cream-000);
+      opacity: .96;
+    }
+
+    .nav-item.active span:last-child {
+      color: var(--cream-000);
+      text-shadow: none;
+    }
+
+    @media (max-width: 460px) {
+      body { padding: 0; background: var(--cream-100); }
+      .phone { border-radius: 0; min-height: 100dvh; border: 0; max-width: none; box-shadow: none; }
+      .bottom-nav { position: fixed; }
+    }
+
+    @media (max-width: 370px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .plate-wrap { display: none; }
+      .hero h2 { max-width: none; }
+      .screen-title { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone" role="application" aria-label="Wallaces Kitchen reference">
+    <div class="topbar" aria-label="Kitchen controls">
+      <button class="header-icon" aria-label="Open kitchen menu">☰</button>
+      <h1 class="screen-title">Kitchen</h1>
+      <div class="topbar-spacer" aria-hidden="true"></div>
+    </div>
+
+    <main>
+      <section class="bistro-card" aria-label="Restaurant kitchen">
+        <div class="bistro-eyebrow">Wallaces Bistro</div>
+        <p class="bistro-copy-card">Dinner, the week ahead, and the shop — kept together without making a meal of it.</p>
+      </section>
+
+      <section class="hero" aria-label="Next Dinner">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <p class="hero-label">Next Dinner</p>
+            <h2>Tonight?</h2>
+            <div class="hero-meta">
+              <span class="pill">🍳 Pick a plate</span>
+              <span class="pill">No faff</span>
+            </div>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#">Import Recipe</a>
+              <a class="btn btn-ghost" href="#">Browse cookbook</a>
+            </div>
+          </div>
+          <div class="plate-wrap" aria-hidden="true">
+            <div class="plate">
+              <div class="greens"></div>
+              <div class="sausage"></div>
+              <div class="sausage two"></div>
+            </div>
+            <div class="stamp">Sausage<br>approved</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-grid">
+        <article class="card card-wide">
+          <p class="card-kicker">This week</p>
+          <h2 class="card-title">Build a week you’ll actually cook</h2>
+          <p class="card-text">Plan a few dinners, leave room for leftovers, and let the shopping list do the boring bits.</p>
+          <div class="week-dots" aria-label="Week overview">
+            <span class="day-dot active">M</span>
+            <span class="day-dot active">T</span>
+            <span class="day-dot">W</span>
+            <span class="day-dot">T</span>
+            <span class="day-dot">F</span>
+            <span class="day-dot">S</span>
+            <span class="day-dot">S</span>
+          </div>
+          <a class="secondary-action" href="#">View Menu</a>
+        </article>
+
+        <article class="card paper-card">
+          <p class="card-kicker">Pantry</p>
+          <h2 class="card-title">Shopping, not stock control</h2>
+          <p class="card-text">A simple list from your menu. No cupboard admin.</p>
+          <a class="secondary-action" href="#">View Pantry</a>
+        </article>
+
+        <article class="card">
+          <p class="card-kicker">Cookbook</p>
+          <h2 class="card-title">Save the good stuff</h2>
+          <p class="card-text">Recipes belong here before they become dinner.</p>
+          <a class="secondary-action" href="#">Open Cookbook</a>
+        </article>
+
+        <article class="note">
+          <div class="note-row">
+            <div class="ba-dot">BA</div>
+            <div>
+              <h3>Big Al Says</h3>
+              <p>Start with one recipe you’d genuinely cook tonight. Fancy systems can wait.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <div class="nav-inner">
+        <a class="nav-item active" href="#"><span class="nav-icon">⌂</span><span>Kitchen</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon">▤</span><span>Cookbook</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon">★</span><span>Specials</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon">◷</span><span>Menu</span></a>
+        <a class="nav-item" href="#"><span class="nav-icon">▱</span><span>Pantry</span></a>
+      </div>
+    </nav>
+  </div>
+</body>
+</html>
