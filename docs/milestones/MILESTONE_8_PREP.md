@@ -12,6 +12,14 @@ Do not use M8 as permission to turn Big Al into a generic AI app.
 
 Big Al should help with cooking from the Restaurant’s stored cookbook, menu, shopping and cooking history.
 
+## Cost guardrail
+
+The current MVP version must remain free to run from an AI-provider perspective.
+
+Do not introduce a paid AI subscription, paid model, paid API key, paid usage plan, or billing-gated provider setup in M8.
+
+If an AI upgrade is useful later, treat it as a future paid/subscription phase after the MVP loop is proven.
+
 ## M8 build posture
 
 - Build the smallest useful Basic Big Al experience.
@@ -19,6 +27,7 @@ Big Al should help with cooking from the Restaurant’s stored cookbook, menu, s
 - Keep outputs grounded in the Restaurant’s own data.
 - Clearly handle “I do not have enough information yet.”
 - Avoid internet search, broad generation and unsupported claims.
+- Avoid paid AI dependencies during the MVP build.
 
 ## Post-milestone plan
 
