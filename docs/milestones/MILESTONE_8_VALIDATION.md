@@ -4,12 +4,14 @@
 
 - Open app as existing user.
 - Confirm Big Al entry point is visible and understandable.
-- Ask/find saved Recipes.
+- Ask or find saved Recipes.
 - Ask for something to cook from stored Recipes.
 - Confirm response is grounded in saved, planned or cooked data.
 - Confirm empty state when there is not enough data.
 - Confirm no cross-Restaurant data leakage.
 - Confirm no unsupported internet or generic AI claims.
+- Confirm M8 does not need any paid AI subscription, paid API key, billing setup, paid model access, or paid usage plan.
+- Confirm M8 still works, or degrades clearly, without an external AI provider.
 
 ## Good M8 answer
 
@@ -20,6 +22,7 @@ A good M8 answer is:
 - grounded
 - kitchen-friendly
 - honest about missing data
+- free to produce in the MVP setup
 
 ## Bad M8 answer
 
@@ -29,7 +32,8 @@ A bad M8 answer is:
 - long-winded
 - pretending to know external facts
 - generating a meal plan without enough data
-- recommending features outside Big Al’s current scope
+- requiring paid AI access during MVP
+- recommending features outside Big Al's current scope
 - sounding like a corporate chatbot
 
 ## Regression checks
