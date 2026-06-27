@@ -4,7 +4,7 @@
 
 Milestone 7 — Cook Mode is next.
 
-Milestone 6 — Shopping is treated as completed for the current build path, with Supabase migration application and manual verification required in a connected environment.
+Milestone 6 — Shopping is completed, applied to the connected Supabase project, and manually verified in the app.
 
 ## Completed Milestones
 
@@ -18,13 +18,18 @@ Milestone 6 — Shopping is treated as completed for the current build path, wit
 
 ## Latest Verification Checkpoint
 
-2026-06-27 Codespaces checkpoint passed:
+2026-06-27 M6 live verification passed:
 
 - Existing Supabase user login works.
 - `pnpm lint` passed.
 - `pnpm tsc --noEmit` passed.
 - `pnpm exec next build --webpack` passed.
-- Production route list includes `/`, `/login`, `/auth/callback`, `/cookbook`, `/menu`, `/pantry`, `/restaurants/new`, and `/specials`.
+- Milestone 6 migration `202606200006_milestone_6_shopping.sql` was applied to the connected Supabase project.
+- `shopping_lists` and `shopping_items` exist in Supabase with RLS enabled.
+- Shopping generation from planned meals works in the app.
+- Manual Shopping item add works.
+- Purchased tick/untick works.
+- Shopping state persists after refresh.
 
 ## What Works
 
@@ -72,7 +77,7 @@ Milestone 6 — Shopping is treated as completed for the current build path, wit
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
 - Automatic Import parsing is intentionally a placeholder; URLs are stored but not fetched.
 - Recipe search uses simple literal containment rather than ranked full-text search.
-- Confirm the Milestone 5 and Milestone 6 migrations have been applied to the connected Supabase project before shared-environment Shopping verification.
+- Shopping consolidation only combines matching normalized Ingredient names with the same unit. Unit conversion is intentionally deferred.
 
 ## Blocked Items
 
@@ -80,9 +85,11 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 ## Next Task
 
-Apply and verify Milestone 6 — Shopping in the connected Supabase project, then begin Milestone 7 — Cook Mode only after a short readiness review.
+Begin Milestone 7 — Cook Mode only after a short readiness review.
 
-M7 scope remains step-by-step cooking flow. Do not build grocery price comparison, full pantry inventory management, calorie tracking, AI meal generation, or social mechanics.
+M7 scope: step-by-step cooking flow for saved Recipes, with large readable text, Previous/Next navigation, simple timer support where practical, mark cooked, and cook-again feedback.
+
+Do not build grocery price comparison, full pantry inventory management, calorie tracking, AI meal generation, Milestone 8 guidance, or social mechanics during M7.
 
 ## Codex Working Directory Rule
 
