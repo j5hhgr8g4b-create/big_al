@@ -21,4 +21,4 @@ This Week planned meals, Next Week planned meals, Unplanned Recipe ideas, add ex
 Generate from planned Menu meals, Shopping items, checkbox/tick state, quantity/unit, purchased section, manual add field, empty states.
 
 ## Cook Mode
-Recipe title, step number, instruction, timer, previous/next, ingredient list access.
+Recipe title, step number, progress, large instruction, timer, previous/next, ingredient list access, mark cooked, cook again feedback.

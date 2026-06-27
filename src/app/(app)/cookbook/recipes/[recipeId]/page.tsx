@@ -54,12 +54,20 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
         </p>
         <div className="mt-2 flex items-start justify-between gap-4">
           <h1 className="text-4xl font-semibold tracking-tight">{recipe.title}</h1>
-          <Link
-            href={`/cookbook/recipes/${recipe.id}/edit`}
-            className="shrink-0 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold"
-          >
-            Edit
-          </Link>
+          <div className="flex shrink-0 flex-col gap-2">
+            <Link
+              href={`/cookbook/recipes/${recipe.id}/cook`}
+              className="rounded-full bg-[var(--accent)] px-4 py-2 text-center text-sm font-semibold text-white"
+            >
+              Cook
+            </Link>
+            <Link
+              href={`/cookbook/recipes/${recipe.id}/edit`}
+              className="rounded-full border border-[var(--border)] px-4 py-2 text-center text-sm font-semibold"
+            >
+              Edit
+            </Link>
+          </div>
         </div>
         {recipe.description && (
           <p className="mt-4 leading-7 text-[var(--muted)]">{recipe.description}</p>

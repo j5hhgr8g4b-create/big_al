@@ -2,9 +2,9 @@
 
 ## Current Milestone
 
-Milestone 7 — Cook Mode is next.
+Milestone 8 — Basic Big Al is next.
 
-Milestone 6 — Shopping is completed, applied to the connected Supabase project, and manually verified in the app.
+Milestone 7 — Cook Mode is completed for the current build path, with manual verification required in a connected app session.
 
 ## Completed Milestones
 
@@ -15,6 +15,7 @@ Milestone 6 — Shopping is completed, applied to the connected Supabase project
 - Milestone 4 — Recipe Books + Search
 - Milestone 5 — Menu
 - Milestone 6 — Shopping
+- Milestone 7 — Cook Mode
 
 ## Latest Verification Checkpoint
 
@@ -68,6 +69,10 @@ Milestone 6 — Shopping is completed, applied to the connected Supabase project
 - Generated Shopping items consolidate matching Ingredients by normalized name and unit where practical for MVP.
 - Pantry supports manual Shopping item additions and purchased tick/untick state.
 - Shopping state persists through Supabase-backed reads after refresh.
+- Recipe detail pages link to Cook Mode.
+- Cook Mode shows one large readable Recipe step at a time with previous/next navigation.
+- Cook Mode includes progress, Recipe context, Ingredients access, a simple timer, screen-awake guidance, and a persisted mark-cooked completion flow.
+- Cook Mode records Recipe cook history and cook-again feedback for future Recipe trust signals.
 
 ## Known Issues / Watch Items
 
@@ -78,6 +83,7 @@ Milestone 6 — Shopping is completed, applied to the connected Supabase project
 - Automatic Import parsing is intentionally a placeholder; URLs are stored but not fetched.
 - Recipe search uses simple literal containment rather than ranked full-text search.
 - Shopping consolidation only combines matching normalized Ingredient names with the same unit. Unit conversion is intentionally deferred.
+- Cook Mode records cook history but does not yet display Times Cooked or Cook Again Rate in the UI.
 
 ## Blocked Items
 
@@ -85,11 +91,9 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 ## Next Task
 
-Begin Milestone 7 — Cook Mode only after a short readiness review.
+Manually verify Milestone 7 — Cook Mode in the connected app, then begin Milestone 8 — Basic Big Al only after explicit approval and a short readiness review.
 
-M7 scope: step-by-step cooking flow for saved Recipes, with large readable text, Previous/Next navigation, simple timer support where practical, mark cooked, and cook-again feedback.
-
-Do not build grocery price comparison, full pantry inventory management, calorie tracking, AI meal generation, Milestone 8 guidance, or social mechanics during M7.
+M8 scope remains contextual help, Recipe search/recommendations, and simple answers from stored Recipe data. Do not build grocery price comparison, full pantry inventory management, calorie tracking, AI meal generation beyond the approved M8 scope, or social mechanics.
 
 ## Codex Working Directory Rule
 

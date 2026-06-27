@@ -20,6 +20,7 @@ Use Supabase/PostgreSQL. Use UUID primary keys.
 - meal_events
 - shopping_lists
 - shopping_items
+- recipe_cooks
 
 ## Key Rules
 
@@ -160,3 +161,17 @@ Shopping-list items scoped to the same Restaurant. Items can come from Menu gene
 - Unit conversion, grocery pricing, and pantry inventory are intentionally not implemented.
 - Shopping lists and items are readable only by Restaurant members through RLS.
 - App users receive no direct Shopping table writes or hard-delete privileges.
+
+## Milestone 7 Table
+
+### recipe_cooks
+
+Restaurant-scoped cook history. Each row records the Recipe cooked, who cooked it, when it was cooked, and optional cook-again feedback for future Recipe trust signals.
+
+## Milestone 7 Automation and Access
+
+- Cook Mode reads existing Restaurant-scoped Recipe, Ingredient, and Step data.
+- The mark-cooked action writes a `recipe_cooks` row through an authenticated function after validating Recipe access and Restaurant membership.
+- Cook-again feedback updates the cook record through an authenticated function and is limited to the Profile that created the cook record.
+- Recipe cook records are readable only by Restaurant members through RLS.
+- App users receive no direct Recipe cook write or hard-delete privileges.

@@ -38,7 +38,7 @@ Shopping List only. Generate from planned Menu meals, add manual items, and tick
 
 ## Cook Mode
 
-One step at a time, previous/next, ingredient list, timer support, mark cooked, cook again yes/no.
+One step at a time, previous/next, progress, ingredient list, timer support, persisted mark cooked, cook again yes/no for future trust signals.
 
 ## Big Al
 

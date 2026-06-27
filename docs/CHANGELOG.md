@@ -24,6 +24,30 @@ Known Issues:
 
 ---
 
+### 2026-06-27 — Milestone 7
+
+Summary:
+Implemented Cook Mode for saved Recipes. Restaurant members can start Cook Mode from Recipe detail, move through large readable steps with Previous/Next controls, see progress and Recipe context, use a simple timer, check Ingredients, mark the Recipe cooked, and persist cook-again feedback.
+
+Files Changed:
+Added `supabase/migrations/202606200007_milestone_7_cook_mode.sql`, `src/app/(app)/cookbook/recipes/[recipeId]/cook/page.tsx`, `src/app/(app)/cookbook/recipes/[recipeId]/cook/actions.ts`, `src/components/cook-timer.tsx`, and `docs/milestones/MILESTONE_7.md`. Updated Recipe detail and product/audit docs.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm tsc --noEmit`
+- `pnpm exec next build --webpack`
+
+Database Changes:
+Added `recipe_cooks`, Restaurant-member read RLS, `record_recipe_cooked`, and `set_recipe_cook_again`. App users receive no direct write grants; Cook Mode writes through authenticated RPCs that validate Recipe access and Restaurant membership.
+
+Testing Required:
+Apply the Milestone 7 migration. Open a Recipe, start Cook Mode, move next and previous, confirm progress changes, open Ingredients, start/pause/reset the timer, mark cooked from the final step, confirm a `recipe_cooks` row is created, choose Cook again and confirm `cook_again = true`, repeat and choose Done for now to confirm `cook_again = false`. Repeat cross-Restaurant access checks when a second user is available.
+
+Known Issues:
+Times Cooked and Cook Again Rate are stored for future use but not displayed yet. Native screen-awake support is not wired in; Cook Mode shows guidance copy instead.
+
+---
+
 ### 2026-06-27 — Milestone 6 Live Verification
 
 Summary:
