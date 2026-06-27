@@ -3,11 +3,15 @@ import { notFound } from "next/navigation";
 
 import { RecipeBookPicker } from "@/components/recipe-book-picker";
 import { RecipeImage } from "@/components/recipe-image";
+import { SubmitButton } from "@/components/submit-button";
+import { saveMealEvent } from "@/app/(app)/menu/actions";
+import { getMenuDateRange } from "@/lib/menu/get-menu";
 import { getRecipeDetail } from "@/lib/recipes/get-recipe";
 import { createClient } from "@/lib/supabase/server";
 
 type RecipePageProps = {
   params: Promise<{ recipeId: string }>;
+  searchParams: Promise<{ error?: string }>;
 };
 
 function displayQuantity(quantity: number | null) {
@@ -15,8 +19,9 @@ function displayQuantity(quantity: number | null) {
   return Number(quantity).toLocaleString(undefined, { maximumFractionDigits: 3 });
 }
 
-export default async function RecipePage({ params }: RecipePageProps) {
+export default async function RecipePage({ params, searchParams }: RecipePageProps) {
   const { recipeId } = await params;
+  const { error } = await searchParams;
   const recipe = await getRecipeDetail(recipeId);
 
   if (!recipe) {
@@ -38,6 +43,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
   const selectedBookIds = new Set(
     (membershipsResult.data ?? []).map((membership) => membership.recipe_book_id),
   );
+  const menuRange = getMenuDateRange();
 
   return (
     <article>
@@ -73,6 +79,60 @@ export default async function RecipePage({ params }: RecipePageProps) {
           </div>
         </dl>
       </div>
+
+      {error && (
+        <p className="mt-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+          {error}
+        </p>
+      )}
+
+      <section className="mt-10 rounded-3xl border border-[var(--border)] bg-white p-5 shadow-sm">
+        <h2 className="text-xl font-semibold tracking-tight">Add to Menu</h2>
+        <form action={saveMealEvent} className="mt-5 space-y-4">
+          <input type="hidden" name="restaurantId" value={recipe.restaurantId} />
+          <input type="hidden" name="recipeId" value={recipe.id} />
+          <input type="hidden" name="returnPath" value={`/cookbook/recipes/${recipe.id}`} />
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block">
+              <span className="text-sm font-semibold">Date</span>
+              <input
+                name="plannedFor"
+                type="date"
+                required
+                defaultValue={menuRange.thisWeekStart}
+                className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+              />
+            </label>
+            <label className="block">
+              <span className="text-sm font-semibold">People eating</span>
+              <input
+                name="peopleEating"
+                type="number"
+                min={1}
+                max={100}
+                required
+                defaultValue={recipe.servings ? Math.ceil(Number(recipe.servings)) : 2}
+                className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+              />
+            </label>
+          </div>
+          <label className="block">
+            <span className="text-sm font-semibold">Meal</span>
+            <select
+              name="mealType"
+              defaultValue="dinner"
+              className="mt-2 w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm capitalize outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-orange-100"
+            >
+              <option value="breakfast">breakfast</option>
+              <option value="lunch">lunch</option>
+              <option value="dinner">dinner</option>
+              <option value="snack">snack</option>
+              <option value="other">other</option>
+            </select>
+          </label>
+          <SubmitButton pendingLabel="Adding...">Add to Menu</SubmitButton>
+        </form>
+      </section>
 
       <section className="mt-10">
         <h2 className="text-2xl font-semibold tracking-tight">Ingredients</h2>

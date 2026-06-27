@@ -119,3 +119,11 @@ Decision: Search active Recipes using literal case-insensitive containment acros
 Reason: This meets MVP search needs without wildcard surprises, cross-Restaurant exposure, or premature full-text infrastructure.
 
 Status: Approved as part of Milestone 4.
+
+## ADR-016 — Save Menu Events Through Restaurant-Scoped Functions
+
+Decision: Store planned meals in `meal_events` and create/archive them through authenticated PostgreSQL functions.
+
+Reason: Meal planning must enforce Restaurant membership, reject archived or cross-Restaurant Recipes, preserve archive-only history, and keep Shopping generation out of Milestone 5.
+
+Status: Approved as part of Milestone 5.

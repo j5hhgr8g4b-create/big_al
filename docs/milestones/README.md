@@ -7,7 +7,7 @@
 | 2 | Cookbook + Recipes | Complete | [Milestone 2](MILESTONE_2.md) |
 | 3 | Imports | Complete | [Milestone 3](MILESTONE_3.md) |
 | 4 | Recipe Books + Search | Complete | [Milestone 4](MILESTONE_4.md) |
-| 5 | Menu | Not started | — |
+| 5 | Menu | Complete | [Milestone 5](MILESTONE_5.md) |
 | 6 | Shopping | Not started | — |
 | 7 | Cook Mode | Not started | — |
 | 8 | Basic Big Al | Not started | — |

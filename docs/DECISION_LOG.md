@@ -197,3 +197,25 @@ supabase/migrations/202606200004_milestone_4_recipe_books_search.sql, src/app/(a
 
 Approved By:
 Founder, through approval to move forward with Milestone 4.
+
+---
+
+### 2026-06-27 — Milestone 5 Menu Planning Events
+
+Decision:
+Model Menu planning as Restaurant-scoped `meal_events` created and archived through authenticated database functions. Store the Recipe serving value on each planned event as `servings_estimate` and compare it with people eating in the UI.
+
+Reason:
+Menu planning needs to stay private to a Restaurant, reject Recipes from other Restaurants, avoid hard deletes, and provide useful serving context without starting Shopping-list generation early.
+
+Alternatives Considered:
+Direct client inserts into `meal_events`, a calendar-only client state planner, and generating Shopping items from planned meals during Milestone 5.
+
+Impact:
+Adds the `meal_events` table, Menu RPCs, RLS, Menu page planner, Recipe-detail Add to Menu flow, and local audit updates. Shopping remains Milestone 6.
+
+Files Affected:
+supabase/migrations/202606200005_milestone_5_menu.sql, src/app/(app)/menu/*, src/app/(app)/cookbook/recipes/[recipeId]/page.tsx, src/lib/menu/get-menu.ts, docs/*
+
+Approved By:
+Founder, through approval to create Milestone 5.

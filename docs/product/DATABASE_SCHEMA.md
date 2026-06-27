@@ -126,3 +126,19 @@ Many-to-many links between Recipe Books and Recipes. Recipe Books organize Recip
 - Search is restricted to the requesting member's Restaurant.
 - Recipe Books and membership links are readable only by Restaurant members through RLS.
 - App users receive no direct Book table writes or hard-delete privileges.
+
+## Milestone 5 Table
+
+### meal_events
+
+Restaurant-scoped planned meals. Each event links one active Recipe to a planned date, optional meal type and note, people eating, the Recipe serving estimate at planning time, timestamps, creator Profile, and optional archive time.
+
+## Milestone 5 Automation and Access
+
+- Authenticated functions create/edit and archive Meal Events.
+- Meal Events are archived rather than hard deleted.
+- A planned Recipe must be active and belong to the same Restaurant as the Meal Event.
+- This Week and Next Week Menu views read active Meal Events for the current Restaurant.
+- Meal Events are readable only by Restaurant members through RLS.
+- App users receive no direct Meal Event table writes or hard-delete privileges.
+- Shopping lists are intentionally not generated until Milestone 6.

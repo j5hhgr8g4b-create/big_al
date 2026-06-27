@@ -201,3 +201,25 @@ Retain second-user cross-Restaurant Book/search isolation in the regression chec
 
 Known Issues:
 No open Milestone 4 functional issues. Search is intentionally simple literal containment for MVP.
+
+---
+
+### 2026-06-27 — Milestone 5
+
+Summary:
+Implemented the Restaurant-scoped Menu planning layer with meal events, This Week and Next Week views, unplanned Recipe ideas, add-to-date flows, people eating, and serving context.
+
+Files Changed:
+Added `supabase/migrations/202606200005_milestone_5_menu.sql`, `src/lib/menu/get-menu.ts`, `src/app/(app)/menu/actions.ts`, and `docs/milestones/MILESTONE_5.md`; updated `src/app/(app)/menu/page.tsx`, `src/app/(app)/cookbook/recipes/[recipeId]/page.tsx`, and audit/product docs.
+
+Commands Run:
+Read required governance/product docs; restored dependencies with `CI=true pnpm install --frozen-lockfile`; ran `./node_modules/.bin/eslint .`, `./node_modules/.bin/next typegen && ./node_modules/.bin/tsc --noEmit`, and `./node_modules/.bin/next build --webpack`.
+
+Database Changes:
+Added `meal_events`, `can_access_meal_event`, `save_meal_event`, `archive_meal_event`, active planning indexes, update trigger, restricted grants, and Restaurant-member RLS. The migration was created but not applied to the connected Supabase project during this local pass.
+
+Testing Required:
+Apply the Milestone 5 migration to Supabase, add a Recipe to this week and next week, confirm people eating and serving context display, remove a planned meal, verify archived Recipes are not offered, and repeat cross-Restaurant isolation with a second user.
+
+Known Issues:
+`pnpm` script wrappers currently stop on dependency build-script approval for `sharp` and `unrs-resolver`; the same lint, typecheck, and build commands passed through direct local binaries.

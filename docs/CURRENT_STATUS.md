@@ -2,7 +2,7 @@
 
 ## Current Milestone
 
-Milestone 4 — Recipe Books + Search completed. Next: Milestone 5 — Menu.
+Milestone 5 — Menu completed. Next: Milestone 6 — Shopping.
 
 ## Completed Milestones
 
@@ -11,6 +11,7 @@ Milestone 4 — Recipe Books + Search completed. Next: Milestone 5 — Menu.
 - Milestone 2 — Cookbook + Recipes
 - Milestone 3 — Imports
 - Milestone 4 — Recipe Books + Search
+- Milestone 5 — Menu
 
 ## What Works
 
@@ -40,14 +41,20 @@ Milestone 4 — Recipe Books + Search completed. Next: Milestone 5 — Menu.
 - Restaurant-scoped Recipe Books with create, view, edit, and archive flows.
 - Atomic add/remove Recipe Book membership controls on Recipes.
 - Recipe search by title and Ingredient within the current Restaurant.
+- Restaurant-scoped Menu planning with This Week and Next Week sections.
+- Active Cookbook Recipes can be added to planned meal dates.
+- Meal planning captures people eating and displays serving context.
+- Meal events are archived rather than hard deleted.
 
 ## Known Issues
 
-- Specials, Menu, and Pantry remain intentional placeholders for later milestones.
+- Specials and Pantry remain intentional placeholders for later milestones.
 - Turbopack production output produced client-manifest runtime errors; production builds use webpack.
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
 - Automatic Import parsing is intentionally a placeholder; URLs are stored but not fetched.
 - Recipe search uses simple literal containment rather than ranked full-text search.
+- Milestone 5 migration has not yet been applied to the connected Supabase project in this local pass.
+- `pnpm` script wrappers currently stop on dependency build-script approval; direct local binaries passed lint, typecheck, and build.
 
 ## Blocked Items
 
@@ -55,4 +62,4 @@ None.
 
 ## Next Task
 
-Begin Milestone 5 only after approval: meal events, This Week, Next Week, Unplanned, adding Recipes to dates, and people eating.
+Begin Milestone 6 only after approval: Shopping lists and Shopping items generated from planned meals.

@@ -15,7 +15,7 @@ Image, Title, Creator, Time, Difficulty, Servings, Ingredients, Method, Source.
 Cover image, Title, Description, Recipe list.
 
 ## Menu
-This Week, Next Week, Unplanned.
+This Week planned meals, Next Week planned meals, Unplanned Recipe ideas, add existing Recipe to date, people eating, serving context.
 
 ## Pantry / Shopping
 Shopping items, checkbox, quantity/unit, manual add field.
