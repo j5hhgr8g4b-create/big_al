@@ -47,6 +47,22 @@ Introduce a basic Big Al helper layer that answers simple, practical cooking que
 
 This must not become a generic chatbot. Big Al should feel like a trusted cookbook that quietly got smarter.
 
+## Cost and AI provider constraint
+
+This MVP version must not require any paid AI subscription, paid API key, paid usage plan, billing setup, or paid model access.
+
+If Basic Big Al can be delivered deterministically from app data, do that first.
+
+If an AI provider is proposed, it must be free to run in the current MVP setup and must degrade gracefully when unavailable. Do not add a paid OpenAI, Anthropic, Gemini, or other paid model dependency during M8.
+
+Before adding any AI SDK, package, environment variable, provider integration, or model-specific code, explain:
+
+- why deterministic app-data logic is not enough
+- whether the provider/model is free for this MVP build
+- what happens when the provider is unavailable or rate limited
+
+If this cannot be guaranteed, do not install or wire an AI provider. Build the deterministic helper experience instead.
+
 ## Must have
 
 - A simple Big Al entry point in the app.
@@ -69,6 +85,9 @@ This must not become a generic chatbot. Big Al should feel like a trusted cookbo
 
 - Generic freeform AI chatbot.
 - Open-ended internet search.
+- Paid AI model or paid API dependency.
+- Paid subscription requirement.
+- Billing-gated provider setup.
 - Unscoped AI meal generation.
 - Grocery price comparison.
 - Full pantry inventory management.
@@ -107,5 +126,6 @@ pnpm exec next build --webpack
 - migration filename if any
 - command results
 - manual test checklist
+- confirmation that no paid AI provider, paid API key, paid model, billing setup, or paid subscription is required
 
 Do not move beyond M8 without explicit approval.
