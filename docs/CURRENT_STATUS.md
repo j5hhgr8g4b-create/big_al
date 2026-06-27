@@ -2,9 +2,9 @@
 
 ## Current Milestone
 
-Milestone 6 — Shopping is next.
+Milestone 7 — Cook Mode is next.
 
-Milestone 5 — Menu is treated as completed for the current build path, with a short readiness review required before M6 implementation starts.
+Milestone 6 — Shopping is treated as completed for the current build path, with Supabase migration application and manual verification required in a connected environment.
 
 ## Completed Milestones
 
@@ -14,6 +14,7 @@ Milestone 5 — Menu is treated as completed for the current build path, with a 
 - Milestone 3 — Imports
 - Milestone 4 — Recipe Books + Search
 - Milestone 5 — Menu
+- Milestone 6 — Shopping
 
 ## Latest Verification Checkpoint
 
@@ -57,16 +58,21 @@ Milestone 5 — Menu is treated as completed for the current build path, with a 
 - Active Cookbook Recipes can be added to planned meal dates.
 - Meal planning captures people eating and displays serving context.
 - Meal events are archived rather than hard deleted.
+- Restaurant-scoped Shopping lists and Shopping items.
+- Pantry generates a Shopping list from planned Menu meals.
+- Generated Shopping items consolidate matching Ingredients by normalized name and unit where practical for MVP.
+- Pantry supports manual Shopping item additions and purchased tick/untick state.
+- Shopping state persists through Supabase-backed reads after refresh.
 
 ## Known Issues / Watch Items
 
 - Specials remains an intentional placeholder for later discovery work.
-- Pantry is ready to become the M6 Shopping area; it should not become full pantry inventory management.
+- Pantry is now the Shopping area; it should remain Shopping support and not become full pantry inventory management.
 - Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
 - Automatic Import parsing is intentionally a placeholder; URLs are stored but not fetched.
 - Recipe search uses simple literal containment rather than ranked full-text search.
-- Confirm the Milestone 5 migration has been applied to the connected Supabase project before M6 relies on meal events in shared environments.
+- Confirm the Milestone 5 and Milestone 6 migrations have been applied to the connected Supabase project before shared-environment Shopping verification.
 
 ## Blocked Items
 
@@ -74,11 +80,9 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 ## Next Task
 
-Begin Milestone 6 — Shopping only after a short readiness review.
+Apply and verify Milestone 6 — Shopping in the connected Supabase project, then begin Milestone 7 — Cook Mode only after a short readiness review.
 
-M6 scope: shopping lists and shopping items generated from planned Menu meals, with practical consolidation, tick-off behaviour, manual add, Restaurant scoping, and clear empty states.
-
-Do not build grocery price comparison, full pantry inventory management, calorie tracking, AI meal generation, Cook Mode, or social mechanics during M6.
+M7 scope remains step-by-step cooking flow. Do not build grocery price comparison, full pantry inventory management, calorie tracking, AI meal generation, or social mechanics.
 
 ## Codex Working Directory Rule
 

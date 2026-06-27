@@ -24,6 +24,30 @@ Known Issues:
 
 ---
 
+### 2026-06-27 — Milestone 6
+
+Summary:
+Implemented Restaurant-scoped Shopping lists in Pantry. Members can generate a list from planned Menu meals, consolidate matching Ingredients by normalized name and unit where practical, manually add items, and tick or untick purchased items.
+
+Files Changed:
+Added `supabase/migrations/202606200006_milestone_6_shopping.sql`, `src/lib/shopping/get-shopping.ts`, `src/app/(app)/pantry/actions.ts`, and `docs/milestones/MILESTONE_6.md`. Updated Pantry UI and product/audit docs.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm tsc --noEmit`
+- `pnpm exec next build --webpack`
+
+Database Changes:
+Added `shopping_lists` and `shopping_items`; active-list helper, generation, manual-add, and purchased-toggle functions; indexes, update triggers, restricted grants, and Restaurant-member RLS. The migration was created locally and still needs to be applied to the connected Supabase project.
+
+Testing Required:
+Apply the Milestone 6 migration to Supabase, plan meals, generate a shopping list from Pantry, confirm generated Ingredient consolidation, manually add an item, tick and untick purchased items, refresh, and confirm persistence. Repeat cross-Restaurant isolation with a second user when available.
+
+Known Issues:
+MVP consolidation only combines matching normalized Ingredient names with the same unit; it does not convert units or compare grocery prices. Pantry remains Shopping support only, not full pantry inventory.
+
+---
+
 ### 2026-06-27 — Milestone 6 Readiness Checkpoint
 
 Summary:

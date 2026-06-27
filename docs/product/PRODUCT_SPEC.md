@@ -34,7 +34,7 @@ This Week, Next Week, Unplanned, add recipe to day, people eating, servings esti
 
 ## Pantry
 
-Shopping List only. No inventory management.
+Shopping List only. Generate from planned Menu meals, add manual items, and tick off purchased items. No inventory management.
 
 ## Cook Mode
 

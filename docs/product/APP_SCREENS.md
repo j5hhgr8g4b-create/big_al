@@ -18,7 +18,7 @@ Cover image, Title, Description, Recipe list.
 This Week planned meals, Next Week planned meals, Unplanned Recipe ideas, add existing Recipe to date, people eating, serving context.
 
 ## Pantry / Shopping
-Shopping items, checkbox, quantity/unit, manual add field.
+Generate from planned Menu meals, Shopping items, checkbox/tick state, quantity/unit, purchased section, manual add field, empty states.
 
 ## Cook Mode
 Recipe title, step number, instruction, timer, previous/next, ingredient list access.

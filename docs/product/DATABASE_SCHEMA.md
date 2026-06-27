@@ -141,4 +141,22 @@ Restaurant-scoped planned meals. Each event links one active Recipe to a planned
 - This Week and Next Week Menu views read active Meal Events for the current Restaurant.
 - Meal Events are readable only by Restaurant members through RLS.
 - App users receive no direct Meal Event table writes or hard-delete privileges.
-- Shopping lists are intentionally not generated until Milestone 6.
+
+## Milestone 6 Tables
+
+### shopping_lists
+
+Restaurant-scoped active Shopping list. MVP keeps one active Shopping list per Restaurant, records the Menu date range used for generation, and archives rather than hard deleting if later lifecycle controls are added.
+
+### shopping_items
+
+Shopping-list items scoped to the same Restaurant. Items can come from Menu generation or manual entry, include optional quantity/unit/notes, and store purchased state.
+
+## Milestone 6 Automation and Access
+
+- Authenticated functions create the active Shopping list, generate it from planned Meal Events, add manual items, and toggle purchased state.
+- Generation reads active Meal Events, active Recipes, and Recipe Ingredients for the selected Menu range.
+- Matching generated Ingredients consolidate by normalized Ingredient name and unit where practical for MVP.
+- Unit conversion, grocery pricing, and pantry inventory are intentionally not implemented.
+- Shopping lists and items are readable only by Restaurant members through RLS.
+- App users receive no direct Shopping table writes or hard-delete privileges.
