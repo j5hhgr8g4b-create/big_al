@@ -1,0 +1,18 @@
+-- No-op migration history alias.
+--
+-- Remote Supabase migration history contains version 20260627145632 with the
+-- name milestone_7_cook_mode.
+--
+-- The schema effect of that remote migration is represented in this repo by
+-- the canonical local migration:
+--   202606200007_milestone_7_cook_mode.sql
+--
+-- This file exists only to align local repository migration history with the
+-- remote Supabase migration ledger.
+--
+-- It must remain no-op:
+-- - do not create tables
+-- - do not alter tables
+-- - do not create functions
+-- - do not grant permissions
+-- - do not add destructive SQL

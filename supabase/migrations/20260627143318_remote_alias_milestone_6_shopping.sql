@@ -1,0 +1,18 @@
+-- No-op migration history alias.
+--
+-- Remote Supabase migration history contains version 20260627143318 with the
+-- name milestone_6_shopping.
+--
+-- The schema effect of that remote migration is represented in this repo by
+-- the canonical local migration:
+--   202606200006_milestone_6_shopping.sql
+--
+-- This file exists only to align local repository migration history with the
+-- remote Supabase migration ledger.
+--
+-- It must remain no-op:
+-- - do not create tables
+-- - do not alter tables
+-- - do not create functions
+-- - do not grant permissions
+-- - do not add destructive SQL

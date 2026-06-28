@@ -1,0 +1,19 @@
+-- No-op migration history alias.
+--
+-- Remote Supabase migration history contains version 20260628134130 with the
+-- name manual_m11_import_parser_output_and_discard_import.
+--
+-- The schema effect of that remote migration is represented in this repo by
+-- the canonical local migrations:
+--   202606280001_m11_import_parser_output.sql
+--   202606280002_m11_discard_import.sql
+--
+-- This file exists only to align local repository migration history with the
+-- remote Supabase migration ledger.
+--
+-- It must remain no-op:
+-- - do not create tables
+-- - do not alter tables
+-- - do not create functions
+-- - do not grant permissions
+-- - do not add destructive SQL
