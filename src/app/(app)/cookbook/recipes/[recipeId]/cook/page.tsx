@@ -17,6 +17,14 @@ function displayQuantity(quantity: number | null) {
   return Number(quantity).toLocaleString(undefined, { maximumFractionDigits: 3 });
 }
 
+function hasStructuredIngredient(ingredient: {
+  preparation: string | null;
+  quantity: number | null;
+  unit: string | null;
+}) {
+  return ingredient.quantity !== null || Boolean(ingredient.unit) || Boolean(ingredient.preparation);
+}
+
 function totalTime(recipe: RecipeDetail) {
   const totalMinutes = (recipe.prep_minutes ?? 0) + (recipe.cook_minutes ?? 0);
   return totalMinutes ? `${totalMinutes} min` : "Time not set";
@@ -36,6 +44,43 @@ export default async function CookModePage({ params, searchParams }: CookModePag
   }
 
   const stepCount = recipe.steps.length;
+  if (stepCount === 0) {
+    return (
+      <article className="-mx-4 -mt-6 min-h-[calc(100vh-104px)] bg-gradient-to-b from-[var(--color-purple-900)] to-[#1f1628] px-4 py-6 text-[var(--color-text-inverse)]">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="section-kicker text-[var(--color-honey)]">
+              Cook Mode
+            </p>
+            <h1 className="mt-2 text-4xl font-semibold tracking-tight">{recipe.title}</h1>
+          </div>
+          <Link
+            href={`/cookbook/recipes/${recipe.id}`}
+            className="btn-secondary shrink-0 border-white/20 bg-white/10 px-4 py-2 text-sm text-[var(--color-text-inverse)]"
+          >
+            Exit
+          </Link>
+        </div>
+
+        <section className="mt-8 rounded-[var(--radius-2xl)] border border-white/10 bg-white/10 p-7 shadow-[var(--shadow-card)]">
+          <p className="section-kicker text-[var(--color-honey)]">
+            No method yet
+          </p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight">This Recipe needs steps before Cook Mode.</h2>
+          <p className="mt-4 leading-7 text-white/72">
+            Big Al cannot guide this one step by step yet. Head back to the Recipe to review or edit the method.
+          </p>
+          <Link
+            href={`/cookbook/recipes/${recipe.id}`}
+            className="btn-primary mt-7 px-6 py-4 text-base"
+          >
+            Back to Recipe
+          </Link>
+        </section>
+      </article>
+    );
+  }
+
   const requestedStep = Number(step ?? "1");
   const currentStepIndex =
     Number.isInteger(requestedStep) && requestedStep >= 1 && requestedStep <= stepCount
@@ -144,7 +189,7 @@ export default async function CookModePage({ params, searchParams }: CookModePag
         <p className="section-kicker text-[var(--color-honey)]">
           Step {currentStep.position}
         </p>
-        <p className="mt-5 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+        <p className="mt-5 text-2xl font-semibold leading-[1.35] tracking-tight sm:text-3xl">
           {currentStep.instruction}
         </p>
       </section>
@@ -181,24 +226,32 @@ export default async function CookModePage({ params, searchParams }: CookModePag
       <div className="mt-6 space-y-4">
         <CookTimer />
 
-        <details className="rounded-[var(--radius-2xl)] border border-white/10 bg-white/8 p-5 shadow-[var(--shadow-card)]">
+        <details open className="rounded-[var(--radius-2xl)] border border-white/10 bg-white/8 p-5 shadow-[var(--shadow-card)]">
           <summary className="cursor-pointer text-lg font-semibold tracking-tight">
             Ingredients
           </summary>
           <ul className="mt-4 divide-y divide-white/10">
-            {recipe.ingredients.map((ingredient) => (
-              <li key={ingredient.id} className="flex gap-3 py-3 leading-6">
-                <span className="min-w-16 font-semibold">
-                  {[displayQuantity(ingredient.quantity), ingredient.unit].filter(Boolean).join(" ")}
-                </span>
-                <span>
-                  {ingredient.name}
-                  {ingredient.preparation && (
-                    <span className="text-white/62">, {ingredient.preparation}</span>
+            {recipe.ingredients.map((ingredient) => {
+              const structured = hasStructuredIngredient(ingredient);
+
+              return (
+                <li key={ingredient.id} className="flex gap-3 py-3 leading-6">
+                  {structured ? (
+                    <span className="min-w-16 font-semibold">
+                      {[displayQuantity(ingredient.quantity), ingredient.unit].filter(Boolean).join(" ")}
+                    </span>
+                  ) : (
+                    <span className="mt-2.5 size-2 shrink-0 rounded-full bg-[var(--color-honey)]" />
                   )}
-                </span>
-              </li>
-            ))}
+                  <span>
+                    {ingredient.name}
+                    {ingredient.preparation && (
+                      <span className="text-white/62">, {ingredient.preparation}</span>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </details>
 

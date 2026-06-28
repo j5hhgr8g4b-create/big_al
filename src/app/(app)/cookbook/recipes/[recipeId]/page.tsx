@@ -19,6 +19,37 @@ function displayQuantity(quantity: number | null) {
   return Number(quantity).toLocaleString(undefined, { maximumFractionDigits: 3 });
 }
 
+function displayMinutes(minutes: number | null) {
+  return minutes ? `${minutes} min` : "Not set";
+}
+
+function displayTotalMinutes(prepMinutes: number | null, cookMinutes: number | null) {
+  const totalMinutes = (prepMinutes ?? 0) + (cookMinutes ?? 0);
+  return totalMinutes ? `${totalMinutes} min` : "Not set";
+}
+
+function splitAttribution(description: string | null) {
+  if (!description) {
+    return { body: "", creatorSource: "" };
+  }
+
+  const attributionPattern = /(?:^|\n+)Creator\/source:\s*(.+)$/i;
+  const match = description.match(attributionPattern);
+
+  return {
+    body: description.replace(attributionPattern, "").trim(),
+    creatorSource: match?.[1]?.trim() ?? "",
+  };
+}
+
+function hasStructuredIngredient(ingredient: {
+  preparation: string | null;
+  quantity: number | null;
+  unit: string | null;
+}) {
+  return ingredient.quantity !== null || Boolean(ingredient.unit) || Boolean(ingredient.preparation);
+}
+
 export default async function RecipePage({ params, searchParams }: RecipePageProps) {
   const { recipeId } = await params;
   const { error } = await searchParams;
@@ -28,7 +59,7 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
     notFound();
   }
 
-  const totalMinutes = (recipe.prep_minutes ?? 0) + (recipe.cook_minutes ?? 0);
+  const description = splitAttribution(recipe.description);
   const supabase = await createClient();
   const [booksResult, membershipsResult] = await Promise.all([
     supabase
@@ -50,40 +81,70 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
       {recipe.image_url && <RecipeImage src={recipe.image_url} title={recipe.title} />}
       <div className={recipe.image_url ? "mt-7" : ""}>
         <p className="section-kicker">
-          By {recipe.creatorName}
+          {description.creatorSource ? `From ${description.creatorSource}` : `By ${recipe.creatorName}`}
         </p>
-        <div className="mt-2 flex items-start justify-between gap-4">
+        <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <h1 className="text-4xl font-semibold tracking-tight">{recipe.title}</h1>
-          <div className="flex shrink-0 flex-col gap-2">
+          <div className="flex shrink-0 gap-2 sm:flex-col">
             <Link
               href={`/cookbook/recipes/${recipe.id}/cook`}
-              className="btn-primary px-4 py-2 text-sm"
+              className="btn-primary flex-1 px-5 py-3 text-sm sm:flex-none"
             >
               Cook
             </Link>
             <Link
               href={`/cookbook/recipes/${recipe.id}/edit`}
-              className="btn-secondary px-4 py-2 text-sm"
+              className="btn-secondary flex-1 px-5 py-3 text-sm sm:flex-none"
             >
               Edit
             </Link>
           </div>
         </div>
-        {recipe.description && (
-          <p className="mt-4 leading-7 text-[var(--color-text-muted)]">{recipe.description}</p>
+        {description.body && (
+          <p className="mt-4 whitespace-pre-line leading-7 text-[var(--color-text-muted)]">
+            {description.body}
+          </p>
         )}
-        <dl className="mt-6 grid grid-cols-3 gap-3 text-center">
+        {(description.creatorSource || recipe.source_url) && (
+          <div className="note-card mt-5 p-4 text-sm leading-6 text-[var(--color-text-soft)]">
+            {description.creatorSource && (
+              <p>
+                Creator/source: <span className="font-semibold">{description.creatorSource}</span>
+              </p>
+            )}
+            {recipe.source_url && (
+              <p className={description.creatorSource ? "mt-2 break-words" : "break-words"}>
+                Source:{" "}
+                <a
+                  href={recipe.source_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-[var(--accent)]"
+                >
+                  {recipe.source_url}
+                </a>
+              </p>
+            )}
+          </div>
+        )}
+        <dl className="mt-6 grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
           <div className="visual-card rounded-2xl p-3">
-            <dt className="text-xs text-[var(--color-text-muted)]">Time</dt>
-            <dd className="mt-1 text-sm font-semibold">{totalMinutes ? `${totalMinutes} min` : "—"}</dd>
+            <dt className="text-xs text-[var(--color-text-muted)]">Prep</dt>
+            <dd className="mt-1 text-sm font-semibold">{displayMinutes(recipe.prep_minutes)}</dd>
           </div>
           <div className="visual-card rounded-2xl p-3">
-            <dt className="text-xs text-[var(--color-text-muted)]">Servings</dt>
-            <dd className="mt-1 text-sm font-semibold">{recipe.servings ?? "—"}</dd>
+            <dt className="text-xs text-[var(--color-text-muted)]">Cook</dt>
+            <dd className="mt-1 text-sm font-semibold">{displayMinutes(recipe.cook_minutes)}</dd>
           </div>
           <div className="visual-card rounded-2xl p-3">
-            <dt className="text-xs text-[var(--color-text-muted)]">Difficulty</dt>
-            <dd className="mt-1 text-sm font-semibold capitalize">{recipe.difficulty ?? "—"}</dd>
+            <dt className="text-xs text-[var(--color-text-muted)]">Total</dt>
+            <dd className="mt-1 text-sm font-semibold">
+              {displayTotalMinutes(recipe.prep_minutes, recipe.cook_minutes)}
+            </dd>
+          </div>
+          <div className="visual-card rounded-2xl p-3">
+            <dt className="text-xs text-[var(--color-text-muted)]">Serves</dt>
+            <dd className="mt-1 text-sm font-semibold">{recipe.servings ?? "Not set"}</dd>
           </div>
         </dl>
       </div>
@@ -93,6 +154,62 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
           {error}
         </p>
       )}
+
+      <section className="mt-10">
+        <h2 className="section-kicker text-2xl">Ingredients</h2>
+        {recipe.ingredients.length ? (
+          <ul className="visual-card mt-4 divide-y divide-[var(--color-border)] px-4">
+            {recipe.ingredients.map((ingredient) => {
+              const structured = hasStructuredIngredient(ingredient);
+
+              return (
+                <li
+                  key={ingredient.id}
+                  className="flex gap-3 py-3 leading-6"
+                >
+                  {structured ? (
+                    <span className="min-w-16 font-semibold">
+                      {[displayQuantity(ingredient.quantity), ingredient.unit].filter(Boolean).join(" ")}
+                    </span>
+                  ) : (
+                    <span className="mt-2.5 size-2 shrink-0 rounded-full bg-[var(--color-honey)]" />
+                  )}
+                  <span>
+                    {ingredient.name}
+                    {ingredient.preparation && (
+                      <span className="text-[var(--color-text-muted)]">, {ingredient.preparation}</span>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="note-card mt-4 p-5 text-sm leading-6 text-[var(--color-text-soft)]">
+            No ingredients are saved for this Recipe yet.
+          </p>
+        )}
+      </section>
+
+      <section className="mt-10">
+        <h2 className="section-kicker text-2xl">Method</h2>
+        {recipe.steps.length ? (
+          <ol className="mt-5 space-y-5">
+            {recipe.steps.map((step) => (
+              <li key={step.id} className="flex gap-4">
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[var(--color-purple-800)] text-sm font-semibold text-[var(--color-text-inverse)]">
+                  {step.position}
+                </span>
+                <p className="pt-1 leading-7">{step.instruction}</p>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="note-card mt-4 p-5 text-sm leading-6 text-[var(--color-text-soft)]">
+            No method steps are saved for this Recipe yet. Add steps before cooking.
+          </p>
+        )}
+      </section>
 
       <section className="visual-card mt-10 p-5">
         <h2 className="section-kicker text-xl">Add to Menu</h2>
@@ -142,39 +259,6 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
         </form>
       </section>
 
-      <section className="mt-10">
-        <h2 className="section-kicker text-2xl">Ingredients</h2>
-        <ul className="visual-card mt-4 divide-y divide-[var(--color-border)] px-4">
-          {recipe.ingredients.map((ingredient) => (
-            <li key={ingredient.id} className="flex gap-3 py-3 leading-6">
-              <span className="min-w-16 font-semibold">
-                {[displayQuantity(ingredient.quantity), ingredient.unit].filter(Boolean).join(" ")}
-              </span>
-              <span>
-                {ingredient.name}
-                {ingredient.preparation && (
-                  <span className="text-[var(--color-text-muted)]">, {ingredient.preparation}</span>
-                )}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-10">
-        <h2 className="section-kicker text-2xl">Method</h2>
-        <ol className="mt-5 space-y-5">
-          {recipe.steps.map((step) => (
-            <li key={step.id} className="flex gap-4">
-              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[var(--color-purple-800)] text-sm font-semibold text-[var(--color-text-inverse)]">
-                {step.position}
-              </span>
-              <p className="pt-1 leading-7">{step.instruction}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
       {books.length ? (
         <RecipeBookPicker books={books} recipeId={recipe.id} selectedIds={selectedBookIds} />
       ) : (
@@ -190,20 +274,6 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
             New Recipe Book
           </Link>
         </section>
-      )}
-
-      {recipe.source_url && (
-        <p className="mt-10 border-t border-[var(--color-border)] pt-6 text-sm text-[var(--color-text-muted)]">
-          Source: {" "}
-          <a
-            href={recipe.source_url}
-            target="_blank"
-            rel="noreferrer"
-            className="font-semibold text-[var(--accent)]"
-          >
-            View original
-          </a>
-        </p>
       )}
     </article>
   );
