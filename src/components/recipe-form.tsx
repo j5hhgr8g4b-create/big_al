@@ -14,6 +14,7 @@ type IngredientInput = {
 
 type RecipeFormValue = {
   cookMinutes: string;
+  creatorSource?: string;
   description: string;
   difficulty: string;
   imageUrl: string;
@@ -23,11 +24,13 @@ type RecipeFormValue = {
   sourceUrl: string;
   steps: string[];
   title: string;
+  totalMinutes?: string;
 };
 
 type RecipeFormProps = {
   importId?: string;
   initialValue?: RecipeFormValue;
+  mode?: "default" | "importReview";
   recipeId?: string;
   restaurantId: string;
 };
@@ -58,7 +61,13 @@ const emptyValue: RecipeFormValue = {
 const inputClassName =
   "input-control mt-2 px-4 py-3 text-base";
 
-export function RecipeForm({ importId, initialValue = emptyValue, recipeId, restaurantId }: RecipeFormProps) {
+export function RecipeForm({
+  importId,
+  initialValue = emptyValue,
+  mode = "default",
+  recipeId,
+  restaurantId,
+}: RecipeFormProps) {
   const [ingredients, setIngredients] = useState<IngredientRow[]>(
     initialValue.ingredients.map((ingredient, index) => ({
       ...ingredient,
@@ -104,6 +113,19 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
             defaultValue={initialValue.description}
           />
         </label>
+        {mode === "importReview" && (
+          <label className="block text-sm font-medium">
+            Creator/source
+            <input
+              className={inputClassName}
+              name="creatorSource"
+              type="text"
+              maxLength={160}
+              defaultValue={initialValue.creatorSource ?? ""}
+              placeholder="Author, publication or website"
+            />
+          </label>
+        )}
         <div className="grid grid-cols-2 gap-4">
           <label className="block text-sm font-medium">
             Prep minutes
@@ -130,12 +152,25 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
             <input
               className={inputClassName}
               name="servings"
-              type="number"
-              min="0.01"
-              step="0.01"
+              type={mode === "importReview" ? "text" : "number"}
+              min={mode === "importReview" ? undefined : "0.01"}
+              step={mode === "importReview" ? undefined : "0.01"}
               defaultValue={initialValue.servings}
+              placeholder={mode === "importReview" ? "Serves 4" : undefined}
             />
           </label>
+          {mode === "importReview" && (
+            <label className="block text-sm font-medium">
+              Total minutes
+              <input
+                className={inputClassName}
+                name="totalMinutes"
+                type="number"
+                min="0"
+                defaultValue={initialValue.totalMinutes ?? ""}
+              />
+            </label>
+          )}
           <label className="block text-sm font-medium">
             Difficulty
             <select className={inputClassName} name="difficulty" defaultValue={initialValue.difficulty}>
@@ -166,6 +201,20 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
         </label>
       </section>
 
+      {mode === "importReview" ? (
+        <section className="visual-card p-6">
+          <h2 className="section-kicker text-xl">Ingredients</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
+            One ingredient per line. Keep the wording from the source unless you need to fix it.
+          </p>
+          <textarea
+            className={`${inputClassName} min-h-64 resize-y leading-6`}
+            name="ingredientLines"
+            defaultValue={initialValue.ingredients.map((ingredient) => ingredient.name).join("\n")}
+            required
+          />
+        </section>
+      ) : (
       <section className="visual-card p-6">
         <div className="flex items-center justify-between gap-4">
           <h2 className="section-kicker text-xl">Ingredients</h2>
@@ -253,7 +302,22 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
           ))}
         </div>
       </section>
+      )}
 
+      {mode === "importReview" ? (
+        <section className="visual-card p-6">
+          <h2 className="section-kicker text-xl">Method</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
+            One step per line. Big Al will keep the order when it saves the recipe.
+          </p>
+          <textarea
+            className={`${inputClassName} min-h-72 resize-y leading-6`}
+            name="stepLines"
+            defaultValue={initialValue.steps.join("\n")}
+            required
+          />
+        </section>
+      ) : (
       <section className="visual-card p-6">
         <div className="flex items-center justify-between gap-4">
           <h2 className="section-kicker text-xl">Method</h2>
@@ -308,6 +372,7 @@ export function RecipeForm({ importId, initialValue = emptyValue, recipeId, rest
           ))}
         </div>
       </section>
+      )}
 
       <SubmitButton pendingLabel="Saving recipe…">Save recipe</SubmitButton>
     </form>

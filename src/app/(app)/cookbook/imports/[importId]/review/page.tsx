@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { RecipeForm } from "@/components/recipe-form";
-import { getImportForReview } from "@/lib/imports/get-import";
+import { getImportForReview, sourceUrlAlreadyExists } from "@/lib/imports/get-import";
 
 type ReviewImportPageProps = {
   params: Promise<{ importId: string }>;
@@ -16,32 +16,58 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
     notFound();
   }
 
+  const extracted = recipeImport.parser_output.recipe;
+  const sourceUrl = extracted?.sourceUrl || recipeImport.source_url || "";
+  const duplicateWarning = sourceUrl
+    ? await sourceUrlAlreadyExists(recipeImport.restaurant_id, sourceUrl)
+    : false;
+  const extractionWorked = recipeImport.parser_output.status === "success";
+
   return (
     <section>
       <p className="section-kicker">
-        Needs Review
+        {extractionWorked ? "Ready for a check" : "Needs a hand"}
       </p>
-      <h1 className="screen-title mt-2 inline-block">Structure this recipe</h1>
+      <h1 className="screen-title mt-2 inline-block">Review recipe</h1>
       <p className="mt-6 leading-7 text-[var(--color-text-muted)]">
-        Check the source below, then add clean ingredients and ordered steps before saving it to your
-        Cookbook.
+        {extractionWorked
+          ? "Big Al has filled in what it found. Give it a quick check before saving it to your Cookbook."
+          : "Big Al could not read this one automatically. The link is saved, and you can still add the recipe details below."}
       </p>
 
-      <aside className="note-card mt-6 p-5 text-sm leading-6">
-        <p className="font-semibold">Parser placeholder</p>
-        <p className="mt-1 text-[var(--color-text-soft)]">
+      <aside className="note-card mt-6 space-y-4 p-5 text-sm leading-6">
+        <div className="flex flex-wrap gap-2">
+          <span className="warm-pill bg-[var(--color-surface)]">
+            {extractionWorked ? "Extracted" : "Fallback saved"}
+          </span>
+          {extracted?.sourceSite && (
+            <span className="warm-pill bg-[var(--color-surface)]">{extracted.sourceSite}</span>
+          )}
+          {extracted?.author && (
+            <span className="warm-pill bg-[var(--color-surface)]">By {extracted.author}</span>
+          )}
+        </div>
+        <p className="text-[var(--color-text-soft)]">
           {recipeImport.parser_output.message ??
-            "Automatic parsing is not enabled. Review this Import manually."}
+            "Review this Import before saving it to your Cookbook."}
         </p>
-        {recipeImport.source_url && (
+        {sourceUrl && (
           <a
-            href={recipeImport.source_url}
+            href={sourceUrl}
             target="_blank"
             rel="noreferrer"
             className="btn-secondary mt-3 min-h-0 px-3 py-2 text-xs"
           >
             Open source recipe
           </a>
+        )}
+        {sourceUrl && (
+          <p className="break-words text-xs text-[var(--color-text-muted)]">Source: {sourceUrl}</p>
+        )}
+        {duplicateWarning && (
+          <p className="rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-surface)] px-4 py-3 font-semibold text-[var(--color-text-soft)]">
+            This link may already be in your Cookbook. Check before saving another copy.
+          </p>
         )}
         {recipeImport.raw_text && (
           <details className="mt-4">
@@ -61,20 +87,32 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
 
       <RecipeForm
         importId={recipeImport.id}
+        mode="importReview"
         restaurantId={recipeImport.restaurant_id}
         initialValue={{
-          cookMinutes: "",
-          description: "",
+          cookMinutes: inputNumber(extracted?.cookMinutes),
+          creatorSource: extracted?.author ?? "",
+          description: extracted?.description ?? "",
           difficulty: "",
-          imageUrl: "",
-          ingredients: [{ name: "", preparation: "", quantity: "", unit: "" }],
-          prepMinutes: "",
-          servings: "",
-          sourceUrl: recipeImport.source_url ?? "",
-          steps: [""],
-          title: "",
+          imageUrl: extracted?.imageUrl ?? "",
+          ingredients: (extracted?.ingredients?.length ? extracted.ingredients : [""]).map((name) => ({
+            name,
+            preparation: "",
+            quantity: "",
+            unit: "",
+          })),
+          prepMinutes: inputNumber(extracted?.prepMinutes),
+          servings: extracted?.yield ?? "",
+          sourceUrl,
+          steps: extracted?.instructions?.length ? extracted.instructions : [""],
+          title: extracted?.title ?? "",
+          totalMinutes: inputNumber(extracted?.totalMinutes),
         }}
       />
     </section>
   );
+}
+
+function inputNumber(value: number | null | undefined) {
+  return value === null || value === undefined ? "" : String(value);
 }

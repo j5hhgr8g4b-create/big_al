@@ -16,6 +16,18 @@ function optionalNumber(value: string) {
   return Number.isFinite(number) ? number : Number.NaN;
 }
 
+function optionalServings(value: string) {
+  if (!value) return null;
+  const directNumber = Number(value);
+  if (Number.isFinite(directNumber)) return directNumber;
+
+  const match = value.match(/\d+(?:\.\d+)?/);
+  if (!match) return Number.NaN;
+
+  const parsedNumber = Number(match[0]);
+  return Number.isFinite(parsedNumber) ? parsedNumber : Number.NaN;
+}
+
 function errorRedirect(path: string, message: string): never {
   redirect(`${path}?${new URLSearchParams({ error: message }).toString()}`);
 }
@@ -31,6 +43,14 @@ function optionalHttpUrl(value: string) {
   }
 }
 
+function descriptionWithCreatorSource(description: string, creatorSource: string) {
+  if (!creatorSource || description.includes(creatorSource)) {
+    return description;
+  }
+
+  return [description, `Creator/source: ${creatorSource}`].filter(Boolean).join("\n\n");
+}
+
 export async function saveRecipe(formData: FormData) {
   const existingRecipeId = field(formData, "recipeId");
   const importId = field(formData, "importId");
@@ -42,12 +62,21 @@ export async function saveRecipe(formData: FormData) {
       ? `/cookbook/imports/${importId}/review`
       : "/cookbook/imports/new";
   const title = field(formData, "title");
-  const description = field(formData, "description");
+  const description = descriptionWithCreatorSource(
+    field(formData, "description"),
+    field(formData, "creatorSource"),
+  );
   const imageUrl = optionalHttpUrl(field(formData, "imageUrl"));
   const sourceUrl = optionalHttpUrl(field(formData, "sourceUrl"));
   const prepMinutes = optionalNumber(field(formData, "prepMinutes"));
-  const cookMinutes = optionalNumber(field(formData, "cookMinutes"));
-  const servings = optionalNumber(field(formData, "servings"));
+  const enteredCookMinutes = optionalNumber(field(formData, "cookMinutes"));
+  const totalMinutes = optionalNumber(field(formData, "totalMinutes"));
+  const cookMinutes =
+    enteredCookMinutes ??
+    (totalMinutes !== null && !Number.isNaN(totalMinutes)
+      ? Math.max(totalMinutes - (prepMinutes ?? 0), 0)
+      : null);
+  const servings = optionalServings(field(formData, "servings"));
   const difficulty = field(formData, "difficulty") || null;
 
   if (!existingRecipeId && !importId) {
@@ -65,31 +94,52 @@ export async function saveRecipe(formData: FormData) {
   if (
     Number.isNaN(prepMinutes) ||
     Number.isNaN(cookMinutes) ||
+    Number.isNaN(totalMinutes) ||
     Number.isNaN(servings) ||
     (prepMinutes !== null && prepMinutes < 0) ||
     (cookMinutes !== null && cookMinutes < 0) ||
+    (totalMinutes !== null && totalMinutes < 0) ||
     (servings !== null && servings <= 0)
   ) {
     errorRedirect(returnPath, "Times must be zero or more and servings must be greater than zero.");
   }
 
-  const names = formData.getAll("ingredientName").map(String);
-  const quantities = formData.getAll("ingredientQuantity").map(String);
-  const units = formData.getAll("ingredientUnit").map(String);
-  const preparations = formData.getAll("ingredientPreparation").map(String);
-  const ingredients = names.map((name, index) => ({
-    name: name.trim(),
-    preparation: preparations[index]?.trim() ?? "",
-    quantity: quantities[index]?.trim() || null,
-    unit: units[index]?.trim() ?? "",
-  }));
-  const steps = formData
-    .getAll("stepInstruction")
-    .map(String)
+  const ingredientLines = field(formData, "ingredientLines")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const ingredients = ingredientLines.length
+    ? ingredientLines.map((name) => ({
+        name,
+        preparation: "",
+        quantity: null,
+        unit: "",
+      }))
+    : formData.getAll("ingredientName").map(String).map((name, index) => {
+        const quantities = formData.getAll("ingredientQuantity").map(String);
+        const units = formData.getAll("ingredientUnit").map(String);
+        const preparations = formData.getAll("ingredientPreparation").map(String);
+
+        return {
+          name: name.trim(),
+          preparation: preparations[index]?.trim() ?? "",
+          quantity: quantities[index]?.trim() || null,
+          unit: units[index]?.trim() ?? "",
+        };
+      });
+  const stepLines = field(formData, "stepLines")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const steps = (stepLines.length ? stepLines : formData.getAll("stepInstruction").map(String))
     .map((instruction) => ({ instruction: instruction.trim() }));
 
   if (ingredients.length < 1 || ingredients.some((ingredient) => !ingredient.name)) {
     errorRedirect(returnPath, "Add at least one named ingredient.");
+  }
+
+  if (ingredients.some((ingredient) => ingredient.name.length > 120)) {
+    errorRedirect(returnPath, "Keep each ingredient to 120 characters or fewer.");
   }
 
   if (
@@ -104,6 +154,10 @@ export async function saveRecipe(formData: FormData) {
 
   if (steps.length < 1 || steps.some((step) => !step.instruction)) {
     errorRedirect(returnPath, "Add at least one recipe step.");
+  }
+
+  if (steps.some((step) => step.instruction.length > 2000)) {
+    errorRedirect(returnPath, "Keep each method step to 2000 characters or fewer.");
   }
 
   const supabase = await createClient();

@@ -2,10 +2,25 @@ import Link from "next/link";
 
 import { RecipeCard, type RecipeCardValue } from "@/components/recipe-card";
 import { SectionIntro } from "@/components/section-intro";
+import { decodeParserOutputFallback } from "@/lib/imports/get-import";
 import { getCurrentRestaurant } from "@/lib/restaurants/current";
 
 type CookbookPageProps = {
   searchParams: Promise<{ q?: string }>;
+};
+
+type PendingImport = {
+  id: string;
+  parser_output?: {
+    recipe?: {
+      sourceSite?: string;
+      title?: string;
+    } | null;
+    status?: string;
+  } | null;
+  raw_text: string | null;
+  source_type: "text" | "url";
+  source_url: string | null;
 };
 
 export default async function CookbookPage({ searchParams }: CookbookPageProps) {
@@ -52,7 +67,7 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
       : Promise.resolve({ data: [] }),
     supabase
       .from("imports")
-      .select("id, source_type, source_url, raw_text, created_at")
+      .select("id, source_type, source_url, raw_text, parser_output, created_at")
       .eq("restaurant_id", restaurant.id)
       .eq("status", "needs_review")
       .is("archived_at", null)
@@ -116,11 +131,24 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
             </span>
           </div>
           <div className="mt-4 space-y-3">
-            {pendingImports.map((recipeImport) => {
+            {(pendingImports as PendingImport[]).map((recipeImport) => {
+              const fallbackEnvelope = decodeParserOutputFallback(recipeImport.raw_text);
+              const parserOutput =
+                recipeImport.parser_output?.status === "placeholder" && fallbackEnvelope
+                  ? fallbackEnvelope.parserOutput
+                  : recipeImport.parser_output;
+              const extracted = parserOutput?.recipe;
+              const rawText = fallbackEnvelope?.rawText ?? recipeImport.raw_text;
+              const rawTextSummary = rawText?.split("\n").find((line) => line.trim());
               const summary =
-                recipeImport.source_url ??
-                recipeImport.raw_text?.split("\n").find((line: string) => line.trim()) ??
+                extracted?.title ||
+                recipeImport.source_url ||
+                rawTextSummary ||
                 "Untitled Import";
+              const meta = [
+                parserOutput?.status === "success" ? "Extracted" : `${recipeImport.source_type} Import`,
+                extracted?.sourceSite,
+              ].filter(Boolean).join(" · ");
 
               return (
                 <Link
@@ -129,7 +157,7 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
                   className="note-card block p-4"
                 >
                   <p className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">
-                    {recipeImport.source_type} Import
+                    {meta}
                   </p>
                   <p className="mt-1 truncate font-semibold">{summary}</p>
                 </Link>

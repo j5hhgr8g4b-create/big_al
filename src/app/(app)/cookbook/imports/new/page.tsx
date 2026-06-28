@@ -25,7 +25,8 @@ export default async function NewImportPage({ searchParams }: NewImportPageProps
       </p>
       <h1 className="screen-title mt-2 inline-block">Import a recipe</h1>
       <p className="mt-6 leading-7 text-[var(--color-text-muted)]">
-        Save a recipe link, paste recipe text, or add both. You will review and structure it next.
+        Paste a recipe link. Big Al will try to pull out the title, ingredients and method so you
+        only have to check it.
       </p>
 
       {error && (
@@ -51,23 +52,23 @@ export default async function NewImportPage({ searchParams }: NewImportPageProps
         </label>
         <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-text-muted)]">
           <span className="h-px flex-1 bg-[var(--color-border)]" />
-          and/or
+          fallback
           <span className="h-px flex-1 bg-[var(--color-border)]" />
         </div>
         <label className="block text-sm font-medium">
-          Recipe text
+          Pasted recipe text
           <textarea
             className={`${inputClassName} min-h-56 resize-y`}
             name="rawText"
             maxLength={100000}
-            placeholder="Paste ingredients and method here…"
+            placeholder="Only paste text if the link is not enough."
           />
         </label>
         <p className="note-card px-4 py-3 text-sm leading-6 text-[var(--color-text-soft)]">
-          Automatic parsing is a placeholder in this milestone. Big Al stores the source safely and
-          asks you to review the structured recipe before conversion.
+          Big Al looks for structured recipe data first. If the page keeps it tucked away, the link
+          is still saved and you can fill the gaps on the next screen.
         </p>
-        <SubmitButton pendingLabel="Saving Import…">Continue to review</SubmitButton>
+        <SubmitButton pendingLabel="Fetching recipe…">Fetch recipe</SubmitButton>
       </form>
     </section>
   );
