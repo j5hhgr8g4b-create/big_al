@@ -182,3 +182,31 @@ export async function createImport(formData: FormData) {
   logImportEvent("redirecting to review", { importId });
   redirect(`/cookbook/imports/${importId}/review`);
 }
+
+export async function discardImport(formData: FormData) {
+  const importId = field(formData, "importId");
+
+  if (!importId) {
+    redirect("/cookbook");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("discard_import", { target_import_id: importId });
+
+  if (error) {
+    logImportWarning("discard import failed", {
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+      importId,
+      message: error.message,
+    });
+    redirect(
+      `/cookbook/imports/${importId}/review?${new URLSearchParams({
+        error: "Big Al could not discard this import. Try again.",
+      }).toString()}`,
+    );
+  }
+
+  redirect("/cookbook");
+}

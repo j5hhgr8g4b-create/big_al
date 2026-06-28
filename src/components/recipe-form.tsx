@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { discardImport } from "@/app/(app)/cookbook/imports/actions";
 import { saveRecipe } from "@/app/(app)/cookbook/recipes/actions";
 import { SubmitButton } from "@/components/submit-button";
 
@@ -374,7 +375,19 @@ export function RecipeForm({
       </section>
       )}
 
-      <SubmitButton pendingLabel="Saving recipe…">Save recipe</SubmitButton>
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <SubmitButton pendingLabel="Saving recipe…">Save recipe</SubmitButton>
+        {mode === "importReview" && importId && (
+          <button
+            type="submit"
+            formAction={discardImport}
+            formNoValidate
+            className="btn-danger"
+          >
+            Discard import
+          </button>
+        )}
+      </div>
     </form>
   );
 }
