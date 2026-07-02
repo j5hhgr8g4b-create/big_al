@@ -18,6 +18,7 @@ Update this page at the end of each meaningful work session.
 - Prefer fixing launch blockers over adding features.
 - Preserve attribution and Restaurant-scoped data.
 - Do not build social mechanics, grocery price comparison, calorie tracking, full pantry inventory or generic chatbot behaviour.
+- The full-build user stories are directional controls, not permission to build future journeys now.
 
 ## Current project snapshot
 
@@ -38,15 +39,18 @@ Current state:
 - M0-M14 are technically complete on the working branch.
 - Founder UAT is in progress.
 - Phase 3 docs are prepared.
-- The next active work is M15 Founder UAT Closeout.
+- Phase 3 operational controls are prepared in Notion.
+- Full-build user stories have been upgraded with Black Belt-style process controls.
+- The next active work is still M15 Founder UAT Closeout.
 - Private beta has not started.
 - Wider launch is not approved.
 
 ## Latest important commits
 
-Add the latest commits here when work pauses.
-
 ```text
+3ebcea6 docs: strengthen user stories with process controls
+bc3955b docs: add reusable project handover page
+e8e99bf docs: add full build user stories and process map
 5fc0446 docs: update milestone tracker for Phase 3
 5a8d153 docs: add Codex reset handoff for founder UAT
 7f659fb chore: mirror shopping list RPC permission fix
@@ -71,6 +75,30 @@ anon can execute: no
 
 Update this section whenever a migration is applied remotely.
 
+## Latest documentation update
+
+The user stories/process map has been updated to include:
+
+- build permission levels
+- journey control framework
+- cross-journey CTQs
+- global defect definitions
+- SIPOC for each journey
+- entry and exit conditions
+- defect definitions
+- critical-to-quality measures
+- controls / detection methods
+- evidence requirements
+- lightweight FMEA
+- Phase 3 and beta measurement plan
+
+Important product control:
+
+```text
+The current active loop is Import → Save → Plan → Shop → Cook.
+The full-build user stories are not permission to build every future journey now.
+```
+
 ## Active blockers
 
 Keep this list in sync with the Notion Launch Blocker Register.
@@ -87,6 +115,7 @@ Keep this list in sync with the Notion Launch Blocker Register.
 Use these before starting work:
 
 ```text
+docs/HANDOVER.md
 docs/CODEX_RESUME_AFTER_USAGE_RESET.md
 docs/milestones/README.md
 docs/milestones/PHASE_3_MVP_HARDENING_AND_BETA_PREPARATION.md
@@ -107,6 +136,8 @@ Founder UAT Closeout Checklist
 Launch Blocker Register
 Phase 3 — MVP Hardening & Beta Preparation
 Launch Readiness Checklist
+User Stories & Process Map — Full Build
+Project Handover
 ```
 
 ## Resume checklist
@@ -120,7 +151,9 @@ At the start of the next session:
 5. Read this handover page.
 6. Read `docs/CODEX_RESUME_AFTER_USAGE_RESET.md` if Codex usage had paused.
 7. Check Notion Launch Blocker Register.
-8. Continue only the current milestone unless founder explicitly changes scope.
+8. Check the Founder UAT Closeout Checklist.
+9. Use the Black Belt user stories/process map as journey control, not as a feature backlog.
+10. Continue only the current milestone unless founder explicitly changes scope.
 
 ## Standard validation commands
 
@@ -173,5 +206,6 @@ Priority order:
 - Do not start M16 until M15 has a clear result.
 - Do not build M21 Private Beta Testing until M20 gives a go decision.
 - Do not add new product areas.
+- Do not treat future user stories as active build scope.
 - Do not use `main` for active work.
 - Do not run broad database changes without checking migration history.
