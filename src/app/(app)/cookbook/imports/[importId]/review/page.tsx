@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { RecipeForm } from "@/components/recipe-form";
@@ -18,9 +19,16 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
 
   const extracted = recipeImport.parser_output.recipe;
   const sourceUrl = extracted?.sourceUrl || recipeImport.source_url || "";
+  const extractedTitle = extracted?.title ?? "";
   const duplicateState = sourceUrl
-    ? await getSourceUrlDuplicateState(recipeImport.restaurant_id, sourceUrl, recipeImport.id)
-    : { pendingImportId: null, recipeId: null };
+    ? await getSourceUrlDuplicateState(recipeImport.restaurant_id, sourceUrl, recipeImport.id, extractedTitle)
+    : {
+        pendingImportId: null,
+        recipeId: null,
+        recipeTitle: null,
+        titleRecipeId: null,
+        titleRecipeTitle: null,
+      };
   const extractionWorked = recipeImport.parser_output.status === "success";
   const extractionPartial = recipeImport.parser_output.status === "partial";
   const extractionLabel = extractionWorked
@@ -73,9 +81,37 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
           <p className="break-words text-xs text-[var(--color-text-muted)]">Source: {sourceUrl}</p>
         )}
         {duplicateState.recipeId && (
-          <p className="rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-surface)] px-4 py-3 font-semibold text-[var(--color-text-soft)]">
-            This source link is already saved in your Cookbook. Check before saving another copy.
-          </p>
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-800">
+            <p className="font-semibold">
+              This source link is already saved in your Cookbook.
+            </p>
+            <p className="mt-1">
+              Big Al will not save another copy unless you deliberately choose to save it as a duplicate.
+            </p>
+            <Link
+              href={`/cookbook/recipes/${duplicateState.recipeId}`}
+              className="btn-secondary mt-3 min-h-0 border-red-200 bg-white px-3 py-2 text-xs text-red-800"
+            >
+              View existing recipe
+              {duplicateState.recipeTitle ? `: ${duplicateState.recipeTitle}` : ""}
+            </Link>
+          </div>
+        )}
+        {!duplicateState.recipeId && duplicateState.titleRecipeId && (
+          <div className="rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-surface)] px-4 py-3 text-[var(--color-text-soft)]">
+            <p className="font-semibold">Possible duplicate title</p>
+            <p className="mt-1">
+              A saved Recipe has a similar title
+              {duplicateState.titleRecipeTitle ? `: ${duplicateState.titleRecipeTitle}` : ""}.
+              Check before saving another version.
+            </p>
+            <Link
+              href={`/cookbook/recipes/${duplicateState.titleRecipeId}`}
+              className="btn-secondary mt-3 min-h-0 px-3 py-2 text-xs"
+            >
+              View possible match
+            </Link>
+          </div>
         )}
         {!duplicateState.recipeId && duplicateState.pendingImportId && (
           <p className="rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-surface)] px-4 py-3 font-semibold text-[var(--color-text-soft)]">
@@ -101,6 +137,9 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
       <RecipeForm
         importId={recipeImport.id}
         mode="importReview"
+        duplicateRecipeId={duplicateState.recipeId}
+        duplicateRecipeTitle={duplicateState.recipeTitle}
+        possibleDuplicateTitle={duplicateState.titleRecipeTitle}
         restaurantId={recipeImport.restaurant_id}
         initialValue={{
           cookMinutes: inputNumber(extracted?.cookMinutes),

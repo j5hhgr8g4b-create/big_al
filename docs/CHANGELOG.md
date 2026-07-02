@@ -24,6 +24,31 @@ Known Issues:
 
 ---
 
+### 2026-07-02 — Duplicate Import Save Hardening
+
+Summary:
+Fixed a UAT issue where exact source URL duplicate warnings were visible but still too easy to bypass. Import review now makes exact duplicate saves deliberate and adds a server-side guard for normal import saves without the duplicate override.
+
+Files Changed:
+Updated `src/lib/imports/get-import.ts`, `src/app/(app)/cookbook/imports/[importId]/review/page.tsx`, `src/components/recipe-form.tsx`, `src/app/(app)/cookbook/recipes/actions.ts`, `docs/UAT_MVP_M11_M14.md`, `docs/CHANGELOG.md`, and `docs/CURRENT_STATUS.md`.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
+- `git diff --check`
+
+Database Changes:
+None. Existing duplicate Recipes are left untouched.
+
+Testing Required:
+Re-import a Recipe with an exact saved `source_url`, confirm the normal save button is hidden, open the existing Recipe link, and confirm only `Save anyway as a duplicate` creates another copy. Also test a same-title different-source Recipe to confirm the softer warning still allows normal saving.
+
+Known Issues:
+Duplicate detection remains MVP-level. It uses exact source URL and same-title signals, not AI matching or merge flows.
+
+---
+
 ### 2026-07-02 — MVP UAT and Regression Pass
 
 Summary:

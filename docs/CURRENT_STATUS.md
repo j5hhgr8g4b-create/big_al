@@ -109,6 +109,7 @@ URL import foundation already exists and has been hardened. Attribution protecti
 - Recipes can store creator/source and source-site attribution separately from the Recipe description.
 - Restaurant cooking preferences can store unit preference, oven type, hob type, and simple equipment limits.
 - Recipe detail and Cook Mode show lightweight kitchen preference guidance when preferences are set.
+- Import review now guards exact source URL duplicates: users see a strong warning, can open the existing Recipe, and must choose an explicit duplicate override before another copy can be saved.
 
 ## Known Issues / Watch Items
 
@@ -117,6 +118,7 @@ URL import foundation already exists and has been hardened. Attribution protecti
 - Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
 - URL extraction still depends on recipe pages exposing usable JSON-LD or basic metadata. It does not use AI, OCR, browser automation, or unsupported scraping workarounds.
+- Duplicate detection remains MVP-level: exact source URL duplicates are guarded, same-title matches are warned, and existing duplicate Recipes are not deleted automatically.
 - Attribution protection is MVP-level metadata capture and display; it is not a plagiarism checker or licensing system.
 - Restaurant cooking preferences are guidance only. They do not automatically convert units, rewrite recipes, or adapt oven temperatures.
 - Recipe search uses simple literal containment rather than ranked full-text search.

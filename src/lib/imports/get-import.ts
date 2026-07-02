@@ -38,7 +38,10 @@ export type ImportForReview = {
 
 export type SourceUrlDuplicateState = {
   pendingImportId: string | null;
+  recipeTitle: string | null;
   recipeId: string | null;
+  titleRecipeId: string | null;
+  titleRecipeTitle: string | null;
 };
 
 type ParserOutputEnvelope = {
@@ -119,9 +122,11 @@ export async function getSourceUrlDuplicateState(
   restaurantId: string,
   sourceUrl: string,
   currentImportId?: string,
+  recipeTitle?: string,
 ): Promise<SourceUrlDuplicateState> {
   const canonicalUrl = canonicalSourceUrl(sourceUrl);
   const sourceUrlCandidates = Array.from(new Set([canonicalUrl, sourceUrl.trim()].filter(Boolean)));
+  const normalizedTitle = recipeTitle?.trim().toLowerCase().replace(/\s+/g, " ") ?? "";
   const supabase = await createClient();
   const { data: cookbook } = await supabase
     .from("cookbooks")
@@ -130,13 +135,19 @@ export async function getSourceUrlDuplicateState(
     .maybeSingle();
 
   if (!cookbook) {
-    return { pendingImportId: null, recipeId: null };
+    return {
+      pendingImportId: null,
+      recipeId: null,
+      recipeTitle: null,
+      titleRecipeId: null,
+      titleRecipeTitle: null,
+    };
   }
 
-  const [{ data: recipes }, { data: imports }] = await Promise.all([
+  const [{ data: recipes }, { data: imports }, { data: titleRecipes }] = await Promise.all([
     supabase
       .from("recipes")
-      .select("id")
+      .select("id, title")
       .eq("cookbook_id", cookbook.id)
       .in("source_url", sourceUrlCandidates)
       .is("archived_at", null)
@@ -150,11 +161,26 @@ export async function getSourceUrlDuplicateState(
       .is("archived_at", null)
       .neq("id", currentImportId ?? "00000000-0000-0000-0000-000000000000")
       .limit(1),
+    normalizedTitle
+      ? supabase
+          .from("recipes")
+          .select("id, title")
+          .eq("cookbook_id", cookbook.id)
+          .is("archived_at", null)
+          .ilike("title", recipeTitle?.trim() ?? "")
+          .limit(1)
+      : Promise.resolve({ data: [] }),
   ]);
+  const exactRecipe = recipes?.[0] ?? null;
+  const titleRecipe =
+    titleRecipes?.find((recipe) => recipe.id !== exactRecipe?.id) ?? titleRecipes?.[0] ?? null;
 
   return {
     pendingImportId: imports?.[0]?.id ?? null,
-    recipeId: recipes?.[0]?.id ?? null,
+    recipeId: exactRecipe?.id ?? null,
+    recipeTitle: exactRecipe?.title ?? null,
+    titleRecipeId: titleRecipe?.id ?? null,
+    titleRecipeTitle: titleRecipe?.title ?? null,
   };
 }
 

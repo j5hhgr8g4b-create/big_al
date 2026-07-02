@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 
 import { redirect } from "next/navigation";
 
+import { getSourceUrlDuplicateState } from "@/lib/imports/get-import";
 import { createClient } from "@/lib/supabase/server";
 
 function field(formData: FormData, name: string) {
@@ -74,6 +75,7 @@ export async function saveRecipe(formData: FormData) {
   const prepMinutes = optionalNumber(field(formData, "prepMinutes"));
   const enteredCookMinutes = optionalNumber(field(formData, "cookMinutes"));
   const totalMinutes = optionalNumber(field(formData, "totalMinutes"));
+  const duplicateOverride = field(formData, "duplicateOverride") === "true";
   const cookMinutes =
     enteredCookMinutes ??
     (totalMinutes !== null && !Number.isNaN(totalMinutes)
@@ -105,6 +107,17 @@ export async function saveRecipe(formData: FormData) {
     (servings !== null && servings <= 0)
   ) {
     errorRedirect(returnPath, "Times must be zero or more and servings must be greater than zero.");
+  }
+
+  if (!existingRecipeId && importId && sourceUrl && !duplicateOverride) {
+    const duplicateState = await getSourceUrlDuplicateState(restaurantId, sourceUrl, importId, title);
+
+    if (duplicateState.recipeId) {
+      errorRedirect(
+        returnPath,
+        "This source link is already saved. Review the existing Recipe or choose Save anyway as a duplicate.",
+      );
+    }
   }
 
   const ingredientLines = field(formData, "ingredientLines")

@@ -43,7 +43,7 @@ The MVP is ready for founder UAT. It is not ready for launch sign-off until Alex
 
 ## 4. Bugs Found And Fixed
 
-None.
+- Founder UAT found that exact source URL duplicate warnings were too easy to bypass; the same imported Recipe could be saved twice from the review screen. The import review now blocks the normal save path for exact source duplicates, links to the existing Recipe, and requires the deliberate `Save anyway as a duplicate` override.
 
 Non-app cleanup: `next-env.d.ts` was restored before UAT because Next typegen had flipped its generated route type path.
 
@@ -62,7 +62,9 @@ Non-app cleanup: `next-env.d.ts` was restored before UAT because Next typegen ha
 - Try invalid preference values if testing via request tooling.
 - Import a strong structured recipe URL.
 - Import a weak/no-structured-data URL and confirm partial/fallback review.
-- Confirm duplicate saved Recipe and duplicate pending Import warnings.
+- Confirm an exact duplicate source URL shows the strong duplicate warning, links to the existing Recipe, hides the normal Save button, and only saves through `Save anyway as a duplicate`.
+- Confirm same-title possible duplicates show a softer warning and still allow normal saving.
+- Confirm duplicate pending Import warnings.
 - Save an Import and confirm the Recipe is created and the Import is converted.
 - Discard an Import.
 - Edit a Recipe and confirm attribution fields persist.

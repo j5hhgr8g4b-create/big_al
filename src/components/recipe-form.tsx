@@ -30,9 +30,12 @@ type RecipeFormValue = {
 };
 
 type RecipeFormProps = {
+  duplicateRecipeId?: string | null;
+  duplicateRecipeTitle?: string | null;
   importId?: string;
   initialValue?: RecipeFormValue;
   mode?: "default" | "importReview";
+  possibleDuplicateTitle?: string | null;
   recipeId?: string;
   restaurantId: string;
 };
@@ -64,9 +67,12 @@ const inputClassName =
   "input-control mt-2 px-4 py-3 text-base";
 
 export function RecipeForm({
+  duplicateRecipeId,
+  duplicateRecipeTitle,
   importId,
   initialValue = emptyValue,
   mode = "default",
+  possibleDuplicateTitle,
   recipeId,
   restaurantId,
 }: RecipeFormProps) {
@@ -385,8 +391,38 @@ export function RecipeForm({
       </section>
       )}
 
+      {mode === "importReview" && (duplicateRecipeId || possibleDuplicateTitle) && (
+        <section
+          className={`rounded-2xl border p-5 text-sm leading-6 ${
+            duplicateRecipeId
+              ? "border-red-200 bg-red-50 text-red-800"
+              : "border-[var(--color-note-border)] bg-[var(--color-surface)] text-[var(--color-text-soft)]"
+          }`}
+        >
+          <p className="font-semibold">
+            {duplicateRecipeId ? "Duplicate check required" : "Possible duplicate"}
+          </p>
+          <p className="mt-1">
+            {duplicateRecipeId
+              ? `This source is already saved${duplicateRecipeTitle ? ` as “${duplicateRecipeTitle}”` : ""}. Review the existing Recipe before saving another copy.`
+              : `A saved Recipe has a similar title${possibleDuplicateTitle ? `: “${possibleDuplicateTitle}”` : ""}. Save only if this is a different version or adaptation.`}
+          </p>
+        </section>
+      )}
+
       <div className="flex flex-col gap-3 sm:flex-row">
-        <SubmitButton pendingLabel="Saving recipe…">Save recipe</SubmitButton>
+        {duplicateRecipeId ? (
+          <button
+            type="submit"
+            name="duplicateOverride"
+            value="true"
+            className="btn-secondary border-red-200 bg-red-50 px-5 py-3 text-sm text-red-800"
+          >
+            Save anyway as a duplicate
+          </button>
+        ) : (
+          <SubmitButton pendingLabel="Saving recipe…">Save recipe</SubmitButton>
+        )}
         {mode === "importReview" && importId && (
           <button
             type="submit"
