@@ -4,6 +4,18 @@
 
 Build efficiently with minimal token waste. Work milestone by milestone. Do not attempt the full product in one prompt.
 
+## Current Branch Rule
+
+- `main` is stale and must not be used for the next Codex task.
+- The current working branch is `clean-milestone-4-sync`.
+- Milestones 0-8 are complete.
+- URL import foundation already exists.
+- The next approved batch is M11-M14:
+  - M11 URL import hardening
+  - M12 attribution protection
+  - M13 Restaurant preferences foundation
+  - M14 MVP closeout QA
+
 ## Hard Rules
 
 - Do not add features not listed in the current milestone.
@@ -16,7 +28,8 @@ Build efficiently with minimal token waste. Work milestone by milestone. Do not 
 - Do not create a blank AI chat homepage.
 - Do not over-engineer.
 - Do not skip audit log updates.
-- Do not work outside /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App.
+- Do not work outside /workspaces/big_al.
+- Do not run migrations unless the approved milestone explicitly requires it.
 
 ## Source Of Truth
 

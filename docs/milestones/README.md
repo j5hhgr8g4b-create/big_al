@@ -1,5 +1,11 @@
 # Milestone Tracker
 
+Current working branch: `clean-milestone-4-sync`.
+
+`main` is stale and must not be used for the next Codex task.
+
+Milestones 0-8 are complete. URL import foundation already exists.
+
 | Milestone | Scope | Status | Record |
 | --- | --- | --- | --- |
 | 0 | Project Setup | Complete | [Milestone 0](MILESTONE_0.md) |
@@ -11,3 +17,12 @@
 | 6 | Shopping | Complete | [Milestone 6](MILESTONE_6.md) |
 | 7 | Cook Mode | Complete | [Milestone 7](MILESTONE_7.md) |
 | 8 | Basic Big Al | Complete | [Milestone 8](MILESTONE_8.md) |
+
+## Next Approved Batch
+
+| Batch | Scope | Status |
+| --- | --- | --- |
+| M11 | URL import hardening | Approved next |
+| M12 | Attribution protection | Approved next |
+| M13 | Restaurant preferences foundation | Approved next |
+| M14 | MVP closeout QA | Approved next |

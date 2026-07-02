@@ -2,6 +2,14 @@
 
 Build milestone by milestone.
 
+## Current Branch State
+
+`main` is stale and must not be used for the next Codex task.
+
+The current working branch is `clean-milestone-4-sync`.
+
+Milestones 0-8 are complete. URL import foundation already exists.
+
 ## Milestone 0 — Project Setup
 Next.js TypeScript app, Tailwind, Supabase client, env vars, app shell, bottom nav.
 
@@ -28,3 +36,14 @@ step-by-step route, Previous/Next, timer, mark cooked, cook again yes/no.
 
 ## Milestone 8 — Basic Big Al
 contextual help panel, search recipes, recommend recipes, answer simple recipe questions.
+
+## Next Approved Batch
+
+The next approved batch is M11-M14:
+
+- M11 URL import hardening
+- M12 attribution protection
+- M13 Restaurant preferences foundation
+- M14 MVP closeout QA
+
+Do not start from `main`; it is stale. Start from `clean-milestone-4-sync`.

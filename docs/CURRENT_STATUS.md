@@ -1,10 +1,20 @@
 # Current Status
 
+## Branch Status
+
+`main` is stale and must not be used for the next Codex task.
+
+The current working branch is:
+
+```txt
+clean-milestone-4-sync
+```
+
 ## Current Milestone
 
-Milestone 8 — Basic Big Al is completed for the current build path, with manual verification required in a connected app session.
+Milestones 0-8 are complete for the current build path.
 
-The remaining work is post-MVP polish, hardening, and validation unless a new milestone is explicitly approved.
+URL import foundation already exists. The next approved work is the M11-M14 batch: URL import hardening, attribution protection, Restaurant preferences foundation, and MVP closeout QA.
 
 ## Completed Milestones
 
@@ -78,6 +88,7 @@ The remaining work is post-MVP polish, hardening, and validation unless a new mi
 - Basic Big Al uses deterministic Restaurant-scoped reads from saved Recipes, Ingredients, Steps, Menu, Shopping, and cook history.
 - Basic Big Al can find saved Recipes, suggest Recipes, surface planned Recipes, surface recently cooked Recipes, and show cook-again Recipes.
 - Basic Big Al requires no paid AI provider, API key, model, billing setup, usage plan, or subscription.
+- URL import foundation exists: URL/text imports are captured, reviewable, and convertible into saved Recipes.
 
 ## Known Issues / Watch Items
 
@@ -85,7 +96,10 @@ The remaining work is post-MVP polish, hardening, and validation unless a new mi
 - Pantry is now the Shopping area; it should remain Shopping support and not become full pantry inventory management.
 - Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
-- Automatic Import parsing is intentionally a placeholder; URLs are stored but not fetched.
+- URL import foundation exists, but URL import hardening is still pending in M11.
+- Attribution protection is pending in M12.
+- Restaurant preferences foundation is pending in M13.
+- MVP closeout QA is pending in M14.
 - Recipe search uses simple literal containment rather than ranked full-text search.
 - Shopping consolidation only combines matching normalized Ingredient names with the same unit. Unit conversion is intentionally deferred.
 - Cook Mode records cook history but does not yet display Times Cooked or Cook Again Rate in the UI.
@@ -97,7 +111,14 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 ## Next Task
 
-Manually verify Milestone 8 — Basic Big Al in the connected app, then proceed only with explicitly approved post-MVP polish, hardening, or validation.
+Use `clean-milestone-4-sync` for the next Codex task. Do not use `main`; it is stale.
+
+The next approved batch is M11-M14:
+
+- M11 URL import hardening
+- M12 attribution protection
+- M13 Restaurant preferences foundation
+- M14 MVP closeout QA
 
 Do not build paid AI integration, grocery price comparison, full pantry inventory management, calorie tracking, unscoped meal generation, social mechanics, or features beyond M8 without explicit approval.
 
@@ -115,3 +136,10 @@ Codex must only inspect and edit files inside:
 ```txt
 /workspaces/big_al
 ```
+
+Before starting the next task, Codex must confirm:
+
+- Branch is `clean-milestone-4-sync`.
+- `main` is stale and is not the working source.
+- Milestones 0-8 are complete.
+- URL import foundation already exists.

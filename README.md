@@ -12,9 +12,24 @@ Import → Save → Plan → Shop → Cook
 
 Build this loop first.
 
-## Local Project Folder
+## Current Branch State
 
-/Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App
+`main` is stale and must not be used for the next Codex task.
+
+The current working branch is `clean-milestone-4-sync`.
+
+Milestones 0-8 are complete. URL import foundation already exists.
+
+The next approved batch is:
+
+- M11 URL import hardening
+- M12 attribution protection
+- M13 Restaurant preferences foundation
+- M14 MVP closeout QA
+
+## Workspace Folder
+
+/workspaces/big_al
 
 Codex must not work outside this folder.
 
