@@ -24,6 +24,28 @@ Known Issues:
 
 ---
 
+### 2026-07-02 — M11-M14 RPC Permission Follow-up
+
+Summary:
+Added a local migration matching the live database fix that restricts anonymous execution of the new M11-M14 write RPCs.
+
+Files Changed:
+Added `supabase/migrations/20260702171052_m11_m14_restrict_anon_rpc_execute.sql` and updated `docs/CHANGELOG.md`.
+
+Commands Run:
+- `pnpm dlx supabase migration new m11_m14_restrict_anon_rpc_execute`
+
+Database Changes:
+Migration revokes `anon` execute permission from attribution-aware `save_recipe`, attribution-aware `convert_import_to_recipe`, and `save_restaurant_cooking_preferences`. No remote Supabase command was run in this task.
+
+Testing Required:
+None locally. This migration records the live fix already applied.
+
+Known Issues:
+None.
+
+---
+
 ### 2026-07-02 — M11-M14 Approved Batch
 
 Summary:
