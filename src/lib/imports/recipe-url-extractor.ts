@@ -18,7 +18,7 @@ export type ExtractedRecipe = {
 export type RecipeExtractionResult = {
   message: string;
   recipe: ExtractedRecipe;
-  status: "failed" | "placeholder" | "success";
+  status: "failed" | "partial" | "placeholder" | "success";
 };
 
 type JsonValue =
@@ -52,10 +52,32 @@ export function validateRecipeUrl(value: string) {
     if (url.protocol !== "http:" && url.protocol !== "https:") {
       return null;
     }
-    return url;
+    return normalizeRecipeUrl(url);
   } catch {
     return null;
   }
+}
+
+export function normalizeRecipeUrl(url: URL) {
+  const normalized = new URL(url.toString());
+  normalized.hash = "";
+
+  for (const param of [
+    "fbclid",
+    "gclid",
+    "mc_cid",
+    "mc_eid",
+    "utm_campaign",
+    "utm_content",
+    "utm_medium",
+    "utm_source",
+    "utm_term",
+  ]) {
+    normalized.searchParams.delete(param);
+  }
+
+  normalized.hostname = normalized.hostname.toLowerCase();
+  return normalized;
 }
 
 export async function extractRecipeFromUrl(url: URL): Promise<RecipeExtractionResult> {
@@ -93,19 +115,26 @@ export async function extractRecipeFromUrl(url: URL): Promise<RecipeExtractionRe
         htmlLength: html.length,
         jsonLdScriptCount: countJsonLdScripts(html),
       });
+      const fallbackFromPage = mergeRecipeFallback(fallbackRecipe, readPageFallback(html));
+
       return {
-        message: "Big Al could not find recipe data on this page. The link is saved, and you can still add the recipe details below.",
-        recipe: fallbackRecipe,
-        status: "failed",
+        message: fallbackFromPage.title
+          ? "Big Al could not find structured recipe data, but it saved basic page details for review."
+          : "Big Al could not find recipe data on this page. The link is saved, and you can still add the recipe details below.",
+        recipe: fallbackFromPage,
+        status: fallbackFromPage.title ? "partial" : "failed",
       };
     }
 
-    const recipe = normalizeRecipe(recipeJson, fallbackRecipe);
+    const recipe = normalizeRecipe(recipeJson, mergeRecipeFallback(fallbackRecipe, readPageFallback(html)));
     const hasCoreRecipe = recipe.title && recipe.ingredients.length > 0 && recipe.instructions.length > 0;
+    const hasUsefulRecipe =
+      recipe.title || recipe.description || recipe.imageUrl || recipe.author || recipe.ingredients.length > 0 || recipe.instructions.length > 0;
 
     logExtractionEvent("recipe json-ld normalized", {
       author: recipe.author,
       hasCoreRecipe: Boolean(hasCoreRecipe),
+      hasUsefulRecipe: Boolean(hasUsefulRecipe),
       hostname: url.hostname,
       ingredientCount: recipe.ingredients.length,
       instructionCount: recipe.instructions.length,
@@ -117,7 +146,7 @@ export async function extractRecipeFromUrl(url: URL): Promise<RecipeExtractionRe
         ? "Big Al found structured recipe details on the page."
         : "Big Al found some recipe details, but this one still needs a careful check.",
       recipe,
-      status: hasCoreRecipe ? "success" : "failed",
+      status: hasCoreRecipe ? "success" : hasUsefulRecipe ? "partial" : "failed",
     };
   } catch (error) {
     logExtractionWarning("fetch or extraction threw", {
@@ -164,6 +193,8 @@ function findRecipeJson(html: string) {
   const scripts = html.matchAll(
     /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
   );
+  let bestRecipe: JsonObject | null = null;
+  let bestScore = -1;
 
   for (const script of scripts) {
     const rawJson = decodeHtmlEntities(stripHtmlComments(script[1] ?? "").trim());
@@ -171,8 +202,13 @@ function findRecipeJson(html: string) {
 
     try {
       const parsed = JSON.parse(rawJson) as JsonValue;
-      const recipe = findRecipeObject(parsed);
-      if (recipe) return recipe;
+      for (const recipe of findRecipeObjects(parsed)) {
+        const score = recipeScore(recipe);
+        if (score > bestScore) {
+          bestRecipe = recipe;
+          bestScore = score;
+        }
+      }
     } catch (error) {
       logExtractionWarning("json-ld parse failed", {
         errorMessage: error instanceof Error ? error.message : String(error),
@@ -182,7 +218,7 @@ function findRecipeJson(html: string) {
     }
   }
 
-  return null;
+  return bestRecipe;
 }
 
 function countJsonLdScripts(html: string) {
@@ -206,33 +242,39 @@ function decodeHtmlEntities(value: string) {
     .replaceAll("&gt;", ">");
 }
 
-function findRecipeObject(value: JsonValue): JsonObject | null {
+function findRecipeObjects(value: JsonValue | undefined): JsonObject[] {
   if (Array.isArray(value)) {
-    for (const item of value) {
-      const recipe = findRecipeObject(item);
-      if (recipe) return recipe;
-    }
-    return null;
+    return value.flatMap((item) => findRecipeObjects(item));
   }
 
-  if (!isObject(value)) return null;
+  if (!isObject(value)) return [];
+
+  const recipes: JsonObject[] = [];
 
   if (isRecipeType(value["@type"])) {
-    return value;
+    recipes.push(value);
   }
 
-  const graph = value["@graph"];
-  if (Array.isArray(graph)) {
-    return findRecipeObject(graph);
-  }
-
-  for (const nestedKey of ["mainEntity", "mainEntityOfPage", "about"]) {
+  for (const nestedKey of ["@graph", "about", "hasPart", "itemListElement", "mainEntity", "mainEntityOfPage", "subjectOf"]) {
     const nested = value[nestedKey];
-    const recipe = findRecipeObject(nested);
-    if (recipe) return recipe;
+    recipes.push(...findRecipeObjects(nested));
   }
 
-  return null;
+  return recipes;
+}
+
+function recipeScore(recipe: JsonObject) {
+  return [
+    recipe.name,
+    recipe.author,
+    recipe.creator,
+    recipe.description,
+    recipe.image,
+    recipe.recipeIngredient ?? recipe.ingredients,
+    recipe.recipeInstructions,
+    recipe.totalTime,
+    recipe.recipeYield ?? recipe.yield,
+  ].filter(Boolean).length;
 }
 
 function isRecipeType(value: JsonValue | undefined) {
@@ -246,17 +288,56 @@ function isRecipeType(value: JsonValue | undefined) {
 function normalizeRecipe(recipeJson: JsonObject, fallback: ExtractedRecipe): ExtractedRecipe {
   return {
     ...fallback,
-    author: getName(recipeJson.author) || getName(recipeJson.creator),
-    cookMinutes: parseDuration(recipeJson.cookTime),
-    description: textValue(recipeJson.description),
-    imageUrl: imageValue(recipeJson.image),
+    author: getName(recipeJson.author) || getName(recipeJson.creator) || fallback.author,
+    cookMinutes: parseDuration(recipeJson.cookTime) ?? fallback.cookMinutes,
+    description: textValue(recipeJson.description) || fallback.description,
+    imageUrl: imageValue(recipeJson.image) || fallback.imageUrl,
     ingredients: stringArray(recipeJson.recipeIngredient ?? recipeJson.ingredients),
     instructions: instructionArray(recipeJson.recipeInstructions),
-    prepMinutes: parseDuration(recipeJson.prepTime),
-    title: textValue(recipeJson.name),
-    totalMinutes: parseDuration(recipeJson.totalTime),
-    yield: yieldValue(recipeJson.recipeYield ?? recipeJson.yield),
+    prepMinutes: parseDuration(recipeJson.prepTime) ?? fallback.prepMinutes,
+    sourceSite: textValue(recipeJson.publisher) || fallback.sourceSite,
+    title: textValue(recipeJson.name) || fallback.title,
+    totalMinutes: parseDuration(recipeJson.totalTime) ?? fallback.totalMinutes,
+    yield: yieldValue(recipeJson.recipeYield ?? recipeJson.yield) || fallback.yield,
   };
+}
+
+function readPageFallback(html: string): ExtractedRecipe {
+  return {
+    ...emptyRecipe,
+    author: metaContent(html, "author"),
+    description: metaContent(html, "description") || metaPropertyContent(html, "og:description"),
+    imageUrl: metaPropertyContent(html, "og:image"),
+    sourceSite: metaPropertyContent(html, "og:site_name"),
+    title:
+      metaPropertyContent(html, "og:title") ||
+      titleTagContent(html),
+  };
+}
+
+function mergeRecipeFallback(base: ExtractedRecipe, fallback: ExtractedRecipe): ExtractedRecipe {
+  return {
+    ...base,
+    author: fallback.author || base.author,
+    description: fallback.description || base.description,
+    imageUrl: fallback.imageUrl || base.imageUrl,
+    sourceSite: fallback.sourceSite || base.sourceSite,
+    title: fallback.title || base.title,
+  };
+}
+
+function metaContent(html: string, name: string) {
+  const pattern = new RegExp(`<meta\\b(?=[^>]*\\bname=["']${escapeRegExp(name)}["'])(?=[^>]*\\bcontent=["']([^"']*)["'])[^>]*>`, "i");
+  return cleanText(pattern.exec(html)?.[1] ?? "");
+}
+
+function metaPropertyContent(html: string, property: string) {
+  const pattern = new RegExp(`<meta\\b(?=[^>]*\\bproperty=["']${escapeRegExp(property)}["'])(?=[^>]*\\bcontent=["']([^"']*)["'])[^>]*>`, "i");
+  return cleanText(pattern.exec(html)?.[1] ?? "");
+}
+
+function titleTagContent(html: string) {
+  return cleanText(/<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] ?? "");
 }
 
 function instructionArray(value: JsonValue | undefined): string[] {
@@ -359,6 +440,10 @@ function cleanText(value: string) {
     .replace(/<[^>]*>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function parseDuration(value: JsonValue | undefined): number | null {

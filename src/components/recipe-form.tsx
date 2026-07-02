@@ -23,6 +23,7 @@ type RecipeFormValue = {
   prepMinutes: string;
   servings: string;
   sourceUrl: string;
+  sourceSite?: string;
   steps: string[];
   title: string;
   totalMinutes?: string;
@@ -114,19 +115,17 @@ export function RecipeForm({
             defaultValue={initialValue.description}
           />
         </label>
-        {mode === "importReview" && (
-          <label className="block text-sm font-medium">
-            Creator/source
-            <input
-              className={inputClassName}
-              name="creatorSource"
-              type="text"
-              maxLength={160}
-              defaultValue={initialValue.creatorSource ?? ""}
-              placeholder="Author, publication or website"
-            />
-          </label>
-        )}
+        <label className="block text-sm font-medium">
+          Creator/source
+          <input
+            className={inputClassName}
+            name="creatorSource"
+            type="text"
+            maxLength={160}
+            defaultValue={initialValue.creatorSource ?? ""}
+            placeholder="Author, publication or website"
+          />
+        </label>
         <div className="grid grid-cols-2 gap-4">
           <label className="block text-sm font-medium">
             Prep minutes
@@ -198,6 +197,17 @@ export function RecipeForm({
             name="sourceUrl"
             type="url"
             defaultValue={initialValue.sourceUrl}
+          />
+        </label>
+        <label className="block text-sm font-medium">
+          Source site
+          <input
+            className={inputClassName}
+            name="sourceSite"
+            type="text"
+            maxLength={160}
+            defaultValue={initialValue.sourceSite ?? ""}
+            placeholder="Website or publisher"
           />
         </label>
       </section>

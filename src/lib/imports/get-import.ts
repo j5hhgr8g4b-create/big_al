@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { RecipeExtractionResult } from "@/lib/imports/recipe-url-extractor";
+import { normalizeRecipeUrl, type RecipeExtractionResult } from "@/lib/imports/recipe-url-extractor";
 import { createClient } from "@/lib/supabase/server";
 
 const parserFallbackEnvelope = "big-al-import-parser-output-v1";
@@ -34,6 +34,11 @@ export type ImportForReview = {
   source_type: "text" | "url";
   source_url: string | null;
   status: "needs_review";
+};
+
+export type SourceUrlDuplicateState = {
+  pendingImportId: string | null;
+  recipeId: string | null;
 };
 
 type ParserOutputEnvelope = {
@@ -102,7 +107,21 @@ export async function getImportForReview(importId: string): Promise<ImportForRev
   return data ? hydrateImportParserOutput(data as ImportForReview) : null;
 }
 
-export async function sourceUrlAlreadyExists(restaurantId: string, sourceUrl: string) {
+function canonicalSourceUrl(sourceUrl: string) {
+  try {
+    return normalizeRecipeUrl(new URL(sourceUrl)).toString();
+  } catch {
+    return sourceUrl.trim();
+  }
+}
+
+export async function getSourceUrlDuplicateState(
+  restaurantId: string,
+  sourceUrl: string,
+  currentImportId?: string,
+): Promise<SourceUrlDuplicateState> {
+  const canonicalUrl = canonicalSourceUrl(sourceUrl);
+  const sourceUrlCandidates = Array.from(new Set([canonicalUrl, sourceUrl.trim()].filter(Boolean)));
   const supabase = await createClient();
   const { data: cookbook } = await supabase
     .from("cookbooks")
@@ -111,16 +130,35 @@ export async function sourceUrlAlreadyExists(restaurantId: string, sourceUrl: st
     .maybeSingle();
 
   if (!cookbook) {
-    return false;
+    return { pendingImportId: null, recipeId: null };
   }
 
-  const { data } = await supabase
-    .from("recipes")
-    .select("id")
-    .eq("cookbook_id", cookbook.id)
-    .eq("source_url", sourceUrl)
-    .is("archived_at", null)
-    .limit(1);
+  const [{ data: recipes }, { data: imports }] = await Promise.all([
+    supabase
+      .from("recipes")
+      .select("id")
+      .eq("cookbook_id", cookbook.id)
+      .in("source_url", sourceUrlCandidates)
+      .is("archived_at", null)
+      .limit(1),
+    supabase
+      .from("imports")
+      .select("id")
+      .eq("restaurant_id", restaurantId)
+      .in("source_url", sourceUrlCandidates)
+      .eq("status", "needs_review")
+      .is("archived_at", null)
+      .neq("id", currentImportId ?? "00000000-0000-0000-0000-000000000000")
+      .limit(1),
+  ]);
 
-  return Boolean(data?.length);
+  return {
+    pendingImportId: imports?.[0]?.id ?? null,
+    recipeId: recipes?.[0]?.id ?? null,
+  };
+}
+
+export async function sourceUrlAlreadyExists(restaurantId: string, sourceUrl: string) {
+  const duplicateState = await getSourceUrlDuplicateState(restaurantId, sourceUrl);
+  return Boolean(duplicateState.recipeId);
 }

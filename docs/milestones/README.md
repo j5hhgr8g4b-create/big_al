@@ -4,7 +4,7 @@ Current working branch: `clean-milestone-4-sync`.
 
 `main` is stale and must not be used for the next Codex task.
 
-Milestones 0-8 are complete. URL import foundation already exists.
+Milestones 0-8 are complete. URL import foundation already exists. M11-M14 are complete on `clean-milestone-4-sync`.
 
 | Milestone | Scope | Status | Record |
 | --- | --- | --- | --- |
@@ -17,12 +17,16 @@ Milestones 0-8 are complete. URL import foundation already exists.
 | 6 | Shopping | Complete | [Milestone 6](MILESTONE_6.md) |
 | 7 | Cook Mode | Complete | [Milestone 7](MILESTONE_7.md) |
 | 8 | Basic Big Al | Complete | [Milestone 8](MILESTONE_8.md) |
+| 11 | URL import hardening | Complete | [Milestone 11](MILESTONE_11.md) |
+| 12 | Attribution protection | Complete | [Milestone 12](MILESTONE_12.md) |
+| 13 | Restaurant preferences foundation | Complete | [Milestone 13](MILESTONE_13.md) |
+| 14 | MVP closeout QA | Complete | [Milestone 14](MILESTONE_14.md) |
 
-## Next Approved Batch
+## Completed Approved Batch
 
 | Batch | Scope | Status |
 | --- | --- | --- |
-| M11 | URL import hardening | Approved next |
-| M12 | Attribution protection | Approved next |
-| M13 | Restaurant preferences foundation | Approved next |
-| M14 | MVP closeout QA | Approved next |
+| M11 | URL import hardening | Complete |
+| M12 | Attribution protection | Complete |
+| M13 | Restaurant preferences foundation | Complete |
+| M14 | MVP closeout QA | Complete |

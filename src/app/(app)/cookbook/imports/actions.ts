@@ -33,6 +33,7 @@ export async function createImport(formData: FormData) {
   const restaurantId = field(formData, "restaurantId");
   const sourceUrl = field(formData, "sourceUrl");
   const rawText = field(formData, "rawText");
+  let normalizedSourceUrl = sourceUrl;
   let parserName = "manual-placeholder-v1";
   let parserOutput: RecipeExtractionResult = {
     message: "Automatic parsing is not enabled. Review and structure this Import manually.",
@@ -79,14 +80,30 @@ export async function createImport(formData: FormData) {
       errorRedirect("Enter a recipe link that starts with http or https.");
     }
 
+    if (url.toString().length > 2000) {
+      logImportWarning("submission rejected for normalized url length", {
+        importId,
+        sourceUrlLength: url.toString().length,
+      });
+      errorRedirect("The imported recipe link is too long.");
+    }
+
     logImportEvent("url validation passed", {
       hostname: url.hostname,
       importId,
       sourceUrl: url.toString(),
     });
 
+    normalizedSourceUrl = url.toString();
     parserName = "schema-org-recipe-jsonld-v1";
     parserOutput = await extractRecipeFromUrl(url);
+    parserOutput = {
+      ...parserOutput,
+      recipe: {
+        ...parserOutput.recipe,
+        sourceUrl: url.toString(),
+      },
+    };
 
     logImportEvent("extraction finished", {
       importId,
@@ -98,11 +115,11 @@ export async function createImport(formData: FormData) {
     });
   }
 
-  if (sourceUrl.length > 2000 || rawText.length > 100000) {
+  if (normalizedSourceUrl.length > 2000 || rawText.length > 100000) {
     logImportWarning("submission rejected for length", {
       importId,
       rawTextLength: rawText.length,
-      sourceUrlLength: sourceUrl.length,
+      sourceUrlLength: normalizedSourceUrl.length,
     });
     errorRedirect("The imported content is too long.");
   }
@@ -119,7 +136,7 @@ export async function createImport(formData: FormData) {
   const { error } = await supabase.rpc("create_import", {
     target_import_id: importId,
     target_restaurant_id: restaurantId,
-    import_source_url: sourceUrl,
+    import_source_url: normalizedSourceUrl,
     import_raw_text: rawText,
     import_parser_name: parserName,
     import_parser_output: parserOutput,
@@ -156,7 +173,7 @@ export async function createImport(formData: FormData) {
     const fallbackResult = await supabase.rpc("create_import", {
       target_import_id: importId,
       target_restaurant_id: restaurantId,
-      import_source_url: sourceUrl,
+      import_source_url: normalizedSourceUrl,
       import_raw_text: legacyRawText,
     });
 

@@ -4,6 +4,10 @@ import { notFound } from "next/navigation";
 import { SubmitButton } from "@/components/submit-button";
 import { CookTimer } from "@/components/cook-timer";
 import { getRecipeDetail, type RecipeDetail } from "@/lib/recipes/get-recipe";
+import {
+  cookingPreferenceSummary,
+  getRestaurantCookingPreferences,
+} from "@/lib/restaurants/preferences";
 
 import { markRecipeCooked, saveCookAgainFeedback } from "./actions";
 
@@ -42,6 +46,9 @@ export default async function CookModePage({ params, searchParams }: CookModePag
   if (!recipe) {
     notFound();
   }
+
+  const preferences = await getRestaurantCookingPreferences(recipe.restaurantId);
+  const preferenceSummary = cookingPreferenceSummary(preferences);
 
   const stepCount = recipe.steps.length;
   if (stepCount === 0) {
@@ -225,6 +232,17 @@ export default async function CookModePage({ params, searchParams }: CookModePag
 
       <div className="mt-6 space-y-4">
         <CookTimer />
+
+        {preferenceSummary.length > 0 && (
+          <section className="rounded-[var(--radius-2xl)] border border-white/10 bg-white/8 p-5 text-sm leading-6 text-white/72 shadow-[var(--shadow-card)]">
+            <p className="text-base font-semibold text-[var(--color-text-inverse)]">Kitchen notes</p>
+            <ul className="mt-3 list-disc space-y-1 pl-5">
+              {preferenceSummary.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <details open className="rounded-[var(--radius-2xl)] border border-white/10 bg-white/8 p-5 shadow-[var(--shadow-card)]">
           <summary className="cursor-pointer text-lg font-semibold tracking-tight">

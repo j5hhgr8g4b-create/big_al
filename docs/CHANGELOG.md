@@ -24,6 +24,35 @@ Known Issues:
 
 ---
 
+### 2026-07-02 — M11-M14 Approved Batch
+
+Summary:
+Completed the approved post-M8 batch on `clean-milestone-4-sync`: URL import hardening, attribution protection, Restaurant cooking preferences foundation, and MVP closeout QA. The existing URL import foundation was improved in place rather than replaced.
+
+Files Changed:
+Updated URL import extraction/review, recipe attribution save/display, Restaurant cooking preferences, Recipe detail and Cook Mode guidance, Supabase migration history, and audit docs.
+
+Commands Run:
+- `pwd`
+- `git branch --show-current`
+- `git status --short`
+- `grep -nE "Milestones 0-8|Milestones 0–8|URL import foundation|clean-milestone-4-sync|main is stale" docs/CURRENT_STATUS.md`
+- `curl -fsSL https://supabase.com/changelog.md`
+- `pnpm dlx supabase migration new m11_m14_import_attribution_preferences`
+- `pnpm lint`
+- `pnpm typecheck`
+
+Database Changes:
+Added migration `20260702164220_m11_m14_import_attribution_preferences.sql`. It adds `recipes.creator_source`, `recipes.source_site`, an active source URL index, `restaurant_cooking_preferences`, Restaurant-member RLS, and authenticated RPCs for attribution-aware Recipe saves and cooking preference saves. The migration file was created but not applied in this task.
+
+Testing Required:
+Apply the new migration, then manually test URL import happy path, partial extraction fallback, failed extraction fallback, duplicate source warnings, saving attribution, editing attribution, saving Restaurant cooking preferences, and viewing preference guidance on Recipe detail and Cook Mode.
+
+Known Issues:
+URL extraction remains MVP-first. It does not use paid AI, OCR, browser automation, nutrition extraction, unit conversion, recipe rewriting, plagiarism checks, licensing checks, or generic chatbot behavior.
+
+---
+
 ### 2026-06-27 — Milestone 8
 
 Summary:

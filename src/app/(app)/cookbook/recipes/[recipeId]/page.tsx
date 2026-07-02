@@ -7,6 +7,10 @@ import { SubmitButton } from "@/components/submit-button";
 import { saveMealEvent } from "@/app/(app)/menu/actions";
 import { getMenuDateRange } from "@/lib/menu/get-menu";
 import { getRecipeDetail } from "@/lib/recipes/get-recipe";
+import {
+  cookingPreferenceSummary,
+  getRestaurantCookingPreferences,
+} from "@/lib/restaurants/preferences";
 import { createClient } from "@/lib/supabase/server";
 
 type RecipePageProps = {
@@ -60,8 +64,10 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
   }
 
   const description = splitAttribution(recipe.description);
+  const creatorSource = recipe.creator_source ?? description.creatorSource;
+  const sourceSite = recipe.source_site ?? "";
   const supabase = await createClient();
-  const [booksResult, membershipsResult] = await Promise.all([
+  const [booksResult, membershipsResult, preferences] = await Promise.all([
     supabase
       .from("recipe_books")
       .select("id, title")
@@ -69,19 +75,21 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
       .is("archived_at", null)
       .order("title"),
     supabase.from("recipe_book_recipes").select("recipe_book_id").eq("recipe_id", recipe.id),
+    getRestaurantCookingPreferences(recipe.restaurantId),
   ]);
   const books = booksResult.data ?? [];
   const selectedBookIds = new Set(
     (membershipsResult.data ?? []).map((membership) => membership.recipe_book_id),
   );
   const menuRange = getMenuDateRange();
+  const preferenceSummary = cookingPreferenceSummary(preferences);
 
   return (
     <article>
       {recipe.image_url && <RecipeImage src={recipe.image_url} title={recipe.title} />}
       <div className={recipe.image_url ? "mt-7" : ""}>
         <p className="section-kicker">
-          {description.creatorSource ? `From ${description.creatorSource}` : `By ${recipe.creatorName}`}
+          {creatorSource ? `From ${creatorSource}` : `By ${recipe.creatorName}`}
         </p>
         <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <h1 className="text-4xl font-semibold tracking-tight">{recipe.title}</h1>
@@ -105,15 +113,20 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
             {description.body}
           </p>
         )}
-        {(description.creatorSource || recipe.source_url) && (
+        {(creatorSource || sourceSite || recipe.source_url) && (
           <div className="note-card mt-5 p-4 text-sm leading-6 text-[var(--color-text-soft)]">
-            {description.creatorSource && (
+            {creatorSource && (
               <p>
-                Creator/source: <span className="font-semibold">{description.creatorSource}</span>
+                Creator/source: <span className="font-semibold">{creatorSource}</span>
+              </p>
+            )}
+            {sourceSite && (
+              <p className={creatorSource ? "mt-2" : ""}>
+                Source site: <span className="font-semibold">{sourceSite}</span>
               </p>
             )}
             {recipe.source_url && (
-              <p className={description.creatorSource ? "mt-2 break-words" : "break-words"}>
+              <p className={creatorSource || sourceSite ? "mt-2 break-words" : "break-words"}>
                 Source:{" "}
                 <a
                   href={recipe.source_url}
@@ -147,6 +160,16 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
             <dd className="mt-1 text-sm font-semibold">{recipe.servings ?? "Not set"}</dd>
           </div>
         </dl>
+        {preferenceSummary.length > 0 && (
+          <section className="note-card mt-5 p-4 text-sm leading-6 text-[var(--color-text-soft)]">
+            <p className="font-semibold">Kitchen notes</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5">
+              {preferenceSummary.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
 
       {error && (

@@ -22,6 +22,7 @@ export type RecipeDetail = {
   cook_minutes: number | null;
   cookbook_id: string;
   created_at: string;
+  creator_source: string | null;
   creatorName: string;
   description: string | null;
   difficulty: "easy" | "medium" | "hard" | null;
@@ -32,6 +33,7 @@ export type RecipeDetail = {
   restaurantId: string;
   servings: number | null;
   source_url: string | null;
+  source_site: string | null;
   steps: RecipeStep[];
   title: string;
   updated_at: string;

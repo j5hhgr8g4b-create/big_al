@@ -51,6 +51,10 @@ function descriptionWithCreatorSource(description: string, creatorSource: string
   return [description, `Creator/source: ${creatorSource}`].filter(Boolean).join("\n\n");
 }
 
+function rpcMissing(error: { code?: string; message?: string }) {
+  return error.code === "PGRST202" || error.message?.toLowerCase().includes("function");
+}
+
 export async function saveRecipe(formData: FormData) {
   const existingRecipeId = field(formData, "recipeId");
   const importId = field(formData, "importId");
@@ -62,10 +66,9 @@ export async function saveRecipe(formData: FormData) {
       ? `/cookbook/imports/${importId}/review`
       : "/cookbook/imports/new";
   const title = field(formData, "title");
-  const description = descriptionWithCreatorSource(
-    field(formData, "description"),
-    field(formData, "creatorSource"),
-  );
+  const description = field(formData, "description");
+  const creatorSource = field(formData, "creatorSource");
+  const sourceSite = field(formData, "sourceSite");
   const imageUrl = optionalHttpUrl(field(formData, "imageUrl"));
   const sourceUrl = optionalHttpUrl(field(formData, "sourceUrl"));
   const prepMinutes = optionalNumber(field(formData, "prepMinutes"));
@@ -167,6 +170,8 @@ export async function saveRecipe(formData: FormData) {
     recipe_description: description,
     recipe_image_url: imageUrl,
     recipe_source_url: sourceUrl,
+    recipe_creator_source: creatorSource,
+    recipe_source_site: sourceSite,
     recipe_prep_minutes: prepMinutes,
     recipe_cook_minutes: cookMinutes,
     recipe_servings: servings,
@@ -185,7 +190,34 @@ export async function saveRecipe(formData: FormData) {
       });
 
   if (error) {
-    errorRedirect(returnPath, "We could not save this recipe. Check the details and try again.");
+    const legacyPayload = {
+      target_recipe_id: recipeId,
+      recipe_title: title,
+      recipe_description: descriptionWithCreatorSource(description, creatorSource || sourceSite),
+      recipe_image_url: imageUrl,
+      recipe_source_url: sourceUrl,
+      recipe_prep_minutes: prepMinutes,
+      recipe_cook_minutes: cookMinutes,
+      recipe_servings: servings,
+      recipe_difficulty: difficulty,
+      ingredients_payload: ingredients,
+      steps_payload: steps,
+    };
+    const fallbackResult = rpcMissing(error)
+      ? importId
+        ? await supabase.rpc("convert_import_to_recipe", {
+            ...legacyPayload,
+            target_import_id: importId,
+          })
+        : await supabase.rpc("save_recipe", {
+            ...legacyPayload,
+            target_restaurant_id: restaurantId,
+          })
+      : { error };
+
+    if (fallbackResult.error) {
+      errorRedirect(returnPath, "We could not save this recipe. Check the details and try again.");
+    }
   }
 
   redirect(`/cookbook/recipes/${recipeId}`);

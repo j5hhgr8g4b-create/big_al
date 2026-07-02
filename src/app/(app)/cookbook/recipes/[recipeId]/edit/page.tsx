@@ -13,6 +13,20 @@ function inputNumber(value: number | null) {
   return value === null ? "" : String(value);
 }
 
+function splitAttribution(description: string | null) {
+  if (!description) {
+    return { body: "", creatorSource: "" };
+  }
+
+  const attributionPattern = /(?:^|\n+)Creator\/source:\s*(.+)$/i;
+  const match = description.match(attributionPattern);
+
+  return {
+    body: description.replace(attributionPattern, "").trim(),
+    creatorSource: match?.[1]?.trim() ?? "",
+  };
+}
+
 export default async function EditRecipePage({ params, searchParams }: EditRecipePageProps) {
   const [{ recipeId }, { error }] = await Promise.all([params, searchParams]);
   const recipe = await getRecipeDetail(recipeId);
@@ -20,6 +34,8 @@ export default async function EditRecipePage({ params, searchParams }: EditRecip
   if (!recipe) {
     notFound();
   }
+
+  const description = splitAttribution(recipe.description);
 
   return (
     <section>
@@ -42,7 +58,8 @@ export default async function EditRecipePage({ params, searchParams }: EditRecip
         restaurantId={recipe.restaurantId}
         initialValue={{
           cookMinutes: inputNumber(recipe.cook_minutes),
-          description: recipe.description ?? "",
+          creatorSource: recipe.creator_source ?? description.creatorSource,
+          description: description.body,
           difficulty: recipe.difficulty ?? "",
           imageUrl: recipe.image_url ?? "",
           ingredients: recipe.ingredients.map((ingredient) => ({
@@ -54,6 +71,7 @@ export default async function EditRecipePage({ params, searchParams }: EditRecip
           prepMinutes: inputNumber(recipe.prep_minutes),
           servings: inputNumber(recipe.servings),
           sourceUrl: recipe.source_url ?? "",
+          sourceSite: recipe.source_site ?? "",
           steps: recipe.steps.map((step) => step.instruction),
           title: recipe.title,
         }}

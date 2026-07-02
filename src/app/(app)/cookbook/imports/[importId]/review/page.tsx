@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { RecipeForm } from "@/components/recipe-form";
-import { getImportForReview, sourceUrlAlreadyExists } from "@/lib/imports/get-import";
+import { getImportForReview, getSourceUrlDuplicateState } from "@/lib/imports/get-import";
 
 type ReviewImportPageProps = {
   params: Promise<{ importId: string }>;
@@ -18,27 +18,35 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
 
   const extracted = recipeImport.parser_output.recipe;
   const sourceUrl = extracted?.sourceUrl || recipeImport.source_url || "";
-  const duplicateWarning = sourceUrl
-    ? await sourceUrlAlreadyExists(recipeImport.restaurant_id, sourceUrl)
-    : false;
+  const duplicateState = sourceUrl
+    ? await getSourceUrlDuplicateState(recipeImport.restaurant_id, sourceUrl, recipeImport.id)
+    : { pendingImportId: null, recipeId: null };
   const extractionWorked = recipeImport.parser_output.status === "success";
+  const extractionPartial = recipeImport.parser_output.status === "partial";
+  const extractionLabel = extractionWorked
+    ? "Extracted"
+    : extractionPartial
+      ? "Partly extracted"
+      : "Fallback saved";
 
   return (
     <section>
       <p className="section-kicker">
-        {extractionWorked ? "Ready for a check" : "Needs a hand"}
+        {extractionWorked ? "Ready for a check" : extractionPartial ? "Partial match" : "Needs a hand"}
       </p>
       <h1 className="screen-title mt-2 inline-block">Review recipe</h1>
       <p className="mt-6 leading-7 text-[var(--color-text-muted)]">
         {extractionWorked
           ? "Big Al has filled in what it found. Give it a quick check before saving it to your Cookbook."
-          : "Big Al could not read this one automatically. The link is saved, and you can still add the recipe details below."}
+          : extractionPartial
+            ? "Big Al found some details. Check the gaps before saving it to your Cookbook."
+            : "Big Al could not read this one automatically. The link is saved, and you can still add the recipe details below."}
       </p>
 
       <aside className="note-card mt-6 space-y-4 p-5 text-sm leading-6">
         <div className="flex flex-wrap gap-2">
           <span className="warm-pill bg-[var(--color-surface)]">
-            {extractionWorked ? "Extracted" : "Fallback saved"}
+            {extractionLabel}
           </span>
           {extracted?.sourceSite && (
             <span className="warm-pill bg-[var(--color-surface)]">{extracted.sourceSite}</span>
@@ -64,9 +72,14 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
         {sourceUrl && (
           <p className="break-words text-xs text-[var(--color-text-muted)]">Source: {sourceUrl}</p>
         )}
-        {duplicateWarning && (
+        {duplicateState.recipeId && (
           <p className="rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-surface)] px-4 py-3 font-semibold text-[var(--color-text-soft)]">
-            This link may already be in your Cookbook. Check before saving another copy.
+            This source link is already saved in your Cookbook. Check before saving another copy.
+          </p>
+        )}
+        {!duplicateState.recipeId && duplicateState.pendingImportId && (
+          <p className="rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-surface)] px-4 py-3 font-semibold text-[var(--color-text-soft)]">
+            Another pending Import uses this same source link. Review both before saving.
           </p>
         )}
         {recipeImport.raw_text && (
@@ -104,6 +117,7 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
           prepMinutes: inputNumber(extracted?.prepMinutes),
           servings: extracted?.yield ?? "",
           sourceUrl,
+          sourceSite: extracted?.sourceSite ?? "",
           steps: extracted?.instructions?.length ? extracted.instructions : [""],
           title: extracted?.title ?? "",
           totalMinutes: inputNumber(extracted?.totalMinutes),

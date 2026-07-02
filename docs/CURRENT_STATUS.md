@@ -12,9 +12,9 @@ clean-milestone-4-sync
 
 ## Current Milestone
 
-Milestones 0-8 are complete for the current build path.
+Milestones 0-8 are complete for the current build path. M11-M14 are now complete on `clean-milestone-4-sync`.
 
-URL import foundation already exists. The next approved work is the M11-M14 batch: URL import hardening, attribution protection, Restaurant preferences foundation, and MVP closeout QA.
+URL import foundation already exists and has been hardened. Attribution protection, Restaurant cooking preferences foundation, and MVP closeout QA are now in place.
 
 ## Completed Milestones
 
@@ -27,6 +27,10 @@ URL import foundation already exists. The next approved work is the M11-M14 batc
 - Milestone 6 — Shopping
 - Milestone 7 — Cook Mode
 - Milestone 8 — Basic Big Al
+- M11 — URL import hardening
+- M12 — Attribution protection
+- M13 — Restaurant preferences foundation
+- M14 — MVP closeout QA
 
 ## Latest Verification Checkpoint
 
@@ -89,6 +93,12 @@ URL import foundation already exists. The next approved work is the M11-M14 batc
 - Basic Big Al can find saved Recipes, suggest Recipes, surface planned Recipes, surface recently cooked Recipes, and show cook-again Recipes.
 - Basic Big Al requires no paid AI provider, API key, model, billing setup, usage plan, or subscription.
 - URL import foundation exists: URL/text imports are captured, reviewable, and convertible into saved Recipes.
+- URL imports normalize common tracking parameters, preserve source URLs, extract JSON-LD Recipe data more reliably, and fall back to basic page metadata when structured recipe data is missing.
+- Import review distinguishes extracted, partly extracted, and fallback states.
+- Import review warns when the same source URL already exists as a saved Recipe or another pending Import.
+- Recipes can store creator/source and source-site attribution separately from the Recipe description.
+- Restaurant cooking preferences can store unit preference, oven type, hob type, and simple equipment limits.
+- Recipe detail and Cook Mode show lightweight kitchen preference guidance when preferences are set.
 
 ## Known Issues / Watch Items
 
@@ -96,10 +106,9 @@ URL import foundation already exists. The next approved work is the M11-M14 batc
 - Pantry is now the Shopping area; it should remain Shopping support and not become full pantry inventory management.
 - Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
 - A second-user cross-Restaurant RLS test remains on the regression checklist.
-- URL import foundation exists, but URL import hardening is still pending in M11.
-- Attribution protection is pending in M12.
-- Restaurant preferences foundation is pending in M13.
-- MVP closeout QA is pending in M14.
+- URL extraction still depends on recipe pages exposing usable JSON-LD or basic metadata. It does not use AI, OCR, browser automation, or unsupported scraping workarounds.
+- Attribution protection is MVP-level metadata capture and display; it is not a plagiarism checker or licensing system.
+- Restaurant cooking preferences are guidance only. They do not automatically convert units, rewrite recipes, or adapt oven temperatures.
 - Recipe search uses simple literal containment rather than ranked full-text search.
 - Shopping consolidation only combines matching normalized Ingredient names with the same unit. Unit conversion is intentionally deferred.
 - Cook Mode records cook history but does not yet display Times Cooked or Cook Again Rate in the UI.
@@ -113,12 +122,7 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 Use `clean-milestone-4-sync` for the next Codex task. Do not use `main`; it is stale.
 
-The next approved batch is M11-M14:
-
-- M11 URL import hardening
-- M12 attribution protection
-- M13 Restaurant preferences foundation
-- M14 MVP closeout QA
+M11-M14 are complete. Next work should be explicitly approved before implementation.
 
 Do not build paid AI integration, grocery price comparison, full pantry inventory management, calorie tracking, unscoped meal generation, social mechanics, or features beyond M8 without explicit approval.
 

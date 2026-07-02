@@ -67,6 +67,9 @@ export default async function KitchenPage() {
                 <Link href="/cookbook" className="btn-ghost w-full">
                   Browse cookbook
                 </Link>
+                <Link href="/restaurants/preferences" className="btn-ghost w-full">
+                  Cooking prefs
+                </Link>
               </div>
             </div>
             <div className="plate-wrap" aria-hidden="true">
