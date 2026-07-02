@@ -24,6 +24,40 @@ Known Issues:
 
 ---
 
+### 2026-07-02 — MVP UAT and Regression Pass
+
+Summary:
+Completed a UAT/regression pass for the MVP through code inspection, local protected-route smoke testing, and required build checks. No low-risk app bugs were found that required code changes.
+
+Files Changed:
+Added `docs/UAT_MVP_M11_M14.md`. Updated `docs/CURRENT_STATUS.md`, `docs/CHANGELOG.md`, and `docs/milestones/README.md`.
+
+Commands Run:
+- `pwd`
+- `git branch --show-current`
+- `git status --short`
+- `find supabase/migrations -maxdepth 1 -type f -name '*.sql' -print | sort`
+- `grep -RInE ... docs/CURRENT_STATUS.md docs/milestones/README.md docs/CHANGELOG.md`
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
+- `git diff --check`
+- `pnpm start`
+- `./node_modules/.bin/next start`
+- `curl -i http://localhost:3000/login`
+- `curl -i` protected app routes
+
+Database Changes:
+None.
+
+Testing Required:
+Founder UAT still needs a live authenticated Supabase session to test sign-up/sign-in, Restaurant preferences persistence, URL Import save/discard, duplicate warnings, Recipe edit/archive, Menu planning, Shopping generation, Cook Mode mark-cooked, and second-user cross-Restaurant isolation.
+
+Known Issues:
+`pnpm start` failed locally with `unable to open database file`; direct `./node_modules/.bin/next start` worked for route smoke testing. No app-code launch blocker was found in static/build testing.
+
+---
+
 ### 2026-07-02 — M11-M14 RPC Permission Follow-up
 
 Summary:

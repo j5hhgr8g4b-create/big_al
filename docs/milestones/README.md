@@ -4,7 +4,9 @@ Current working branch: `clean-milestone-4-sync`.
 
 `main` is stale and must not be used for the next Codex task.
 
-Milestones 0-8 are complete. URL import foundation already exists. M11-M14 are complete on `clean-milestone-4-sync`.
+Milestones 0-8 are complete. URL import foundation already exists. M11-M14 are complete on `clean-milestone-4-sync` and ready for founder UAT.
+
+Latest UAT report: [MVP UAT M11-M14](../UAT_MVP_M11_M14.md).
 
 | Milestone | Scope | Status | Record |
 | --- | --- | --- | --- |

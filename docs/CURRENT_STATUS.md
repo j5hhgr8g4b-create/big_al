@@ -34,6 +34,16 @@ URL import foundation already exists and has been hardened. Attribution protecti
 
 ## Latest Verification Checkpoint
 
+2026-07-02 M11-M14 UAT/regression pass completed:
+
+- Branch confirmed as `clean-milestone-4-sync`; `main` remains stale.
+- Supabase migrations are present through the M11-M14 anon RPC execute restriction follow-up.
+- Code inspection covered Auth, Restaurant, Kitchen, Cookbook, URL Import, Recipe Books, Search, Menu, Pantry/Shopping, Cook Mode, and security/RLS paths.
+- Local protected-route smoke tests confirmed logged-out app routes redirect to `/login`.
+- `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `git diff --check` passed.
+- UAT report added at `docs/UAT_MVP_M11_M14.md`.
+- Founder UAT with a live authenticated Supabase session is still required before launch sign-off.
+
 2026-06-27 M6 live verification passed:
 
 - Existing Supabase user login works.
@@ -122,7 +132,7 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 Use `clean-milestone-4-sync` for the next Codex task. Do not use `main`; it is stale.
 
-M11-M14 are complete. Next work should be explicitly approved before implementation.
+M11-M14 are complete and ready for founder UAT. Next implementation work should be explicitly approved before coding.
 
 Do not build paid AI integration, grocery price comparison, full pantry inventory management, calorie tracking, unscoped meal generation, social mechanics, or features beyond M8 without explicit approval.
 
