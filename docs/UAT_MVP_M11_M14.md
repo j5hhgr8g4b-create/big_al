@@ -44,6 +44,9 @@ The MVP is ready for founder UAT. It is not ready for launch sign-off until Alex
 ## 4. Bugs Found And Fixed
 
 - Founder UAT found that exact source URL duplicate warnings were too easy to bypass; the same imported Recipe could be saved twice from the review screen. The import review now blocks the normal save path for exact source duplicates, links to the existing Recipe, and requires the deliberate `Save anyway as a duplicate` override.
+- Founder UAT found that Shopping generation copied raw Recipe ingredient lines too literally. Shopping list now filters non-shopping basics, handles spices as buyable items, combines obvious duplicates, and shows meal/date context.
+- Founder UAT follow-up found garlic variants and prep notes still made the Shopping list feel like recipe text. Shopping list normalisation improved: prep notes are stripped from item titles, garlic/onion-style duplicates combine more reliably, tomato purée categorisation corrected, and meal/date context is prioritised over repeated source labels.
+- Founder UAT found duplicate garlic cards still appeared from existing generated Shopping rows. Garlic and similar ingredient forms now canonicalise correctly, prep clutter is stripped before display, and regenerated shopping lists no longer show duplicate garlic cards.
 
 Non-app cleanup: `next-env.d.ts` was restored before UAT because Next typegen had flipped its generated route type path.
 
@@ -72,6 +75,20 @@ Non-app cleanup: `next-env.d.ts` was restored before UAT because Next typegen ha
 - Search Recipes by title and ingredient.
 - Plan Recipes in Menu.
 - Generate and update Shopping items.
+- Plan a meal with water in the ingredients and confirm water is not shown in the generated Shopping list.
+- Plan a meal with generic salt and pepper and confirm generic salt/pepper is excluded by default.
+- Plan a meal with specific salt or peppercorns and confirm specific buyable versions may remain.
+- Plan a meal with spices measured in tsp/tbsp and confirm the spice name is the main item while the Recipe amount is secondary.
+- Plan meals with `3 cloves garlic`, `6 garlic cloves`, and `1 garlic clove` and confirm one Garlic item appears with total cloves or readable recipe amounts.
+- Confirm existing generated rows such as `3 cloves garlic (peeled and minced)`, `6 garlic cloves (, minced)`, and `Garlic Clove` display as one Garlic card before regeneration where they share generated Shopping state.
+- Plan a meal with `1 large onion (peeled and finely chopped)` and confirm the main title is Onion, not the prep instruction.
+- Plan a meal with `2 tbsp tomato puree (tomato paste in US)` and confirm Tomato purée appears under Tins, jars & packets or Pantry staples, not Fresh produce.
+- Plan two meals with onions and confirm the generated onion item combines where safe.
+- Plan two meals with the same ingredient but incompatible quantities and confirm the list does not crash and amounts remain readable.
+- Plan meals across different dates and confirm Shopping items show the planned meal date context.
+- Add a short-life ingredient for a later meal and confirm the item subtly says to buy closer to cooking day.
+- Confirm each generated item shows subtle meal context without making the card noisy.
+- Confirm checked/unchecked Shopping list behaviour still works.
 - Use Cook Mode, mark cooked, and save cook-again feedback.
 - Repeat a targeted second-user/cross-Restaurant RLS check.
 
@@ -109,3 +126,6 @@ Non-app cleanup: `next-env.d.ts` was restored before UAT because Next typegen ha
 - `docs/CURRENT_STATUS.md`
 - `docs/CHANGELOG.md`
 - `docs/milestones/README.md`
+- `supabase/migrations/20260702174752_uat_shopping_list_cleanup.sql`
+- `src/lib/shopping/get-shopping.ts`
+- `src/app/(app)/pantry/page.tsx`

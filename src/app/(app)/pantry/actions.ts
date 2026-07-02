@@ -72,20 +72,27 @@ export async function addManualShoppingItem(formData: FormData) {
 }
 
 export async function toggleShoppingItemPurchased(formData: FormData) {
-  const itemId = field(formData, "itemId");
+  const itemIds = field(formData, "itemId")
+    .split(",")
+    .map((itemId) => itemId.trim())
+    .filter(Boolean);
   const isPurchased = field(formData, "isPurchased") === "true";
 
-  if (!itemId) {
+  if (itemIds.length === 0) {
     redirect("/pantry");
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.rpc("set_shopping_item_purchased", {
-    target_is_purchased: isPurchased,
-    target_shopping_item_id: itemId,
-  });
+  const results = await Promise.all(
+    itemIds.map((itemId) =>
+      supabase.rpc("set_shopping_item_purchased", {
+        target_is_purchased: isPurchased,
+        target_shopping_item_id: itemId,
+      }),
+    ),
+  );
 
-  if (error) {
+  if (results.some((result) => result.error)) {
     errorRedirect("We could not update that shopping item.");
   }
 

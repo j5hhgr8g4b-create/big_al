@@ -16,6 +16,12 @@ Milestones 0-8 are complete for the current build path. M11-M14 are now complete
 
 URL import foundation already exists and has been hardened. Attribution protection, Restaurant cooking preferences foundation, and MVP closeout QA are now in place.
 
+Pantry/Shopping UAT cleanup is also in place on this branch: generated Shopping lists now filter obvious non-shopping basics, treat tiny spice amounts as buyable spice items, combine obvious same-unit duplicates, and show planned meal/date context.
+
+Follow-up Shopping normalisation now strips obvious prep notes from generated item titles, combines garlic/onion-style variants more reliably, categorises tomato purée away from Fresh produce, and prioritises meal/date context over repeated source labels.
+
+Garlic duplicate fallback is in place at both generation time and display time so older generated Shopping rows can render as one Garlic card before the user regenerates the list.
+
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
@@ -92,6 +98,13 @@ URL import foundation already exists and has been hardened. Attribution protecti
 - Restaurant-scoped Shopping lists and Shopping items.
 - Pantry generates a Shopping list from planned Menu meals.
 - Generated Shopping items consolidate matching Ingredients by normalized name and unit where practical for MVP.
+- Generated Shopping items filter obvious non-shopping basics such as water, ice, and generic salt/pepper.
+- Generated Shopping items show common small measured spices as buyable items, with Recipe amounts in notes instead of as the main item.
+- Generated Shopping items strip obvious prep notes such as peeled, chopped, minced, melted, optional, and note callouts from the display title.
+- Generated Shopping items combine common garlic forms such as cloves garlic, garlic cloves, and garlic clove into Garlic when safe.
+- Pantry defensively canonicalises older generated garlic rows at display time and toggles grouped generated rows together.
+- Generated Shopping items include subtle Menu meal/date context and simple buy-closer guidance for obvious short-life items planned later.
+- Pantry groups active Shopping items into lightweight shop sections without adding full inventory management.
 - Pantry supports manual Shopping item additions and purchased tick/untick state.
 - Shopping state persists through Supabase-backed reads after refresh.
 - Recipe detail pages link to Cook Mode.
@@ -122,7 +135,7 @@ URL import foundation already exists and has been hardened. Attribution protecti
 - Attribution protection is MVP-level metadata capture and display; it is not a plagiarism checker or licensing system.
 - Restaurant cooking preferences are guidance only. They do not automatically convert units, rewrite recipes, or adapt oven temperatures.
 - Recipe search uses simple literal containment rather than ranked full-text search.
-- Shopping consolidation only combines matching normalized Ingredient names with the same unit. Unit conversion is intentionally deferred.
+- Shopping cleanup is MVP-level and keyword-based. It combines only matching normalized Ingredient names with compatible units and simple numeric quantities. Unit conversion, pack-size inference, grocery pricing, pantry inventory, and expiry prediction are intentionally deferred.
 - Cook Mode records cook history but does not yet display Times Cooked or Cook Again Rate in the UI.
 - Basic Big Al is deterministic and intentionally simple. It does not generate new meal plans, search the internet, use paid AI, convert units, or make unsupported claims.
 

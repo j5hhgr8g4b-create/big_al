@@ -24,6 +24,36 @@ Known Issues:
 
 ---
 
+### 2026-07-02 — Shopping List UAT Cleanup
+
+Summary:
+Fixed a UAT issue where generated Shopping lists were too literal. Generated lists now filter obvious non-shopping basics, show small spice amounts as buyable spice items, combine obvious same-unit duplicates, and include planned meal/date context.
+
+Follow-up UAT refinement: Shopping list normalisation improved so prep notes are stripped from item titles, garlic/onion-style duplicates combine more reliably, tomato purée categorisation is corrected, and meal/date context is prioritised over repeated source labels.
+
+Launch-blocking garlic follow-up: Garlic and similar ingredient forms now canonicalise correctly at generation time and display time, prep clutter is stripped before display, and regenerated Shopping lists no longer show duplicate garlic cards.
+
+Files Changed:
+Updated `supabase/migrations/20260702174752_uat_shopping_list_cleanup.sql`, `src/lib/shopping/get-shopping.ts`, `src/app/(app)/pantry/page.tsx`, `docs/UAT_MVP_M11_M14.md`, `docs/CHANGELOG.md`, and `docs/CURRENT_STATUS.md`.
+
+Commands Run:
+- `pnpm dlx supabase migration new uat_shopping_list_cleanup`
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
+- `git diff --check`
+
+Database Changes:
+Added a local migration that replaces `public.generate_shopping_list_from_meal_events(uuid, date, date)` without changing table schema. No remote Supabase command was run.
+
+Testing Required:
+Plan meals with water, generic salt/pepper, specific salts or peppercorns, small measured spices, garlic clove variants, prep-note-heavy onions, tomato purée, duplicate onions, incompatible quantities, multiple planned dates, and short-life fresh ingredients. Regenerate Pantry and confirm generated items remain practical, grouped, contextual, and checkable. Also confirm older generated garlic rows display as one Garlic card before regeneration.
+
+Known Issues:
+Shopping cleanup remains MVP-level and keyword-based. It does not convert units, infer supermarket pack sizes, compare grocery prices, manage pantry inventory, predict expiry dates, or split shopping trips.
+
+---
+
 ### 2026-07-02 — Duplicate Import Save Hardening
 
 Summary:

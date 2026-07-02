@@ -4,7 +4,7 @@ import { SectionIntro } from "@/components/section-intro";
 import { SubmitButton } from "@/components/submit-button";
 import { formatMenuDate } from "@/lib/menu/get-menu";
 import { getCurrentRestaurant } from "@/lib/restaurants/current";
-import { getShoppingData, type ShoppingItem } from "@/lib/shopping/get-shopping";
+import { getShoppingData, type ShoppingCategory, type ShoppingItem } from "@/lib/shopping/get-shopping";
 
 import { addManualShoppingItem, generateShoppingList, toggleShoppingItemPurchased } from "./actions";
 
@@ -22,6 +22,26 @@ function itemAmount(item: ShoppingItem) {
   });
 
   return item.unit ? `${quantity} ${item.unit}` : quantity;
+}
+
+const categoryOrder: ShoppingCategory[] = [
+  "Fresh produce",
+  "Meat & fish",
+  "Dairy & eggs",
+  "Bakery",
+  "Tins, jars & packets",
+  "Spices & seasonings",
+  "Pantry staples",
+  "Other",
+];
+
+function groupShoppingItems(items: ShoppingItem[]) {
+  return categoryOrder
+    .map((category) => ({
+      category,
+      items: items.filter((item) => item.category === category),
+    }))
+    .filter((group) => group.items.length > 0);
 }
 
 function ShoppingItemRow({ item }: { item: ShoppingItem }) {
@@ -50,13 +70,19 @@ function ShoppingItemRow({ item }: { item: ShoppingItem }) {
             <h3 className={`font-semibold ${item.is_purchased ? "text-[var(--color-text-muted)] line-through" : ""}`}>
               {item.name}
             </h3>
-            {amount && <span className="text-sm font-medium text-[var(--color-text-muted)]">{amount}</span>}
+            {amount && (
+              <span className="text-sm font-medium text-[var(--color-text-muted)]">
+                {item.source === "generated" ? `Total: ${amount}` : amount}
+              </span>
+            )}
           </div>
-          <p className="section-kicker mt-1 text-sm">
-            {item.source === "generated" ? "From Menu" : "Added by hand"}
-          </p>
           {item.notes && (
-            <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">{item.notes}</p>
+            <p className="mt-1 text-sm leading-6 text-[var(--color-text-muted)]">{item.notes}</p>
+          )}
+          {(!item.notes || item.source === "manual") && (
+            <p className="section-kicker mt-2 text-sm">
+              {item.source === "generated" ? "From Menu" : "Added by hand"}
+            </p>
           )}
         </div>
       </div>
@@ -90,6 +116,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
     supabase,
     restaurant.id,
   );
+  const activeGroups = groupShoppingItems(activeItems);
 
   return (
     <>
@@ -200,9 +227,21 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
         </div>
 
         {activeItems.length ? (
-          <div className="mt-4 space-y-3">
-            {activeItems.map((item) => (
-              <ShoppingItemRow key={item.id} item={item} />
+          <div className="mt-4 space-y-6">
+            {activeGroups.map((group) => (
+              <section key={group.category} aria-labelledby={`shopping-category-${group.category.replace(/\W+/g, "-")}`}>
+                <h3
+                  id={`shopping-category-${group.category.replace(/\W+/g, "-")}`}
+                  className="section-kicker text-base"
+                >
+                  {group.category}
+                </h3>
+                <div className="mt-3 space-y-3">
+                  {group.items.map((item) => (
+                    <ShoppingItemRow key={item.id} item={item} />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         ) : (
