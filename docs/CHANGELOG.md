@@ -24,6 +24,31 @@ Known Issues:
 
 ---
 
+### 2026-07-04 — M16 Core Reliability and Error Handling
+
+Summary:
+Added friendly loading, error, and not-found fallbacks for normal app routes. Tightened Menu and Pantry date validation and improved common failed-action messages so founder flows recover with clear guidance instead of vague failures.
+
+Files Changed:
+Added `src/app/(app)/error.tsx`, `src/app/(app)/loading.tsx`, `src/app/not-found.tsx`, and `docs/milestones/MILESTONE_16.md`. Updated `src/app/(app)/layout.tsx`, `src/app/(app)/menu/actions.ts`, `src/app/(app)/pantry/actions.ts`, `docs/CURRENT_STATUS.md`, `docs/CHANGELOG.md`, and `docs/milestones/README.md`.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
+- `git diff --check`
+
+Database Changes:
+None.
+
+Testing Required:
+Bulk UAT should confirm expired sessions show the login message, missing records show the friendly not-found state, and Menu/Pantry failed actions return useful messages while Import -> Save -> Plan -> Shop -> Cook still works.
+
+Known Issues:
+Second-user Restaurant isolation remains parked as a pre-beta gate.
+
+---
+
 ### 2026-07-04 — M15 Founder UAT Pantry and Core Loop Closeout
 
 Summary:

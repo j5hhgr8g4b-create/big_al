@@ -12,7 +12,10 @@ export default async function AppLayout({ children }: Readonly<{ children: React
   const { data, error } = await supabase.auth.getClaims();
 
   if (error || !data?.claims.sub) {
-    redirect("/login");
+    const params = new URLSearchParams({
+      message: "Sign in again to keep cooking with Big Al.",
+    });
+    redirect(`/login?${params.toString()}`);
   }
 
   return (

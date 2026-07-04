@@ -36,6 +36,8 @@ Founder UAT retesting has now passed for Pantry salt/pepper filtering, Clear Sho
 
 The live Supabase project has the `clear_active_shopping_list` RPC applied and permission-checked: authenticated users can execute it, anonymous users cannot.
 
+M16 Core Reliability & Error Handling is complete: app routes now have friendlier loading, error, and not-found fallbacks, expired sessions redirect with a clear login message, and common Menu/Pantry action failures use clearer recovery copy.
+
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
@@ -51,6 +53,7 @@ The live Supabase project has the `clear_active_shopping_list` RPC applied and p
 - M12 — Attribution protection
 - M13 — Restaurant preferences foundation
 - M14 — MVP closeout QA
+- M16 — Core Reliability & Error Handling
 
 ## Latest Verification Checkpoint
 

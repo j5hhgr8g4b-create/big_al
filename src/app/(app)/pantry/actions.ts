@@ -22,6 +22,10 @@ export async function generateShoppingList(formData: FormData) {
     errorRedirect("Choose Menu dates before generating a shopping list.");
   }
 
+  if (Number.isNaN(Date.parse(startDate)) || Number.isNaN(Date.parse(endDate)) || startDate > endDate) {
+    errorRedirect("Choose a valid Menu date range before generating a shopping list.");
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.rpc("generate_shopping_list_from_meal_events", {
     target_end_date: endDate,
@@ -30,7 +34,7 @@ export async function generateShoppingList(formData: FormData) {
   });
 
   if (error) {
-    errorRedirect("We could not generate the shopping list.");
+    errorRedirect("Big Al could not generate the shopping list. Check your Menu and try again.");
   }
 
   revalidatePath("/pantry");
@@ -55,7 +59,7 @@ export async function clearShoppingList(formData: FormData) {
   });
 
   if (error) {
-    errorRedirect("We could not clear the shopping list.");
+    errorRedirect("Big Al could not clear the shopping list. Refresh Pantry and try again.");
   }
 
   revalidatePath("/pantry");
@@ -92,7 +96,7 @@ export async function addManualShoppingItem(formData: FormData) {
   });
 
   if (error) {
-    errorRedirect("We could not add that shopping item.");
+    errorRedirect("Big Al could not add that shopping item. Check the details and try again.");
   }
 
   revalidatePath("/pantry");
@@ -121,7 +125,7 @@ export async function toggleShoppingItemPurchased(formData: FormData) {
   );
 
   if (results.some((result) => result.error)) {
-    errorRedirect("We could not update that shopping item.");
+    errorRedirect("Big Al could not update that shopping item. Refresh Pantry and try again.");
   }
 
   revalidatePath("/pantry");

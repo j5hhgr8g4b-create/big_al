@@ -29,6 +29,10 @@ export async function saveMealEvent(formData: FormData) {
     errorRedirect(returnPath, "Choose a Recipe and date for the Menu.");
   }
 
+  if (Number.isNaN(Date.parse(plannedFor))) {
+    errorRedirect(returnPath, "Choose a real Menu date.");
+  }
+
   if (!Number.isInteger(peopleEating) || peopleEating <= 0 || peopleEating > 100) {
     errorRedirect(returnPath, "Add how many people are eating.");
   }
@@ -49,7 +53,7 @@ export async function saveMealEvent(formData: FormData) {
   });
 
   if (error) {
-    errorRedirect(returnPath, "We could not add that Recipe to the Menu.");
+    errorRedirect(returnPath, "Big Al could not add that Recipe to the Menu. Check it is still in this Restaurant and try again.");
   }
 
   redirect(returnPath);
@@ -68,7 +72,7 @@ export async function archiveMealEvent(formData: FormData) {
   });
 
   if (error) {
-    errorRedirect("/menu", "We could not remove that meal from the Menu.");
+    errorRedirect("/menu", "Big Al could not remove that meal from the Menu. Refresh and try again.");
   }
 
   redirect("/menu");

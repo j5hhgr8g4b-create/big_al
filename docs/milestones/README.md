@@ -4,7 +4,7 @@ Current working branch: `clean-milestone-4-sync`.
 
 `main` is stale and must not be used for the next Codex task.
 
-Milestones 0-8 are complete. URL import foundation already exists. M11-M14 are complete on `clean-milestone-4-sync` and ready for founder UAT.
+Milestones 0-8 are complete. URL import foundation already exists. M11-M14 are complete on `clean-milestone-4-sync`. M15 founder-only UAT is complete; second-user Restaurant isolation is parked as a pre-beta gate while the app has one active user.
 
 Latest UAT report: [MVP UAT M11-M14](../UAT_MVP_M11_M14.md).
 
@@ -23,6 +23,7 @@ Latest UAT report: [MVP UAT M11-M14](../UAT_MVP_M11_M14.md).
 | 12 | Attribution protection | Complete | [Milestone 12](MILESTONE_12.md) |
 | 13 | Restaurant preferences foundation | Complete | [Milestone 13](MILESTONE_13.md) |
 | 14 | MVP closeout QA | Complete | [Milestone 14](MILESTONE_14.md) |
+| 16 | Core Reliability & Error Handling | Complete | [Milestone 16](MILESTONE_16.md) |
 
 ## Completed Approved Batch
 
