@@ -43,17 +43,74 @@ export type ShoppingData = {
 
 type RawShoppingItem = Omit<ShoppingItem, "category">;
 
-function stripPrepNotes(value: string) {
+function normalizeUnicodeFractions(value: string) {
   return value
+    .replace(/½/g, "1/2")
+    .replace(/¼/g, "1/4")
+    .replace(/¾/g, "3/4")
+    .replace(/⅓/g, "1/3")
+    .replace(/⅔/g, "2/3")
+    .replace(/⅛/g, "1/8")
+    .replace(/⅜/g, "3/8")
+    .replace(/⅝/g, "5/8")
+    .replace(/⅞/g, "7/8");
+}
+
+function stripPrepNotes(value: string) {
+  return normalizeUnicodeFractions(value)
+    .replace(/\s+mixed\s+with\s+.*\bwater\b.*\bslurry\b.*$/i, "")
+    .replace(/\s+mixed\s+with\s+.*\bcold water\b.*$/i, "")
     .replace(/\s*\([^)]*\)/g, "")
     .replace(
       /\s*,\s*(peeled|finely chopped|chopped|diced|sliced|minced|grated|crushed|melted|softened|room temperature|optional|to taste|note\s*\d+).*$/i,
       "",
     )
     .replace(/^(peeled|finely chopped|chopped|diced|sliced|minced|grated|crushed)\s+/i, "")
+    .replace(/\s+(optional|to taste)$/i, "")
     .replace(/\s*,\s*$/g, "")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function parentheticalExample(value: string) {
+  return value.match(/\((such as [^)]+)\)/i)?.[1]?.trim() ?? null;
+}
+
+function stripLeadingAmount(value: string) {
+  return normalizeUnicodeFractions(value)
+    .replace(
+      /^\s*(\d+\s+\d+\s*\/\s*\d+|\d+\s*\/\s*\d+|\d+(?:\.\d+)?)\s*(tsp|teaspoons?|tbsp|tablespoons?|g|kg|ml|l|oz|lbs?|cups?|pinches?|cloves?|large|medium|small|each)?\s+/i,
+      "",
+    )
+    .trim();
+}
+
+function dedupeRepeatedWords(value: string) {
+  return value.replace(/\b(\w+)\s+\1\b/gi, "$1").trim();
+}
+
+function canonicalGeneratedName(value: string) {
+  const stripped = dedupeRepeatedWords(stripLeadingAmount(stripPrepNotes(value)));
+  const normalized = stripped.toLowerCase();
+
+  if (normalized === "fresh thyme" || normalized === "thyme") return "Thyme";
+  if (normalized === "oil oil" || normalized === "oil") return "Oil";
+  if (normalized === "olive oil oil" || normalized === "oil olive oil" || normalized === "olive oil") return "Olive oil";
+  if (/^(mashed|roast|boiled) potatoes$/.test(normalized)) return "Potatoes";
+
+  return stripped;
+}
+
+function isGenericSaltOrPepper(value: string) {
+  const normalized = canonicalGeneratedName(value)
+    .toLowerCase()
+    .replace(/[^a-z& ]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return /^(salt|pepper|black pepper|ground black pepper|freshly ground black pepper|salt and pepper|salt & pepper|salt and black pepper|salt black pepper|pepper and salt|black pepper and salt|freshly ground black pepper and salt)$/.test(
+    normalized,
+  );
 }
 
 function parseSimpleQuantity(value: string) {
@@ -74,7 +131,8 @@ function normaliseGeneratedShoppingItem(item: RawShoppingItem): RawShoppingItem 
   if (item.source !== "generated") return item;
 
   const withoutTotal = item.name.replace(/\s+total:.*$/i, "");
-  const stripped = stripPrepNotes(withoutTotal);
+  const example = parentheticalExample(withoutTotal);
+  const stripped = canonicalGeneratedName(withoutTotal);
   const distinctGarlic = /(^|\s)(black garlic|garlic powder|garlic granules|garlic paste|garlic oil)(\s|$)/i.test(stripped);
   const garlicLike =
     !distinctGarlic &&
@@ -84,9 +142,15 @@ function normaliseGeneratedShoppingItem(item: RawShoppingItem): RawShoppingItem 
   const garlicCloveName = !distinctGarlic && /^garlic cloves?$/i.test(stripped);
 
   if (!garlicLike && !garlicCloveName) {
+    const notes =
+      example && item.source === "generated" && !item.notes?.toLowerCase().includes(example.toLowerCase())
+        ? [example, item.notes].filter(Boolean).join(" · ")
+        : item.notes;
+
     return {
       ...item,
       name: stripped || item.name,
+      notes,
     };
   }
 
@@ -130,6 +194,10 @@ function consolidateGeneratedItems(items: RawShoppingItem[]): RawShoppingItem[] 
   const groups = new Map<string, RawShoppingItem[]>();
 
   for (const item of items.map(normaliseGeneratedShoppingItem)) {
+    if (item.source === "generated" && isGenericSaltOrPepper(item.name)) {
+      continue;
+    }
+
     const key =
       item.source === "generated"
         ? `${item.name.toLowerCase()}::${item.unit?.toLowerCase() ?? ""}::${item.is_purchased}`
@@ -177,7 +245,7 @@ function categorizeShoppingItem(name: string): ShoppingCategory {
   }
 
   if (
-    /\b(fresh coriander|fresh parsley|fresh basil|fresh mint|fresh dill|lettuce|rocket|spinach|salad|onion|garlic|potato|carrot|tomato|lemon|lime|berries|apple|banana|mushroom|courgette|broccoli|cabbage)\b/.test(
+    /\b(fresh coriander|fresh parsley|fresh basil|fresh mint|fresh dill|lettuce|rocket|spinach|salad|green vegetables|vegetables|onion|garlic|potato|potatoes|carrot|carrots|tomato|lemon|lime|berries|apple|banana|mushroom|courgette|broccoli|cabbage)\b/.test(
       normalized,
     )
   ) {
@@ -192,7 +260,7 @@ function categorizeShoppingItem(name: string): ShoppingCategory {
     return "Spices & seasonings";
   }
 
-  if (/\b(flour|sugar|rice|pasta|noodles|oil|vinegar|honey|oats|breadcrumbs)\b/.test(normalized)) {
+  if (/\b(flour|cornflour|sugar|rice|pasta|noodles|oil|vinegar|honey|oats|breadcrumbs)\b/.test(normalized)) {
     return "Pantry staples";
   }
 

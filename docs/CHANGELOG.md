@@ -24,6 +24,33 @@ Known Issues:
 
 ---
 
+### 2026-07-04 — M15 Founder UAT Pantry and Core Loop Closeout
+
+Summary:
+Founder UAT retesting passed for Pantry generic salt/pepper filtering, Clear Shopping list, duplicate import handling, and the full live core loop: Import -> Save -> Plan -> Shop -> Cook. The remaining M15 blocker is second-user Restaurant isolation only.
+
+The live Supabase project `cqcjacirzibfjecrruie` was verified after applying the missing Clear Shopping list RPC. `public.clear_active_shopping_list(uuid)` exists, clears the active Restaurant's current Shopping list including purchased items, is executable by `authenticated`, and is not executable by `anon`.
+
+Files Changed:
+Updated `src/lib/shopping/get-shopping.ts`, `src/app/(app)/pantry/actions.ts`, `src/app/(app)/pantry/page.tsx`, `supabase/migrations/20260702174752_uat_shopping_list_cleanup.sql`, `docs/UAT_MVP_M11_M14.md`, `docs/CHANGELOG.md`, and `docs/CURRENT_STATUS.md`.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
+- `git diff --check`
+
+Database Changes:
+Live Supabase project `cqcjacirzibfjecrruie` now has `public.clear_active_shopping_list(uuid)` and its execute grants corrected for M15 UAT. No unrelated database objects were changed.
+
+Testing Required:
+Run the second-user Restaurant isolation check before closing M15.
+
+Known Issues:
+Second-user Restaurant isolation remains the only M15 blocker.
+
+---
+
 ### 2026-07-02 — Shopping List UAT Cleanup
 
 Summary:
@@ -32,6 +59,16 @@ Fixed a UAT issue where generated Shopping lists were too literal. Generated lis
 Follow-up UAT refinement: Shopping list normalisation improved so prep notes are stripped from item titles, garlic/onion-style duplicates combine more reliably, tomato purée categorisation is corrected, and meal/date context is prioritised over repeated source labels.
 
 Launch-blocking garlic follow-up: Garlic and similar ingredient forms now canonicalise correctly at generation time and display time, prep clutter is stripped before display, and regenerated Shopping lists no longer show duplicate garlic cards.
+
+M15 Founder UAT follow-up: generated Shopping lists now filter generic salt/pepper basics more defensively, strip cornflour slurry instructions from item titles, and categorise carrots as Fresh produce.
+
+Additional M15 Pantry normalisation follow-up: generic salt/black pepper filtering now handles rows with leading recipe amounts, fresh thyme and thyme canonicalise together as Thyme, duplicated titles such as Oil Oil are cleaned up, and green vegetables categorise as Fresh produce. Sugar is intentionally left visible for now.
+
+M15 Founder UAT follow-up: generic salt/black pepper filtering now handles more punctuation and word-order variants, prepared potato items such as Mashed potatoes normalise to Potatoes where safe, and Green vegetables remains a vague buyable item while staying under Fresh produce. Red currant jelly and Red wine remain visible.
+
+M15 Pantry follow-up: Potatoes now categorise as Fresh produce, generated Green vegetables preserves useful parenthetical examples such as asparagus and green beans in notes, and generic salt/black pepper filtering remains scoped to non-specialist basics.
+
+M15 Pantry closeout follow-up: generic salt/pepper filtering now uses an exact basic-ingredient rule after measured amount stripping, and Pantry has a confirmed Clear Shopping list action that removes both to-buy and purchased items for the active Restaurant.
 
 Files Changed:
 Updated `supabase/migrations/20260702174752_uat_shopping_list_cleanup.sql`, `src/lib/shopping/get-shopping.ts`, `src/app/(app)/pantry/page.tsx`, `docs/UAT_MVP_M11_M14.md`, `docs/CHANGELOG.md`, and `docs/CURRENT_STATUS.md`.
@@ -47,7 +84,7 @@ Database Changes:
 Added a local migration that replaces `public.generate_shopping_list_from_meal_events(uuid, date, date)` without changing table schema. No remote Supabase command was run.
 
 Testing Required:
-Plan meals with water, generic salt/pepper, specific salts or peppercorns, small measured spices, garlic clove variants, prep-note-heavy onions, tomato purée, duplicate onions, incompatible quantities, multiple planned dates, and short-life fresh ingredients. Regenerate Pantry and confirm generated items remain practical, grouped, contextual, and checkable. Also confirm older generated garlic rows display as one Garlic card before regeneration.
+Plan meals with water, generic salt/pepper, specific salts or peppercorns, small measured spices, garlic clove variants, fresh thyme/thyme duplicates, oil title variants, prep-note-heavy onions, prepared potatoes, tomato purée, cornflour slurry instructions, carrots, green vegetables, red currant jelly, red wine, duplicate onions, incompatible quantities, multiple planned dates, and short-life fresh ingredients. Regenerate Pantry and confirm generated items remain practical, grouped, contextual, and checkable. Also confirm older generated garlic and generic salt/pepper rows are cleaned up before regeneration.
 
 Known Issues:
 Shopping cleanup remains MVP-level and keyword-based. It does not convert units, infer supermarket pack sizes, compare grocery prices, manage pantry inventory, predict expiry dates, or split shopping trips.

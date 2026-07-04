@@ -66,11 +66,48 @@ begin
   parsed as (
     select
       planned_ingredients.*,
-      lower(regexp_replace(btrim(name), '\s+', ' ', 'g')) as raw_lower,
-      regexp_match(name, '^\s*(\d+)\s*/\s*(\d+)') as fraction_parts,
-      regexp_match(name, '^\s*(\d+(\.\d+)?)') as number_parts,
-      regexp_match(lower(name), '(^|\s)(tsp|teaspoons?|tbsp|tablespoons?|g|kg|ml|l|oz|lbs?|cups?|pinches?|cloves?|large|medium|small)(\s|$)') as unit_parts
-    from planned_ingredients
+      lower(regexp_replace(btrim(normalized_raw_name), '\s+', ' ', 'g')) as raw_lower,
+      regexp_match(normalized_raw_name, '^\s*(\d+)\s*/\s*(\d+)') as fraction_parts,
+      regexp_match(normalized_raw_name, '^\s*(\d+(\.\d+)?)') as number_parts,
+      regexp_match(lower(normalized_raw_name), '(^|\s)(tsp|teaspoons?|tbsp|tablespoons?|g|kg|ml|l|oz|lbs?|cups?|pinches?|cloves?|large|medium|small)(\s|$)') as unit_parts
+    from (
+      select
+        planned_ingredients.*,
+        replace(
+          replace(
+            replace(
+              replace(
+                replace(
+                  replace(
+                    replace(
+                      replace(
+                        replace(name, '½', '1/2'),
+                        '¼',
+                        '1/4'
+                      ),
+                      '¾',
+                      '3/4'
+                    ),
+                    '⅓',
+                    '1/3'
+                  ),
+                  '⅔',
+                  '2/3'
+                ),
+                '⅛',
+                '1/8'
+              ),
+              '⅜',
+              '3/8'
+            ),
+            '⅝',
+            '5/8'
+          ),
+          '⅞',
+          '7/8'
+        ) as normalized_raw_name
+      from planned_ingredients
+    ) planned_ingredients
   ),
   cleaned as (
     select
@@ -86,7 +123,7 @@ begin
       nullif(
         btrim(
           regexp_replace(
-            name,
+            normalized_raw_name,
             '^\s*(\d+\s+\d+/\d+|\d+/\d+|\d+(\.\d+)?)\s*(tsp|teaspoons?|tbsp|tablespoons?|g|kg|ml|l|oz|lbs?|cups?|pinches?|cloves?|large|medium|small)?\s+',
             '',
             'i'
@@ -99,6 +136,7 @@ begin
   tidied as (
     select
       cleaned.*,
+      substring(coalesce(cleaned_name, name) from '\((such as [^)]+)\)') as example_context,
       nullif(
         btrim(
           regexp_replace(
@@ -106,7 +144,17 @@ begin
               regexp_replace(
                 regexp_replace(
                   regexp_replace(
-                    coalesce(cleaned_name, name),
+                    regexp_replace(
+                      regexp_replace(
+                        coalesce(cleaned_name, name),
+                        '\s+mixed\s+with\s+.*water.*slurry.*$',
+                        '',
+                        'i'
+                      ),
+                      '\s+mixed\s+with\s+.*cold water.*$',
+                      '',
+                      'i'
+                    ),
                     '\s*\([^)]*\)',
                     '',
                     'g'
@@ -119,17 +167,21 @@ begin
                 '',
                 'i'
               ),
-              '\s*,\s*$',
+              '\s+(optional|to taste)$',
               '',
-              'g'
+              'i'
             ),
-            '\s+',
-            ' ',
+            '\s*,\s*$',
+            '',
             'g'
-          )
-        ),
-        ''
-      ) as display_name
+          ),
+          '\s+',
+          ' ',
+          'g'
+        )
+      ),
+      ''
+    ) as display_name
     from cleaned
   ),
   classified as (
@@ -148,11 +200,15 @@ begin
           'pepper',
           'black pepper',
           'ground black pepper',
+          'freshly ground black pepper',
           'salt and pepper',
+          'salt and black pepper',
+          'salt black pepper',
+          'pepper and salt',
+          'black pepper and salt',
+          'freshly ground black pepper and salt',
           'salt & pepper'
         )
-          or lower(regexp_replace(btrim(coalesce(display_name, cleaned_name, name)), '\s+', ' ', 'g')) ~ '^salt( and | & )(freshly ground )?(black )?pepper$'
-          or lower(regexp_replace(btrim(coalesce(display_name, cleaned_name, name)), '\s+', ' ', 'g')) ~ '^(freshly ground )?(black )?pepper$'
         then true
         else false
       end as is_excluded,
@@ -165,7 +221,11 @@ begin
         when lower(coalesce(display_name, cleaned_name, name)) ~ '(^| )(black garlic|garlic powder|garlic granules|garlic paste)( |$)' then initcap(coalesce(display_name, cleaned_name, name))
         when lower(coalesce(display_name, cleaned_name, name)) ~ '^(minced |crushed )?garlic$|^garlic cloves?$|^cloves? garlic$' then 'Garlic'
         when lower(coalesce(display_name, cleaned_name, name)) ~ '^onions?$' then 'Onion'
+        when lower(coalesce(display_name, cleaned_name, name)) ~ '^(mashed|roast|boiled) potatoes?$' then 'Potatoes'
+        when lower(coalesce(display_name, cleaned_name, name)) ~ '^green vegetables?$' then 'Green vegetables'
         when lower(coalesce(display_name, cleaned_name, name)) ~ 'tomato pur(e|é)e|tomato paste' then 'Tomato purée'
+        when lower(coalesce(display_name, cleaned_name, name)) ~ 'olive oil' then 'Olive oil'
+        when lower(coalesce(display_name, cleaned_name, name)) ~ '^(oil\s+oil|oil)$' then 'Oil'
         when lower(coalesce(display_name, cleaned_name, name)) ~ 'garam masala' then 'Garam masala'
         when lower(coalesce(display_name, cleaned_name, name)) ~ 'curry powder' then 'Curry powder'
         when lower(coalesce(display_name, cleaned_name, name)) ~ 'chilli powder' then 'Chilli powder'
@@ -190,7 +250,7 @@ begin
         when lower(coalesce(display_name, cleaned_name, name)) ~ 'basil' then
           case when lower(coalesce(display_name, cleaned_name, name)) ~ 'fresh' then 'Fresh basil' else 'Basil' end
         when lower(coalesce(display_name, cleaned_name, name)) ~ 'thyme' then
-          case when lower(coalesce(display_name, cleaned_name, name)) ~ 'fresh' then 'Fresh thyme' else 'Thyme' end
+          'Thyme'
         when lower(coalesce(display_name, cleaned_name, name)) ~ 'rosemary' then
           case when lower(coalesce(display_name, cleaned_name, name)) ~ 'fresh' then 'Fresh rosemary' else 'Rosemary' end
         when lower(coalesce(display_name, cleaned_name, name)) ~ 'nutmeg' then 'Nutmeg'
@@ -249,6 +309,7 @@ begin
       count(distinct meal_event_id) as meal_count,
       (array_agg(to_char(planned_for, 'Dy') || ' · ' || recipe_title order by planned_for, recipe_title))[1] as first_meal_label,
       string_agg(to_char(planned_for, 'Dy'), ', ' order by planned_for) as date_labels,
+      string_agg(distinct example_context, ', ') filter (where example_context is not null) as example_contexts,
       string_agg(distinct recipe_amount_text, ', ') filter (where recipe_amount_text is not null) as recipe_amounts
     from shoppable
     group by normalized_shopping_name
@@ -287,6 +348,7 @@ begin
           when (is_spice or quantity is null) and recipe_amounts is not null then 'Recipe amount: ' || recipe_amounts
           else null
         end,
+        example_contexts,
         case
           when meal_count = 1 then 'For: ' || first_meal_label
           else 'Used in ' || meal_count::text || ' planned meals · ' || date_labels
@@ -313,7 +375,44 @@ begin
 end;
 $$;
 
+create or replace function public.clear_active_shopping_list(
+  target_restaurant_id uuid
+)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  current_profile_id uuid := auth.uid();
+  selected_shopping_list_id uuid;
+begin
+  if current_profile_id is null then
+    raise exception 'Authentication required';
+  end if;
+
+  if not public.is_restaurant_member(target_restaurant_id) then
+    raise exception 'Restaurant membership required';
+  end if;
+
+  selected_shopping_list_id := public.ensure_active_shopping_list(target_restaurant_id);
+
+  delete from public.shopping_items
+  where shopping_list_id = selected_shopping_list_id
+    and restaurant_id = target_restaurant_id;
+
+  update public.shopping_lists
+  set source_start_date = null,
+      source_end_date = null,
+      generated_at = null
+  where id = selected_shopping_list_id
+    and restaurant_id = target_restaurant_id;
+end;
+$$;
+
 revoke all on function public.generate_shopping_list_from_meal_events(uuid, date, date) from public;
+revoke all on function public.clear_active_shopping_list(uuid) from public;
 grant execute on function public.generate_shopping_list_from_meal_events(uuid, date, date) to authenticated;
+grant execute on function public.clear_active_shopping_list(uuid) to authenticated;
 
 commit;

@@ -6,9 +6,9 @@ Branch: `clean-milestone-4-sync`
 
 ## 1. Executive Summary
 
-MVP UAT and regression checks passed for code inspection, protected-route smoke testing, and required build checks. No low-risk app bugs were found that required code changes.
+MVP UAT and regression checks passed for code inspection, protected-route smoke testing, required build checks, founder Pantry/Shopping retesting, duplicate import handling retesting, and the full live core loop.
 
-The MVP is ready for founder UAT. It is not ready for launch sign-off until Alex completes connected Supabase manual testing with a real authenticated account and at least one saved Recipe.
+The full live core loop Import -> Save -> Plan -> Shop -> Cook has passed founder retest. The remaining M15 blocker is second-user Restaurant isolation only.
 
 ## 2. What Was Tested
 
@@ -40,6 +40,11 @@ The MVP is ready for founder UAT. It is not ready for launch sign-off until Alex
   - `git diff --check`
 - App code paths remain Restaurant-scoped through current Restaurant lookup, Restaurant IDs, cookbook IDs, RLS reads, and authenticated RPCs.
 - M11-M14 write RPCs are not expected for anonymous users and have an anon-execute revoke migration.
+- Live Supabase project `cqcjacirzibfjecrruie` has `clear_active_shopping_list(uuid)` applied. `authenticated` can execute it; `anon` cannot.
+- Founder retest passed for Pantry generic salt/pepper filtering.
+- Founder retest passed for Clear Shopping list.
+- Founder retest passed for duplicate import handling.
+- Founder retest passed for the full live core loop: Import -> Save -> Plan -> Shop -> Cook.
 
 ## 4. Bugs Found And Fixed
 
@@ -47,55 +52,24 @@ The MVP is ready for founder UAT. It is not ready for launch sign-off until Alex
 - Founder UAT found that Shopping generation copied raw Recipe ingredient lines too literally. Shopping list now filters non-shopping basics, handles spices as buyable items, combines obvious duplicates, and shows meal/date context.
 - Founder UAT follow-up found garlic variants and prep notes still made the Shopping list feel like recipe text. Shopping list normalisation improved: prep notes are stripped from item titles, garlic/onion-style duplicates combine more reliably, tomato purée categorisation corrected, and meal/date context is prioritised over repeated source labels.
 - Founder UAT found duplicate garlic cards still appeared from existing generated Shopping rows. Garlic and similar ingredient forms now canonicalise correctly, prep clutter is stripped before display, and regenerated shopping lists no longer show duplicate garlic cards.
+- M15 Founder UAT found generic salt/pepper basics, cornflour slurry instructions, and carrots still needed cleanup. Generated Shopping lists now filter generic salt/pepper basics, show Cornflour as the buyable slurry item, and categorise carrots as Fresh produce.
+- M15 Founder UAT follow-up found generic salt/black pepper rows with amounts, herb duplicates, duplicated oil titles, and green vegetables still needed cleanup. Pantry now filters generic salt/black pepper more defensively, groups fresh thyme/thyme as Thyme, cleans Oil Oil to Oil or Olive oil where clear, and categorises green vegetables as Fresh produce. Sugar remains visible for now.
+- M15 Founder UAT follow-up found generic salt/black pepper variants and prepared potato items still needed cleanup. Pantry now filters broader generic salt/pepper punctuation and word-order variants, normalises Mashed/Roast/Boiled potatoes to Potatoes where safe, keeps Green vegetables as a vague item under Fresh produce, and leaves Red currant jelly and Red wine visible.
+- M15 Founder UAT follow-up found Potatoes still categorised under Other and useful Green vegetables examples were lost. Potatoes now categorise as Fresh produce, and parenthetical examples like `such as asparagus and green beans` are preserved in Shopping item context while the title remains Green vegetables.
+- M15 Founder UAT follow-up added a confirmed Clear Shopping list action and tightened generic salt/pepper filtering to exact basic-ingredient matches after measured amount stripping.
 
 Non-app cleanup: `next-env.d.ts` was restored before UAT because Next typegen had flipped its generated route type path.
 
 ## 5. Bugs Found But Not Fixed
 
-- `pnpm start` failed locally with `unable to open database file` from the pnpm runner. The equivalent local Next binary started successfully with elevated local-server permission.
-- Authenticated browser UAT was not possible in this pass because no live user session was available to this agent.
 - Cross-Restaurant access could not be exercised live without a second authenticated user/session.
 
 ## 6. Manual Testing Still Required From Alex
 
-- Sign up and sign in with a real account.
-- Confirm logged-in Kitchen loads the expected Restaurant.
-- Create or access a Restaurant.
-- Save Restaurant cooking preferences, refresh, and confirm persistence.
-- Try invalid preference values if testing via request tooling.
-- Import a strong structured recipe URL.
-- Import a weak/no-structured-data URL and confirm partial/fallback review.
-- Confirm an exact duplicate source URL shows the strong duplicate warning, links to the existing Recipe, hides the normal Save button, and only saves through `Save anyway as a duplicate`.
-- Confirm same-title possible duplicates show a softer warning and still allow normal saving.
-- Confirm duplicate pending Import warnings.
-- Save an Import and confirm the Recipe is created and the Import is converted.
-- Discard an Import.
-- Edit a Recipe and confirm attribution fields persist.
-- Archive a Recipe and Recipe Book where appropriate.
-- Search Recipes by title and ingredient.
-- Plan Recipes in Menu.
-- Generate and update Shopping items.
-- Plan a meal with water in the ingredients and confirm water is not shown in the generated Shopping list.
-- Plan a meal with generic salt and pepper and confirm generic salt/pepper is excluded by default.
-- Plan a meal with specific salt or peppercorns and confirm specific buyable versions may remain.
-- Plan a meal with spices measured in tsp/tbsp and confirm the spice name is the main item while the Recipe amount is secondary.
-- Plan meals with `3 cloves garlic`, `6 garlic cloves`, and `1 garlic clove` and confirm one Garlic item appears with total cloves or readable recipe amounts.
-- Confirm existing generated rows such as `3 cloves garlic (peeled and minced)`, `6 garlic cloves (, minced)`, and `Garlic Clove` display as one Garlic card before regeneration where they share generated Shopping state.
-- Plan a meal with `1 large onion (peeled and finely chopped)` and confirm the main title is Onion, not the prep instruction.
-- Plan a meal with `2 tbsp tomato puree (tomato paste in US)` and confirm Tomato purée appears under Tins, jars & packets or Pantry staples, not Fresh produce.
-- Plan two meals with onions and confirm the generated onion item combines where safe.
-- Plan two meals with the same ingredient but incompatible quantities and confirm the list does not crash and amounts remain readable.
-- Plan meals across different dates and confirm Shopping items show the planned meal date context.
-- Add a short-life ingredient for a later meal and confirm the item subtly says to buy closer to cooking day.
-- Confirm each generated item shows subtle meal context without making the card noisy.
-- Confirm checked/unchecked Shopping list behaviour still works.
-- Use Cook Mode, mark cooked, and save cook-again feedback.
 - Repeat a targeted second-user/cross-Restaurant RLS check.
 
 ## 7. Recommended Launch Blockers
 
-- Complete connected Supabase founder UAT for Auth, Restaurant preferences, URL Import, Recipe save/edit, Menu, Shopping, and Cook Mode.
-- Confirm the latest migrations have been applied to the intended Supabase project.
 - Complete at least one second-user cross-Restaurant isolation check.
 
 ## 8. Non-Blocking Polish

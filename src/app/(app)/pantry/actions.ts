@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
@@ -32,6 +33,32 @@ export async function generateShoppingList(formData: FormData) {
     errorRedirect("We could not generate the shopping list.");
   }
 
+  revalidatePath("/pantry");
+  redirect("/pantry");
+}
+
+export async function clearShoppingList(formData: FormData) {
+  const restaurantId = field(formData, "restaurantId");
+  const confirmed = field(formData, "confirmClear") === "yes";
+
+  if (!restaurantId) {
+    errorRedirect("Choose a Restaurant before clearing a shopping list.");
+  }
+
+  if (!confirmed) {
+    errorRedirect("Confirm that you want to clear the current Shopping list.");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("clear_active_shopping_list", {
+    target_restaurant_id: restaurantId,
+  });
+
+  if (error) {
+    errorRedirect("We could not clear the shopping list.");
+  }
+
+  revalidatePath("/pantry");
   redirect("/pantry");
 }
 
@@ -68,6 +95,7 @@ export async function addManualShoppingItem(formData: FormData) {
     errorRedirect("We could not add that shopping item.");
   }
 
+  revalidatePath("/pantry");
   redirect("/pantry");
 }
 
@@ -96,5 +124,6 @@ export async function toggleShoppingItemPurchased(formData: FormData) {
     errorRedirect("We could not update that shopping item.");
   }
 
+  revalidatePath("/pantry");
   redirect("/pantry");
 }

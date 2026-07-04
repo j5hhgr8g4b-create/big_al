@@ -6,7 +6,7 @@ import { formatMenuDate } from "@/lib/menu/get-menu";
 import { getCurrentRestaurant } from "@/lib/restaurants/current";
 import { getShoppingData, type ShoppingCategory, type ShoppingItem } from "@/lib/shopping/get-shopping";
 
-import { addManualShoppingItem, generateShoppingList, toggleShoppingItemPurchased } from "./actions";
+import { addManualShoppingItem, clearShoppingList, generateShoppingList, toggleShoppingItemPurchased } from "./actions";
 
 type PantryPageProps = {
   searchParams: Promise<{ error?: string }>;
@@ -219,11 +219,29 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
               {activeItems.length} to buy · {purchasedItems.length} purchased
             </p>
           </div>
-          <span className="warm-pill">
-            {activeItems.length + purchasedItems.length
-              ? `${purchasedItems.length}/${activeItems.length + purchasedItems.length} done`
-              : "No list yet"}
-          </span>
+          <div className="flex flex-col items-end gap-2">
+            <span className="warm-pill">
+              {activeItems.length + purchasedItems.length
+                ? `${purchasedItems.length}/${activeItems.length + purchasedItems.length} done`
+                : "No list yet"}
+            </span>
+            {activeItems.length + purchasedItems.length > 0 && (
+              <form action={clearShoppingList} className="flex max-w-xs flex-col items-end gap-2 text-right">
+                <input type="hidden" name="restaurantId" value={restaurant.id} />
+                <label className="text-xs leading-5 text-[var(--color-text-muted)]">
+                  <input
+                    type="checkbox"
+                    name="confirmClear"
+                    value="yes"
+                    required
+                    className="mr-2 align-middle"
+                  />
+                  Are you sure? This will clear your current Shopping list, including purchased items.
+                </label>
+                <SubmitButton pendingLabel="Clearing...">Clear Shopping list</SubmitButton>
+              </form>
+            )}
+          </div>
         </div>
 
         {activeItems.length ? (

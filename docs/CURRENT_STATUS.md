@@ -22,6 +22,20 @@ Follow-up Shopping normalisation now strips obvious prep notes from generated it
 
 Garlic duplicate fallback is in place at both generation time and display time so older generated Shopping rows can render as one Garlic card before the user regenerates the list.
 
+M15 Founder UAT Pantry cleanup also filters generic salt/pepper basics, strips cornflour slurry instructions from Shopping item titles, and categorises carrots as Fresh produce.
+
+Latest M15 Pantry normalisation also filters generic salt/black pepper rows with leading recipe amounts, groups fresh thyme and thyme as Thyme, cleans duplicated oil titles, and categorises green vegetables as Fresh produce. Sugar remains visible pending a future preference decision.
+
+Prepared potato items such as Mashed potatoes, Roast potatoes, and Boiled potatoes now normalise to Potatoes where safe. Red currant jelly and Red wine remain visible as buyable Shopping items.
+
+Potatoes now categorise as Fresh produce. Vague Green vegetables remains the buyable title, and useful parenthetical examples such as asparagus and green beans are preserved as Shopping context rather than turned into invented specific items.
+
+Pantry now includes a confirmed Clear Shopping list action for the active Restaurant and generic salt/pepper filtering uses exact basic-ingredient matches after measured amount stripping.
+
+Founder UAT retesting has now passed for Pantry salt/pepper filtering, Clear Shopping list, duplicate import handling, and the full live core loop: Import -> Save -> Plan -> Shop -> Cook.
+
+The live Supabase project has the `clear_active_shopping_list` RPC applied and permission-checked: authenticated users can execute it, anonymous users cannot.
+
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
@@ -40,6 +54,17 @@ Garlic duplicate fallback is in place at both generation time and display time s
 
 ## Latest Verification Checkpoint
 
+2026-07-04 M15 founder UAT retest checkpoint:
+
+- Branch confirmed as `clean-milestone-4-sync`; `main` remains stale.
+- Live Supabase project `cqcjacirzibfjecrruie` has `clear_active_shopping_list(uuid)` applied.
+- `clear_active_shopping_list(uuid)` is executable by `authenticated`, not executable by `anon`, and clears both to-buy and purchased items from the active Restaurant's current Shopping list.
+- Founder retest passed for Pantry generic salt/pepper filtering.
+- Founder retest passed for Clear Shopping list.
+- Founder retest passed for duplicate import handling.
+- Founder retest passed for the full live core loop: Import -> Save -> Plan -> Shop -> Cook.
+- Remaining M15 blocker: second-user Restaurant isolation only.
+
 2026-07-02 M11-M14 UAT/regression pass completed:
 
 - Branch confirmed as `clean-milestone-4-sync`; `main` remains stale.
@@ -48,7 +73,7 @@ Garlic duplicate fallback is in place at both generation time and display time s
 - Local protected-route smoke tests confirmed logged-out app routes redirect to `/login`.
 - `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `git diff --check` passed.
 - UAT report added at `docs/UAT_MVP_M11_M14.md`.
-- Founder UAT with a live authenticated Supabase session is still required before launch sign-off.
+- Founder UAT with a live authenticated Supabase session has since passed for the core loop; second-user Restaurant isolation remains before M15 closeout.
 
 2026-06-27 M6 live verification passed:
 
@@ -99,10 +124,16 @@ Garlic duplicate fallback is in place at both generation time and display time s
 - Pantry generates a Shopping list from planned Menu meals.
 - Generated Shopping items consolidate matching Ingredients by normalized name and unit where practical for MVP.
 - Generated Shopping items filter obvious non-shopping basics such as water, ice, and generic salt/pepper.
+- Generated Shopping items strip slurry instruction text such as cornflour mixed with cold water so the buyable title remains Cornflour.
 - Generated Shopping items show common small measured spices as buyable items, with Recipe amounts in notes instead of as the main item.
 - Generated Shopping items strip obvious prep notes such as peeled, chopped, minced, melted, optional, and note callouts from the display title.
 - Generated Shopping items combine common garlic forms such as cloves garlic, garlic cloves, and garlic clove into Garlic when safe.
 - Pantry defensively canonicalises older generated garlic rows at display time and toggles grouped generated rows together.
+- Pantry defensively filters older generated generic salt/pepper basics at display time.
+- Pantry defensively canonicalises generated herb and oil title variants such as fresh thyme/thyme and Oil Oil.
+- Pantry defensively canonicalises prepared potato titles such as Mashed potatoes to Potatoes.
+- Pantry preserves useful Green vegetables examples from parenthetical text in item context.
+- Pantry can clear the active Restaurant's current Shopping list, including purchased items, only after explicit confirmation.
 - Generated Shopping items include subtle Menu meal/date context and simple buy-closer guidance for obvious short-life items planned later.
 - Pantry groups active Shopping items into lightweight shop sections without adding full inventory management.
 - Pantry supports manual Shopping item additions and purchased tick/untick state.
@@ -129,7 +160,7 @@ Garlic duplicate fallback is in place at both generation time and display time s
 - Specials is now Basic Big Al; it should remain grounded helper behaviour, not a generic chatbot.
 - Pantry is now the Shopping area; it should remain Shopping support and not become full pantry inventory management.
 - Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
-- A second-user cross-Restaurant RLS test remains on the regression checklist.
+- A second-user cross-Restaurant RLS test remains the only M15 blocker.
 - URL extraction still depends on recipe pages exposing usable JSON-LD or basic metadata. It does not use AI, OCR, browser automation, or unsupported scraping workarounds.
 - Duplicate detection remains MVP-level: exact source URL duplicates are guarded, same-title matches are warned, and existing duplicate Recipes are not deleted automatically.
 - Attribution protection is MVP-level metadata capture and display; it is not a plagiarism checker or licensing system.
@@ -147,7 +178,7 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 Use `clean-milestone-4-sync` for the next Codex task. Do not use `main`; it is stale.
 
-M11-M14 are complete and ready for founder UAT. Next implementation work should be explicitly approved before coding.
+M11-M14 are complete. M15 founder UAT retesting has passed for Pantry/Shopping, duplicate import handling, and the live core loop. The next approved task is second-user Restaurant isolation verification.
 
 Do not build paid AI integration, grocery price comparison, full pantry inventory management, calorie tracking, unscoped meal generation, social mechanics, or features beyond M8 without explicit approval.
 
