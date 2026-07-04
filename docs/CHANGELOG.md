@@ -24,6 +24,31 @@ Known Issues:
 
 ---
 
+### 2026-07-04 — M19 Cook Mode Beta Polish
+
+Summary:
+Polished Cook Mode for beta cooking with clearer current-step hierarchy, accessible progress metadata, previous/next step previews, clearer finish/completion copy, and friendlier Cook Mode action failure messages.
+
+Files Changed:
+Updated `src/app/(app)/cookbook/recipes/[recipeId]/cook/page.tsx`, `src/app/(app)/cookbook/recipes/[recipeId]/cook/actions.ts`, `docs/CURRENT_STATUS.md`, `docs/CHANGELOG.md`, `docs/milestones/README.md`, and added `docs/milestones/MILESTONE_19.md`.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
+- `git diff --check`
+
+Database Changes:
+None.
+
+Testing Required:
+Bulk UAT should open Cook Mode on a real Recipe, move previous/next through all steps, confirm the current step is obvious, confirm Ingredients remain readable, finish and mark cooked, save cook-again feedback, and return to the Recipe without confusion.
+
+Known Issues:
+Native screen-awake support remains intentionally unwired.
+
+---
+
 ### 2026-07-04 — M18 Shopping List Reliability
 
 Summary:

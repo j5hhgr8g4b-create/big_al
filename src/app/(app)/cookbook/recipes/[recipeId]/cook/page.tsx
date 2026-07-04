@@ -38,6 +38,11 @@ function stepHref(recipeId: string, stepIndex: number) {
   return `/cookbook/recipes/${recipeId}/cook?step=${stepIndex + 1}`;
 }
 
+function stepPreview(recipe: RecipeDetail, stepIndex: number) {
+  const instruction = recipe.steps[stepIndex]?.instruction ?? "";
+  return instruction.length > 54 ? `${instruction.slice(0, 54).trim()}...` : instruction;
+}
+
 export default async function CookModePage({ params, searchParams }: CookModePageProps) {
   const { recipeId } = await params;
   const { cooked, cookId, error, step } = await searchParams;
@@ -107,9 +112,9 @@ export default async function CookModePage({ params, searchParams }: CookModePag
           <p className="section-kicker text-[var(--color-honey)]">
             Marked cooked
           </p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight">How did that go?</h2>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight">Recipe complete. How did that go?</h2>
           <p className="mt-3 leading-7 text-white/72">
-            Big Al saved that this Recipe was cooked. Your answer here helps future trust signals like Times Cooked and Cook Again Rate.
+            Big Al saved that this Recipe was cooked. Tell it whether this one deserves another go.
           </p>
           {cookId ? (
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
@@ -117,7 +122,7 @@ export default async function CookModePage({ params, searchParams }: CookModePag
                 <input type="hidden" name="recipeId" value={recipe.id} />
                 <input type="hidden" name="recipeCookId" value={cookId} />
                 <input type="hidden" name="cookAgain" value="true" />
-                <SubmitButton pendingLabel="Saving...">Cook again</SubmitButton>
+                <SubmitButton pendingLabel="Saving...">Yes, cook again</SubmitButton>
               </form>
               <form action={saveCookAgainFeedback}>
                 <input type="hidden" name="recipeId" value={recipe.id} />
@@ -127,7 +132,7 @@ export default async function CookModePage({ params, searchParams }: CookModePag
                   type="submit"
                   className="btn-secondary w-full border-white/20 bg-white/10 px-6 py-4 text-base text-[var(--color-text-inverse)]"
                 >
-                  Done for now
+                  No, done for now
                 </button>
               </form>
             </div>
@@ -147,11 +152,11 @@ export default async function CookModePage({ params, searchParams }: CookModePag
   return (
     <article className="-mx-4 -mt-6 min-h-[calc(100vh-104px)] bg-gradient-to-b from-[var(--color-purple-900)] to-[#1f1628] px-4 py-6 text-[var(--color-text-inverse)]">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <p className="section-kicker text-[var(--color-honey)]">
             Cook Mode
           </p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight">{recipe.title}</h1>
+          <h1 className="mt-2 text-3xl font-semibold leading-tight tracking-tight">{recipe.title}</h1>
         </div>
         <Link
           href={`/cookbook/recipes/${recipe.id}`}
@@ -184,7 +189,14 @@ export default async function CookModePage({ params, searchParams }: CookModePag
             <p className="mt-1 text-lg font-semibold">{recipe.servings ?? "—"}</p>
           </div>
         </div>
-        <div className="mt-5 h-3 overflow-hidden rounded-full bg-white/12">
+        <div
+          className="mt-5 h-3 overflow-hidden rounded-full bg-white/12"
+          role="progressbar"
+          aria-label="Recipe step progress"
+          aria-valuemin={1}
+          aria-valuemax={stepCount}
+          aria-valuenow={currentStepIndex + 1}
+        >
           <div
             className="h-full rounded-full bg-[var(--color-honey)]"
             style={{ width: `${progressPercent}%` }}
@@ -192,11 +204,14 @@ export default async function CookModePage({ params, searchParams }: CookModePag
         </div>
       </section>
 
-      <section className="mt-6 rounded-[var(--radius-2xl)] border border-white/10 bg-white/10 p-7 shadow-[var(--shadow-card)]">
-        <p className="section-kicker text-[var(--color-honey)]">
-          Step {currentStep.position}
+      <section className="mt-6 rounded-[var(--radius-2xl)] border border-white/10 bg-white/10 p-6 shadow-[var(--shadow-card)]">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/62">
+          Current step
         </p>
-        <p className="mt-5 text-2xl font-semibold leading-[1.35] tracking-tight sm:text-3xl">
+        <p className="section-kicker mt-2 text-[var(--color-honey)]">
+          Step {currentStepIndex + 1} of {stepCount}
+        </p>
+        <p className="mt-5 text-3xl font-semibold leading-[1.25] tracking-tight">
           {currentStep.instruction}
         </p>
       </section>
@@ -205,9 +220,12 @@ export default async function CookModePage({ params, searchParams }: CookModePag
         {currentStepIndex > 0 ? (
           <Link
             href={stepHref(recipe.id, currentStepIndex - 1)}
-            className="btn-secondary border-white/20 bg-white/10 px-6 py-4 text-base text-[var(--color-text-inverse)]"
+            className="rounded-[var(--radius-md)] border border-white/20 bg-white/10 px-4 py-4 text-[var(--color-text-inverse)]"
           >
-            Previous
+            <span className="block text-base font-semibold">Previous</span>
+            <span className="mt-1 block truncate text-xs font-medium text-white/62">
+              {stepPreview(recipe, currentStepIndex - 1)}
+            </span>
           </Link>
         ) : (
           <span className="rounded-[var(--radius-md)] border border-white/10 bg-white/5 px-6 py-4 text-center text-base font-semibold text-white/42">
@@ -218,14 +236,17 @@ export default async function CookModePage({ params, searchParams }: CookModePag
         {currentStepIndex < stepCount - 1 ? (
           <Link
             href={stepHref(recipe.id, currentStepIndex + 1)}
-            className="btn-primary px-6 py-4 text-base"
+            className="rounded-[var(--radius-md)] bg-[var(--color-accent)] px-4 py-4 text-[var(--color-text-inverse)] shadow-[0_8px_18px_rgba(185,84,60,.18)]"
           >
-            Next
+            <span className="block text-base font-semibold">Next</span>
+            <span className="mt-1 block truncate text-xs font-medium text-white/78">
+              {stepPreview(recipe, currentStepIndex + 1)}
+            </span>
           </Link>
         ) : (
           <form action={markRecipeCooked}>
             <input type="hidden" name="recipeId" value={recipe.id} />
-            <SubmitButton pendingLabel="Marking...">Mark cooked</SubmitButton>
+            <SubmitButton pendingLabel="Marking...">Finish and mark cooked</SubmitButton>
           </form>
         )}
       </nav>

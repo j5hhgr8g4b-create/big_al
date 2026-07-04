@@ -27,7 +27,7 @@ export async function markRecipeCooked(formData: FormData) {
   });
 
   if (error || !recipeCookId) {
-    errorRedirect(recipeId, "We could not mark this Recipe cooked.");
+    errorRedirect(recipeId, "Big Al could not mark this Recipe cooked. Try once more before leaving Cook Mode.");
   }
 
   redirect(
@@ -54,7 +54,7 @@ export async function saveCookAgainFeedback(formData: FormData) {
   });
 
   if (error) {
-    errorRedirect(recipeId, "We could not save that cooking feedback.");
+    errorRedirect(recipeId, "Big Al could not save that cooking feedback. The cooked record is still there.");
   }
 
   redirect(cookAgain ? `/cookbook/recipes/${recipeId}/cook?step=1` : `/cookbook/recipes/${recipeId}`);

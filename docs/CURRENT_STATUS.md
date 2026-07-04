@@ -42,6 +42,8 @@ M17 Import Quality & Attribution Hardening is complete: Import review now shows 
 
 M18 Shopping List Reliability is complete: Pantry now flags stale generated list ranges, clear-list copy is more explicit, generated item cleanup strips more prep/instruction clutter, and vegetable/onion categorisation is more consistent while preserving M15 salt/pepper filtering.
 
+M19 Cook Mode Beta Polish is complete: current-step hierarchy is clearer, progress is accessible, previous/next controls include step previews, completion copy is clearer, and Cook Mode action failures use friendlier messages.
+
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
@@ -60,6 +62,7 @@ M18 Shopping List Reliability is complete: Pantry now flags stale generated list
 - M16 — Core Reliability & Error Handling
 - M17 — Import Quality & Attribution Hardening
 - M18 — Shopping List Reliability
+- M19 — Cook Mode Beta Polish
 
 ## Latest Verification Checkpoint
 
