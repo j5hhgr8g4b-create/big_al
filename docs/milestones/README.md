@@ -25,6 +25,7 @@ Latest UAT report: [MVP UAT M11-M14](../UAT_MVP_M11_M14.md).
 | 14 | MVP closeout QA | Complete | [Milestone 14](MILESTONE_14.md) |
 | 16 | Core Reliability & Error Handling | Complete | [Milestone 16](MILESTONE_16.md) |
 | 17 | Import Quality & Attribution Hardening | Complete | [Milestone 17](MILESTONE_17.md) |
+| 18 | Shopping List Reliability | Complete | [Milestone 18](MILESTONE_18.md) |
 
 ## Completed Approved Batch
 

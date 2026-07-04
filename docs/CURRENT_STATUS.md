@@ -40,6 +40,8 @@ M16 Core Reliability & Error Handling is complete: app routes now have friendlie
 
 M17 Import Quality & Attribution Hardening is complete: Import review now shows a confidence checklist, keeps source/creator attribution prominent, links duplicate pending Imports, and validates attribution field lengths on save.
 
+M18 Shopping List Reliability is complete: Pantry now flags stale generated list ranges, clear-list copy is more explicit, generated item cleanup strips more prep/instruction clutter, and vegetable/onion categorisation is more consistent while preserving M15 salt/pepper filtering.
+
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
@@ -57,6 +59,7 @@ M17 Import Quality & Attribution Hardening is complete: Import review now shows 
 - M14 — MVP closeout QA
 - M16 — Core Reliability & Error Handling
 - M17 — Import Quality & Attribution Hardening
+- M18 — Shopping List Reliability
 
 ## Latest Verification Checkpoint
 

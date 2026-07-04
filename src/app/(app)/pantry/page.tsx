@@ -112,7 +112,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
     );
   }
 
-  const { activeItems, list, plannedMealCount, purchasedItems, range } = await getShoppingData(
+  const { activeItems, isStale, list, plannedMealCount, purchasedItems, range } = await getShoppingData(
     supabase,
     restaurant.id,
   );
@@ -145,6 +145,12 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
             {list?.generated_at && list.source_start_date && list.source_end_date && (
               <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
                 Last generated for {formatMenuDate(list.source_start_date)} to {formatMenuDate(list.source_end_date)}
+              </p>
+            )}
+            {isStale && (
+              <p className="mt-3 rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-note)] px-4 py-3 text-sm leading-6 text-[var(--color-text-soft)]">
+                This list was generated for a different Menu range. Regenerate when you want the
+                latest planned meals reflected here.
               </p>
             )}
           </div>
@@ -238,6 +244,9 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
                   />
                   Are you sure? This will clear your current Shopping list, including purchased items.
                 </label>
+                <p className="text-xs leading-5 text-[var(--color-text-muted)]">
+                  This only affects the active Restaurant. Menu plans and Recipes stay put.
+                </p>
                 <SubmitButton pendingLabel="Clearing...">Clear Shopping list</SubmitButton>
               </form>
             )}

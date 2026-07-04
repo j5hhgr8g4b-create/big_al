@@ -35,6 +35,7 @@ export type ShoppingList = {
 
 export type ShoppingData = {
   activeItems: ShoppingItem[];
+  isStale: boolean;
   list: ShoppingList | null;
   plannedMealCount: number;
   purchasedItems: ShoppingItem[];
@@ -62,11 +63,12 @@ function stripPrepNotes(value: string) {
     .replace(/\s+mixed\s+with\s+.*\bcold water\b.*$/i, "")
     .replace(/\s*\([^)]*\)/g, "")
     .replace(
-      /\s*,\s*(peeled|finely chopped|chopped|diced|sliced|minced|grated|crushed|melted|softened|room temperature|optional|to taste|note\s*\d+).*$/i,
+      /\s*,\s*(peeled|finely chopped|roughly chopped|chopped|diced|sliced|minced|grated|crushed|melted|softened|room temperature|optional|to taste|trimmed|washed|drained|rinsed|divided|for serving|to serve|note\s*\d+).*$/i,
       "",
     )
-    .replace(/^(peeled|finely chopped|chopped|diced|sliced|minced|grated|crushed)\s+/i, "")
-    .replace(/\s+(optional|to taste)$/i, "")
+    .replace(/^(peeled|finely chopped|roughly chopped|chopped|diced|sliced|minced|grated|crushed)\s+/i, "")
+    .replace(/\s+(optional|to taste|for serving|to serve)$/i, "")
+    .replace(/\s+(peeled|finely chopped|roughly chopped|chopped|diced|sliced|minced|grated|crushed|trimmed|washed|drained|rinsed|divided)$/i, "")
     .replace(/\s*,\s*$/g, "")
     .replace(/\s+/g, " ")
     .trim();
@@ -97,6 +99,9 @@ function canonicalGeneratedName(value: string) {
   if (normalized === "oil oil" || normalized === "oil") return "Oil";
   if (normalized === "olive oil oil" || normalized === "oil olive oil" || normalized === "olive oil") return "Olive oil";
   if (/^(mashed|roast|boiled) potatoes$/.test(normalized)) return "Potatoes";
+  if (/^spring onions?$/.test(normalized)) return "Spring onions";
+  if (/^red onions?$/.test(normalized)) return "Red onion";
+  if (/^brown onions?$/.test(normalized)) return "Brown onion";
 
   return stripped;
 }
@@ -245,7 +250,7 @@ function categorizeShoppingItem(name: string): ShoppingCategory {
   }
 
   if (
-    /\b(fresh coriander|fresh parsley|fresh basil|fresh mint|fresh dill|lettuce|rocket|spinach|salad|green vegetables|vegetables|onion|garlic|potato|potatoes|carrot|carrots|tomato|lemon|lime|berries|apple|banana|mushroom|courgette|broccoli|cabbage)\b/.test(
+    /\b(fresh coriander|fresh parsley|fresh basil|fresh mint|fresh dill|lettuce|rocket|spinach|salad|green vegetables|vegetables|spring onion|red onion|brown onion|onion|garlic|potato|potatoes|sweet potato|carrot|carrots|tomato|lemon|lime|berries|apple|banana|mushroom|courgette|broccoli|cabbage|pepper|peppers|capsicum|asparagus|beans|peas|celery|cucumber|leek|leeks)\b/.test(
       normalized,
     )
   ) {
@@ -303,10 +308,16 @@ export async function getShoppingData(
     ...item,
     category: categorizeShoppingItem(item.name),
   }));
+  const shoppingList = (list ?? null) as ShoppingList | null;
 
   return {
     activeItems: shoppingItems.filter((item) => !item.is_purchased),
-    list: (list ?? null) as ShoppingList | null,
+    isStale: Boolean(
+      shoppingList &&
+        (shoppingList.source_start_date !== range.thisWeekStart ||
+          shoppingList.source_end_date !== range.nextWeekEnd),
+    ),
+    list: shoppingList,
     plannedMealCount: plannedMealsResult.count ?? 0,
     purchasedItems: shoppingItems.filter((item) => item.is_purchased),
     range,

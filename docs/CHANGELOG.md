@@ -24,6 +24,31 @@ Known Issues:
 
 ---
 
+### 2026-07-04 — M18 Shopping List Reliability
+
+Summary:
+Improved Pantry/Shopping reliability for beta without rebuilding the feature. Pantry now warns when the generated list is for a different Menu range, Clear Shopping list explains its scope, generated item cleanup strips more prep/instruction clutter, and common vegetable/onion categorisation is more consistent.
+
+Files Changed:
+Updated `src/lib/shopping/get-shopping.ts`, `src/app/(app)/pantry/page.tsx`, `docs/CURRENT_STATUS.md`, `docs/CHANGELOG.md`, `docs/milestones/README.md`, and added `docs/milestones/MILESTONE_18.md`.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
+- `git diff --check`
+
+Database Changes:
+None.
+
+Testing Required:
+Bulk UAT should regenerate Shopping from Menu, confirm stale-range messaging appears only for older generated ranges, verify generic salt/pepper remains filtered, confirm Clear Shopping list still removes to-buy and purchased items, and check weird generated ingredient wording degrades into practical titles where possible.
+
+Known Issues:
+Shopping cleanup remains MVP-level and keyword-based. It still does not do unit conversion, pack sizes, retailer logic, inventory, prices, expiry prediction, barcode scanning, or nutrition.
+
+---
+
 ### 2026-07-04 — M17 Import Quality and Attribution Hardening
 
 Summary:
