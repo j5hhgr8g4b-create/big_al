@@ -24,6 +24,31 @@ Known Issues:
 
 ---
 
+### 2026-07-04 — M17 Import Quality and Attribution Hardening
+
+Summary:
+Made Import review clearer for beta by showing a compact confidence checklist, keeping source/creator attribution visible, linking pending duplicate Imports, and tightening attribution field validation during Recipe save.
+
+Files Changed:
+Updated `src/app/(app)/cookbook/imports/[importId]/review/page.tsx`, `src/components/recipe-form.tsx`, `src/app/(app)/cookbook/recipes/actions.ts`, `docs/CURRENT_STATUS.md`, `docs/CHANGELOG.md`, `docs/milestones/README.md`, and added `docs/milestones/MILESTONE_17.md`.
+
+Commands Run:
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
+- `git diff --check`
+
+Database Changes:
+None.
+
+Testing Required:
+Bulk UAT should import structured, partial, and failed URLs; confirm source URL, creator/source, and source site remain visible; confirm exact duplicates still require the deliberate duplicate override; and confirm pending duplicate Imports link to the matching review screen.
+
+Known Issues:
+Import quality remains MVP-level and depends on page metadata/JSON-LD. No AI matching, merge flow, plagiarism scoring, licensing checks, OCR, or browser automation was added.
+
+---
+
 ### 2026-07-04 — M16 Core Reliability and Error Handling
 
 Summary:

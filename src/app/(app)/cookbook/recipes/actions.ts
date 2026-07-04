@@ -92,6 +92,10 @@ export async function saveRecipe(formData: FormData) {
     errorRedirect(returnPath, "Add a recipe title of no more than 160 characters.");
   }
 
+  if (creatorSource.length > 160 || sourceSite.length > 160) {
+    errorRedirect(returnPath, "Keep creator/source and source site to 160 characters or fewer.");
+  }
+
   if (imageUrl === null || sourceUrl === null) {
     errorRedirect(returnPath, "Image and source links must use http or https.");
   }

@@ -38,6 +38,8 @@ The live Supabase project has the `clear_active_shopping_list` RPC applied and p
 
 M16 Core Reliability & Error Handling is complete: app routes now have friendlier loading, error, and not-found fallbacks, expired sessions redirect with a clear login message, and common Menu/Pantry action failures use clearer recovery copy.
 
+M17 Import Quality & Attribution Hardening is complete: Import review now shows a confidence checklist, keeps source/creator attribution prominent, links duplicate pending Imports, and validates attribution field lengths on save.
+
 ## Completed Milestones
 
 - Milestone 0 — Project Setup
@@ -54,6 +56,7 @@ M16 Core Reliability & Error Handling is complete: app routes now have friendlie
 - M13 — Restaurant preferences foundation
 - M14 — MVP closeout QA
 - M16 — Core Reliability & Error Handling
+- M17 — Import Quality & Attribution Hardening
 
 ## Latest Verification Checkpoint
 

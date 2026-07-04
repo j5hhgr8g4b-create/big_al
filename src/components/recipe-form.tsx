@@ -123,6 +123,9 @@ export function RecipeForm({
         </label>
         <label className="block text-sm font-medium">
           Creator/source
+          <span className="mt-1 block text-xs font-normal leading-5 text-[var(--color-text-muted)]">
+            Keep the original creator, author, publication, or website visible.
+          </span>
           <input
             className={inputClassName}
             name="creatorSource"
@@ -193,15 +196,22 @@ export function RecipeForm({
             className={inputClassName}
             name="imageUrl"
             type="url"
+            maxLength={2000}
             defaultValue={initialValue.imageUrl}
           />
         </label>
         <label className="block text-sm font-medium">
           Source URL
+          {mode === "importReview" && (
+            <span className="mt-1 block text-xs font-normal leading-5 text-[var(--color-text-muted)]">
+              Big Al keeps this source link with the saved Recipe for attribution and duplicate checks.
+            </span>
+          )}
           <input
             className={inputClassName}
             name="sourceUrl"
             type="url"
+            maxLength={2000}
             defaultValue={initialValue.sourceUrl}
           />
         </label>

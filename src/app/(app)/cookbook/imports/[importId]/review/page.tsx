@@ -9,6 +9,16 @@ type ReviewImportPageProps = {
   searchParams: Promise<{ error?: string }>;
 };
 
+function extractionChecks(extracted: NonNullable<Awaited<ReturnType<typeof getImportForReview>>>["parser_output"]["recipe"]) {
+  return [
+    { label: "Title", ok: Boolean(extracted?.title) },
+    { label: "Ingredients", ok: Boolean(extracted?.ingredients?.length) },
+    { label: "Method", ok: Boolean(extracted?.instructions?.length) },
+    { label: "Creator/source", ok: Boolean(extracted?.author || extracted?.sourceSite) },
+    { label: "Source link", ok: Boolean(extracted?.sourceUrl) },
+  ];
+}
+
 export default async function ReviewImportPage({ params, searchParams }: ReviewImportPageProps) {
   const [{ importId }, { error }] = await Promise.all([params, searchParams]);
   const recipeImport = await getImportForReview(importId);
@@ -36,6 +46,7 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
     : extractionPartial
       ? "Partly extracted"
       : "Fallback saved";
+  const checks = extractionChecks(extracted);
 
   return (
     <section>
@@ -67,6 +78,22 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
           {recipeImport.parser_output.message ??
             "Review this Import before saving it to your Cookbook."}
         </p>
+        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3">
+          <p className="font-semibold text-[var(--color-text-soft)]">Review confidence</p>
+          <ul className="mt-2 grid gap-1 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-text-muted)]">
+            {checks.map((check) => (
+              <li key={check.label} className="flex items-center justify-between gap-3">
+                <span>{check.label}</span>
+                <span className={check.ok ? "text-[var(--color-green-700)]" : "text-[var(--color-accent)]"}>
+                  {check.ok ? "Found" : "Check"}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs leading-5 text-[var(--color-text-muted)]">
+            Keep the original creator, source site, and source link visible before saving.
+          </p>
+        </div>
         {sourceUrl && (
           <a
             href={sourceUrl}
@@ -114,9 +141,20 @@ export default async function ReviewImportPage({ params, searchParams }: ReviewI
           </div>
         )}
         {!duplicateState.recipeId && duplicateState.pendingImportId && (
-          <p className="rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-surface)] px-4 py-3 font-semibold text-[var(--color-text-soft)]">
-            Another pending Import uses this same source link. Review both before saving.
-          </p>
+          <div className="rounded-2xl border border-[var(--color-note-border)] bg-[var(--color-surface)] px-4 py-3 text-[var(--color-text-soft)]">
+            <p className="font-semibold">
+              Another pending Import uses this same source link.
+            </p>
+            <p className="mt-1">
+              Review both before saving so the same Recipe does not slip in twice.
+            </p>
+            <Link
+              href={`/cookbook/imports/${duplicateState.pendingImportId}/review`}
+              className="btn-secondary mt-3 min-h-0 px-3 py-2 text-xs"
+            >
+              Open pending Import
+            </Link>
+          </div>
         )}
         {recipeImport.raw_text && (
           <details className="mt-4">
