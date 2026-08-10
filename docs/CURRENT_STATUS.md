@@ -12,6 +12,10 @@ clean-milestone-4-sync
 
 ## Current Milestone
 
+M15-M19 are complete on `clean-milestone-4-sync`. The current milestone is M20 — Beta Readiness Review. M21 Private Beta Testing has not started.
+
+Founder UAT passed for the full Import -> Save -> Plan -> Shop -> Cook loop. Second-user Restaurant isolation remains a verification gap rather than a demonstrated security failure; current RLS and RPC review found no cross-Restaurant access path.
+
 Milestones 0-8 are complete for the current build path. M11-M14 are now complete on `clean-milestone-4-sync`.
 
 URL import foundation already exists and has been hardened. Attribution protection, Restaurant cooking preferences foundation, and MVP closeout QA are now in place.
@@ -59,6 +63,7 @@ M19 Cook Mode Beta Polish is complete: current-step hierarchy is clearer, progre
 - M12 — Attribution protection
 - M13 — Restaurant preferences foundation
 - M14 — MVP closeout QA
+- M15 — Founder UAT Closeout
 - M16 — Core Reliability & Error Handling
 - M17 — Import Quality & Attribution Hardening
 - M18 — Shopping List Reliability
@@ -172,7 +177,7 @@ M19 Cook Mode Beta Polish is complete: current-step hierarchy is clearer, progre
 - Specials is now Basic Big Al; it should remain grounded helper behaviour, not a generic chatbot.
 - Pantry is now the Shopping area; it should remain Shopping support and not become full pantry inventory management.
 - Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
-- A second-user cross-Restaurant RLS test remains the only M15 blocker.
+- A second-user cross-Restaurant RLS test remains a pre-beta verification gap; no cross-Restaurant security failure has been demonstrated.
 - URL extraction still depends on recipe pages exposing usable JSON-LD or basic metadata. It does not use AI, OCR, browser automation, or unsupported scraping workarounds.
 - Duplicate detection remains MVP-level: exact source URL duplicates are guarded, same-title matches are warned, and existing duplicate Recipes are not deleted automatically.
 - Attribution protection is MVP-level metadata capture and display; it is not a plagiarism checker or licensing system.
@@ -190,7 +195,7 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 Use `clean-milestone-4-sync` for the next Codex task. Do not use `main`; it is stale.
 
-M11-M14 are complete. M15 founder UAT retesting has passed for Pantry/Shopping, duplicate import handling, and the live core loop. The next approved task is second-user Restaurant isolation verification.
+M15-M19 are complete. M20 Beta Readiness Review is current, and M21 has not started. Founder UAT passed for Pantry/Shopping, duplicate import handling, and the full live core loop. Second-user Restaurant isolation remains a targeted verification task rather than a demonstrated security blocker.
 
 Do not build paid AI integration, grocery price comparison, full pantry inventory management, calorie tracking, unscoped meal generation, social mechanics, or features beyond M8 without explicit approval.
 
