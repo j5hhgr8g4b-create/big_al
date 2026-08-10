@@ -12,9 +12,11 @@ clean-milestone-4-sync
 
 ## Current Milestone
 
-M15-M19 are complete on `clean-milestone-4-sync`. The current milestone is M20 — Beta Readiness Review. M21 Private Beta Testing has not started.
+M15-M20 are complete on `clean-milestone-4-sync`. M20 Beta Readiness Review concluded **GO**. The next milestone is M21 — Private Beta Testing, which has not started. M22 remains future/not started.
 
 Founder UAT passed for the full Import -> Save -> Plan -> Shop -> Cook loop. Second-user Restaurant isolation remains a verification gap rather than a demonstrated security failure; current RLS and RPC review found no cross-Restaurant access path.
+
+M20 resolved the URL-import security blocker in `17c6b7c — M20 harden recipe URL import security`. Public destination and DNS validation, address pinning with shared-agent reuse disabled, redirect revalidation, HTML/XHTML enforcement, a 2 MiB streamed body cap and the existing manual-review fallback are in place. Focused security tests pass 22/22; lint, typecheck, build and diff-check pass. No technical M20 blocker remains.
 
 Milestones 0-8 are complete for the current build path. M11-M14 are now complete on `clean-milestone-4-sync`.
 
@@ -68,10 +70,21 @@ M19 Cook Mode Beta Polish is complete: current-step hierarchy is clearer, progre
 - M17 — Import Quality & Attribution Hardening
 - M18 — Shopping List Reliability
 - M19 — Cook Mode Beta Polish
+- M20 — Beta Readiness Review — GO
 
 ## Latest Verification Checkpoint
 
-2026-07-04 M15 founder UAT retest checkpoint:
+2026-08-10 M20 Beta Readiness Review closeout:
+
+- Branch confirmed as `clean-milestone-4-sync`; `main` remains stale.
+- Founder-authenticated UAT already passed the complete Import -> Save -> Plan -> Shop -> Cook loop.
+- URL importer SSRF, redirect, DNS and response-resource blocker resolved in `17c6b7c`.
+- Focused security tests pass 22/22.
+- `pnpm lint`, `pnpm typecheck`, `pnpm build` and `git diff --check` passed.
+- Final M20 decision: GO. M21 is next and has not started.
+- Live two-user isolation, supported public import and rejected-import recovery are M21 entry checks, not open M20 blockers.
+
+2026-07-04 M15 founder UAT retest checkpoint (historical):
 
 - Branch confirmed as `clean-milestone-4-sync`; `main` remains stale.
 - Live Supabase project `cqcjacirzibfjecrruie` has `clear_active_shopping_list(uuid)` applied.
@@ -80,7 +93,7 @@ M19 Cook Mode Beta Polish is complete: current-step hierarchy is clearer, progre
 - Founder retest passed for Clear Shopping list.
 - Founder retest passed for duplicate import handling.
 - Founder retest passed for the full live core loop: Import -> Save -> Plan -> Shop -> Cook.
-- Remaining M15 blocker: second-user Restaurant isolation only.
+- At that checkpoint, second-user Restaurant isolation was the remaining manual verification item. Later M20 review classified it as an M21 entry check rather than a demonstrated blocker.
 
 2026-07-02 M11-M14 UAT/regression pass completed:
 
@@ -90,7 +103,7 @@ M19 Cook Mode Beta Polish is complete: current-step hierarchy is clearer, progre
 - Local protected-route smoke tests confirmed logged-out app routes redirect to `/login`.
 - `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `git diff --check` passed.
 - UAT report added at `docs/UAT_MVP_M11_M14.md`.
-- Founder UAT with a live authenticated Supabase session has since passed for the core loop; second-user Restaurant isolation remains before M15 closeout.
+- Founder UAT with a live authenticated Supabase session subsequently passed for the core loop. The uncompleted second-user exercise is now an M21 entry verification check.
 
 2026-06-27 M6 live verification passed:
 
@@ -177,7 +190,7 @@ M19 Cook Mode Beta Polish is complete: current-step hierarchy is clearer, progre
 - Specials is now Basic Big Al; it should remain grounded helper behaviour, not a generic chatbot.
 - Pantry is now the Shopping area; it should remain Shopping support and not become full pantry inventory management.
 - Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
-- A second-user cross-Restaurant RLS test remains a pre-beta verification gap; no cross-Restaurant security failure has been demonstrated.
+- A second-user cross-Restaurant RLS test remains an M21 entry verification gap; no cross-Restaurant security failure has been demonstrated.
 - URL extraction still depends on recipe pages exposing usable JSON-LD or basic metadata. It does not use AI, OCR, browser automation, or unsupported scraping workarounds.
 - Duplicate detection remains MVP-level: exact source URL duplicates are guarded, same-title matches are warned, and existing duplicate Recipes are not deleted automatically.
 - Attribution protection is MVP-level metadata capture and display; it is not a plagiarism checker or licensing system.
@@ -195,7 +208,7 @@ None, provided Codex confirms it is working inside `/workspaces/big_al` before e
 
 Use `clean-milestone-4-sync` for the next Codex task. Do not use `main`; it is stale.
 
-M15-M19 are complete. M20 Beta Readiness Review is current, and M21 has not started. Founder UAT passed for Pantry/Shopping, duplicate import handling, and the full live core loop. Second-user Restaurant isolation remains a targeted verification task rather than a demonstrated security blocker.
+M15-M20 are complete and M20 concluded GO. M21 Private Beta Testing is next and has not started. Begin with live two-user Restaurant isolation, a supported public recipe import, and rejected/unsafe import manual-review recovery before broad tester activity.
 
 Do not build paid AI integration, grocery price comparison, full pantry inventory management, calorie tracking, unscoped meal generation, social mechanics, or features beyond M8 without explicit approval.
 

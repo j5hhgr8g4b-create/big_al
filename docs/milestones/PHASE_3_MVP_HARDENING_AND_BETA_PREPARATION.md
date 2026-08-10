@@ -12,12 +12,13 @@ Phase 3 began after M14 technical completion and founder UAT handoff.
 
 Current product state:
 
-- M0-M19 are built on `clean-milestone-4-sync`.
+- M0-M20 are complete on `clean-milestone-4-sync`.
 - The core loop exists: Import → Save → Plan → Shop → Cook.
 - Founder UAT passed for the full live core loop.
-- Launch sign-off is not complete.
-- M20 Beta Readiness Review is current; M21 Private Beta Testing has not started.
-- Second-user Restaurant isolation remains a verification gap, not a demonstrated security failure.
+- M20 Beta Readiness Review concluded GO after the URL importer security blocker was resolved.
+- M21 Private Beta Testing is next and has not started.
+- Second-user Restaurant isolation remains an M21 entry verification gap, not a demonstrated security failure.
+- Wider-launch sign-off is not complete.
 
 ## Phase rule
 
@@ -51,9 +52,9 @@ Big Al must stay focused on making cooking easy and enjoyable.
 | M17 | Import Quality & Attribution Hardening | Make URL imports trustworthy for beta users | Complete |
 | M18 | Shopping List Reliability | Make Pantry useful enough for real weekly shopping | Complete |
 | M19 | Cook Mode Beta Polish | Make cooking from Big Al calm and usable | Complete |
-| M20 | Beta Readiness Review | Decide whether Big Al is ready for invited testers | Current |
-| M21 | Private Beta Testing | Run a small controlled beta with invited Restaurants | Not started |
-| M22 | Beta Findings & Launch Decision | Turn beta evidence into a go/no-go decision | Planned |
+| M20 | Beta Readiness Review | Decide whether Big Al is ready for invited testers | Complete / GO |
+| M21 | Private Beta Testing | Run a small controlled beta with invited Restaurants | Next / Not started |
+| M22 | Beta Findings & Launch Decision | Turn beta evidence into a go/no-go decision | Future / Not started |
 
 ## Success criteria for Phase 3
 

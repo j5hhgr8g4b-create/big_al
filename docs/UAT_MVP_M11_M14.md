@@ -8,7 +8,7 @@ Branch: `clean-milestone-4-sync`
 
 MVP UAT and regression checks passed for code inspection, protected-route smoke testing, required build checks, founder Pantry/Shopping retesting, duplicate import handling retesting, and the full live core loop.
 
-The full live core loop Import -> Save -> Plan -> Shop -> Cook has passed founder retest. The remaining M15 blocker is second-user Restaurant isolation only.
+The full live core loop Import -> Save -> Plan -> Shop -> Cook passed founder retest. At this historical checkpoint, second-user Restaurant isolation remained the outstanding manual verification item. M20 later concluded GO and classified it as an M21 entry check rather than a demonstrated security failure.
 
 ## 2. What Was Tested
 
@@ -64,13 +64,15 @@ Non-app cleanup: `next-env.d.ts` was restored before UAT because Next typegen ha
 
 - Cross-Restaurant access could not be exercised live without a second authenticated user/session.
 
+Current status: implementation review found no demonstrated cross-Restaurant access path. Complete the live two-user smoke test at M21 entry.
+
 ## 6. Manual Testing Still Required From Alex
 
 - Repeat a targeted second-user/cross-Restaurant RLS check.
 
-## 7. Recommended Launch Blockers
+## 7. Recommended Launch Blockers At This Checkpoint
 
-- Complete at least one second-user cross-Restaurant isolation check.
+- Complete at least one second-user cross-Restaurant isolation check. M20 subsequently moved this to an M21 entry validation task rather than retaining it as a technical blocker.
 
 ## 8. Non-Blocking Polish
 

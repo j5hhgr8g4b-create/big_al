@@ -2,7 +2,9 @@
 
 ## Status
 
-Planned for Phase 3.
+Next in Phase 3 — not started. M20 completed with a GO decision.
+
+Before broad tester activity, run the three entry checks recorded in M20: live two-user Restaurant isolation, a supported public recipe import, and rejected/unsafe import manual-review recovery.
 
 ## Goal
 

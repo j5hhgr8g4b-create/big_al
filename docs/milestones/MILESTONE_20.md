@@ -2,7 +2,50 @@
 
 ## Status
 
-Current in Phase 3. M21 has not started.
+Complete in Phase 3 — **GO**. M21 is next and has not started.
+
+Closeout commit: `17c6b7c — M20 harden recipe URL import security`
+
+## Decision
+
+**GO — proceed to M21 Private Beta Testing.**
+
+The founder-authenticated Import → Save → Plan → Shop → Cook loop passed before this review, M15-M19 are complete, and no technical M20 blocker remains.
+
+## Readiness evidence
+
+- Founder authenticated UAT passed the complete Import → Save → Plan → Shop → Cook loop.
+- M15 Founder UAT Closeout, M16 Core Reliability, M17 Import Quality, M18 Shopping Reliability and M19 Cook Mode Polish are complete.
+- The server-side URL importer now accepts only validated public HTTP/HTTPS destinations.
+- DNS results are checked for unsafe IPv4 and IPv6 destinations, including private, loopback, link-local, metadata, IPv4-mapped IPv6, 6to4 and special-purpose ranges.
+- The validated DNS address is pinned into the connection and shared-agent socket reuse is disabled.
+- Every redirect destination is resolved and revalidated, with a small redirect limit.
+- Responses must be HTML or XHTML and streamed body consumption is capped at 2 MiB.
+- The ten-second timeout covers DNS, redirects and response streaming.
+- Rejected and failed automatic extraction retains the existing manual-review recovery path without exposing security details to the user.
+- Focused importer security tests pass 22/22.
+- `pnpm lint`, `pnpm typecheck`, `pnpm build` and `git diff --check` pass.
+- No remaining technical M20 blocker was identified.
+
+## M21 entry checks
+
+These are beta-entry verification tasks, not unresolved M20 blockers:
+
+1. Run a live authenticated two-user Restaurant-isolation smoke test.
+2. Run a live supported public recipe import.
+3. Confirm a rejected or unsafe import reaches manual-review recovery.
+
+Current RLS, RPC and server-access review found no demonstrated cross-Restaurant access path. The missing two-user exercise remains a verification gap rather than evidence of a security failure.
+
+## Accepted limitations
+
+- Shopping interpretation remains deterministic and can be literal.
+- Cook Mode instruction quality depends on the imported recipe.
+- Minor visual polish remains.
+- The current UX assumes one active/first Restaurant.
+- Native screen-awake support is not implemented.
+
+These do not block private beta unless real beta evidence shows they prevent successful cooking.
 
 ## Goal
 

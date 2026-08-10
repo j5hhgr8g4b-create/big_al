@@ -4,9 +4,9 @@ Current working branch: `clean-milestone-4-sync`.
 
 `main` is stale and must not be used for the next Codex task.
 
-Milestones 0-8 and M11-M19 are complete on `clean-milestone-4-sync`. Founder UAT passed for the full Import -> Save -> Plan -> Shop -> Cook loop. Second-user Restaurant isolation remains a verification gap, not a demonstrated security failure.
+Milestones 0-8 and M11-M20 are complete on `clean-milestone-4-sync`. Founder UAT passed for the full Import -> Save -> Plan -> Shop -> Cook loop. M20 concluded GO after the URL importer security blocker was resolved. Second-user Restaurant isolation remains an M21 entry verification gap, not a demonstrated security failure.
 
-The current phase is Phase 3 — MVP Hardening & Beta Preparation. The next milestone is M20 — Beta Readiness Review. M21 Private Beta Testing has not started.
+The current phase is Phase 3 — MVP Hardening & Beta Preparation. The next milestone is M21 — Private Beta Testing. M21 has not started.
 
 Latest UAT report: [MVP UAT M11-M14](../UAT_MVP_M11_M14.md).
 
@@ -32,9 +32,9 @@ Phase 3 planning is now prepared: [Phase 3 — MVP Hardening & Beta Preparation]
 | 17 | Import Quality & Attribution Hardening | Complete | [Milestone 17](MILESTONE_17.md) |
 | 18 | Shopping List Reliability | Complete | [Milestone 18](MILESTONE_18.md) |
 | 19 | Cook Mode Beta Polish | Complete | [Milestone 19](MILESTONE_19.md) |
-| 20 | Beta Readiness Review | Planned | [Milestone 20](MILESTONE_20.md) |
-| 21 | Private Beta Testing | Not started | [Milestone 21](MILESTONE_21.md) |
-| 22 | Beta Findings & Launch Decision | Planned | [Milestone 22](MILESTONE_22.md) |
+| 20 | Beta Readiness Review | Complete / GO | [Milestone 20](MILESTONE_20.md) |
+| 21 | Private Beta Testing | Next / Not started | [Milestone 21](MILESTONE_21.md) |
+| 22 | Beta Findings & Launch Decision | Future / Not started | [Milestone 22](MILESTONE_22.md) |
 
 ## Completed Approved Batch
 
@@ -47,7 +47,7 @@ Phase 3 planning is now prepared: [Phase 3 — MVP Hardening & Beta Preparation]
 
 ## Phase 3 Batch
 
-M15-M19 are complete. M20 is the current review milestone; M21 has not started.
+M15-M20 are complete. M20 concluded GO; M21 is next and has not started.
 
 | Batch | Scope | Status |
 | --- | --- | --- |
@@ -56,9 +56,9 @@ M15-M19 are complete. M20 is the current review milestone; M21 has not started.
 | M17 | Import Quality & Attribution Hardening | Complete |
 | M18 | Shopping List Reliability | Complete |
 | M19 | Cook Mode Beta Polish | Complete |
-| M20 | Beta Readiness Review | Current |
-| M21 | Private Beta Testing | Not started |
-| M22 | Beta Findings & Launch Decision | Planned |
+| M20 | Beta Readiness Review | Complete / GO |
+| M21 | Private Beta Testing | Next / Not started |
+| M22 | Beta Findings & Launch Decision | Future / Not started |
 
 ## Phase 3 rule
 

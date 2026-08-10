@@ -24,6 +24,24 @@ Known Issues:
 
 ---
 
+### 2026-08-10 — M20 Beta Readiness Review Closeout
+
+Summary:
+M20 completed with a final **GO** decision. The initial review was conditional on hardening the server-side recipe importer against SSRF, unsafe redirects, DNS rebinding and excessive or unsupported responses. The remediation added public destination validation, per-redirect DNS validation and pinned connections, HTML/XHTML enforcement, a 2 MiB streamed response cap and safe manual-review recovery.
+
+Security review identified two follow-up blockers: incomplete IPv6 special-range filtering and possible shared-agent socket reuse. Both were resolved by blocking 6to4 and extended documentation space and disabling shared-agent reuse with `agent: false`. Focused security tests pass 22/22; lint, typecheck, build and diff-check pass. M21 Private Beta Testing is next and has not started.
+
+Files Changed:
+Updated the server-side recipe importer, import action logging, focused security tests, test command and M20 closeout documentation.
+
+Database Changes:
+None.
+
+Known Issues:
+Live two-user Restaurant isolation, a supported public import and rejected-import manual recovery remain M21 entry checks, not M20 blockers.
+
+---
+
 ### 2026-07-04 — M19 Cook Mode Beta Polish
 
 Summary:
@@ -119,15 +137,15 @@ None.
 Testing Required:
 Bulk UAT should confirm expired sessions show the login message, missing records show the friendly not-found state, and Menu/Pantry failed actions return useful messages while Import -> Save -> Plan -> Shop -> Cook still works.
 
-Known Issues:
-Second-user Restaurant isolation remains parked as a pre-beta gate.
+Known Issues At This Checkpoint:
+Second-user Restaurant isolation remained parked as a pre-beta gate. M20 later reclassified the uncompleted live exercise as an M21 entry check after implementation review found no demonstrated leak.
 
 ---
 
 ### 2026-07-04 — M15 Founder UAT Pantry and Core Loop Closeout
 
 Summary:
-Founder UAT retesting passed for Pantry generic salt/pepper filtering, Clear Shopping list, duplicate import handling, and the full live core loop: Import -> Save -> Plan -> Shop -> Cook. The remaining M15 blocker is second-user Restaurant isolation only.
+Founder UAT retesting passed for Pantry generic salt/pepper filtering, Clear Shopping list, duplicate import handling, and the full live core loop: Import -> Save -> Plan -> Shop -> Cook. At this historical checkpoint, the remaining M15 verification item was second-user Restaurant isolation.
 
 The live Supabase project `cqcjacirzibfjecrruie` was verified after applying the missing Clear Shopping list RPC. `public.clear_active_shopping_list(uuid)` exists, clears the active Restaurant's current Shopping list including purchased items, is executable by `authenticated`, and is not executable by `anon`.
 
@@ -143,11 +161,11 @@ Commands Run:
 Database Changes:
 Live Supabase project `cqcjacirzibfjecrruie` now has `public.clear_active_shopping_list(uuid)` and its execute grants corrected for M15 UAT. No unrelated database objects were changed.
 
-Testing Required:
-Run the second-user Restaurant isolation check before closing M15.
+Testing Required At This Checkpoint:
+Run the second-user Restaurant isolation check. M20 later moved this live exercise to M21 entry rather than retaining it as a technical blocker.
 
-Known Issues:
-Second-user Restaurant isolation remains the only M15 blocker.
+Known Issues At This Checkpoint:
+Second-user Restaurant isolation remained the only uncompleted M15 verification item; no cross-Restaurant failure had been demonstrated.
 
 ---
 

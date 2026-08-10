@@ -26,7 +26,7 @@ Last updated: 2026-08-10
 
 Current phase: Phase 3 — MVP Hardening & Beta Preparation
 
-Current milestone: M20 — Beta Readiness Review
+Next milestone: M21 — Private Beta Testing (not started)
 
 Current branch:
 
@@ -36,18 +36,21 @@ clean-milestone-4-sync
 
 Current state:
 
-- M0-M19 are complete on the working branch.
+- M0-M20 are complete on the working branch.
 - Founder UAT passed for the full Import → Save → Plan → Shop → Cook loop.
+- M20 Beta Readiness Review concluded GO; no technical M20 blocker remains.
+- M21 is next but has not started.
 - Phase 3 docs are prepared.
 - Phase 3 operational controls are prepared in Notion.
 - Full-build user stories have been upgraded with Black Belt-style process controls.
-- The next active work is M20 Beta Readiness Review.
 - Private beta has not started.
 - Wider launch is not approved.
 
 ## Latest important commits
 
 ```text
+17c6b7c M20 harden recipe URL import security
+51e1eed Merge Phase 3 documentation with M15-M19 implementation
 c75bf1f M19 cook mode beta polish
 c89e546 M18 shopping list reliability
 1e21a4b M17 import quality and attribution hardening
@@ -99,14 +102,16 @@ The current active loop is Import → Save → Plan → Shop → Cook.
 The full-build user stories are not permission to build every future journey now.
 ```
 
+Local and GitHub were synchronized at `17c6b7c`, and the worktree was clean before this documentation closeout.
+
 ## Active blockers
 
 Keep this list in sync with the Notion Launch Blocker Register.
 
 | Blocker | Status | Next action |
 | --- | --- | --- |
-| Server-side URL import fetch needs security hardening before private beta | Open | Complete the approved M20 remediation only after founder review |
-| Second-user Restaurant isolation not manually validated | Verification gap | Run a targeted two-user negative-access matrix before or during M21 preparation; current RLS review found no demonstrated leak |
+| M20 technical blockers | None | M20 concluded GO |
+| Second-user Restaurant isolation not manually validated | M21 entry check | Run a targeted two-user negative-access matrix before broad tester activity; current RLS review found no demonstrated leak |
 
 ## Active documents
 
@@ -149,7 +154,7 @@ At the start of the next session:
 5. Read this handover page.
 6. Read `docs/CODEX_RESUME_AFTER_USAGE_RESET.md` if Codex usage had paused.
 7. Check Notion Launch Blocker Register.
-8. Check the M20 readiness findings and blocker decision.
+8. Confirm M20 remains complete/GO and review the M21 entry checks.
 9. Use the Black Belt user stories/process map as journey control, not as a feature backlog.
 10. Continue only the current milestone unless founder explicitly changes scope.
 
@@ -189,21 +194,26 @@ Notes for founder:
 
 ## Current next action
 
-Continue M20 Beta Readiness Review. Do not start M21 until the M20 recommendation and any blocker remediation are approved.
+Prepare to begin M21 Private Beta Testing. M21 has not started.
 
 Priority order:
 
-1. Preserve the completed M15-M19 implementation and Phase 3 planning history.
-2. Review the M20 beta-readiness findings.
-3. Resolve only the explicitly approved beta blockers.
-4. Run a targeted second-user Restaurant-isolation verification.
-5. Decide whether M21 Private Beta Testing may begin.
+1. Confirm the branch is `clean-milestone-4-sync`, pull, and verify a clean worktree.
+2. Run a live authenticated two-user Restaurant-isolation smoke test.
+3. Run one live supported public recipe import.
+4. Confirm a rejected or unsafe import reaches manual-review recovery.
+5. Begin broad tester activity only after recording those entry checks.
+
+These are beta-entry validation tasks, not product redesign tasks.
+
+M21 should validate real use of Import → Save → Plan → Shop → Cook. Keep deterministic Shopping interpretation, source-dependent Cook Mode instructions, minor visual polish, one active/first Restaurant UX and lack of native screen-awake support as accepted limitations unless beta evidence shows they prevent successful cooking.
 
 ## Do not do next
 
-- Do not start M21 until M20 has a clear result.
-- Do not build M21 Private Beta Testing until M20 gives a go decision.
+- Do not treat M21 validation as permission for broad feature work.
+- Do not begin M22 or wider-launch work.
 - Do not add new product areas.
+- Do not build followers/following, likes, public feeds, influencer mechanics, grocery price comparison, calorie tracking, full pantry inventory, public community features, generic AI chatbot functionality, advanced AI recipe interpretation, a major redesign or marketing/public-launch work.
 - Do not treat future user stories as active build scope.
 - Do not use `main` for active work.
 - Do not run broad database changes without checking migration history.
