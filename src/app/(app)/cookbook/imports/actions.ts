@@ -59,7 +59,6 @@ export async function createImport(formData: FormData) {
     hasRestaurantId: Boolean(restaurantId),
     hasSourceUrl: Boolean(sourceUrl),
     importId,
-    sourceUrl,
   });
 
   if (!restaurantId || (!sourceUrl && !rawText)) {
@@ -76,7 +75,10 @@ export async function createImport(formData: FormData) {
     const url = validateRecipeUrl(sourceUrl);
 
     if (!url) {
-      logImportWarning("url validation failed", { importId, sourceUrl });
+      logImportWarning("url validation failed", {
+        importId,
+        sourceUrlLength: sourceUrl.length,
+      });
       errorRedirect("Enter a recipe link that starts with http or https.");
     }
 
@@ -91,17 +93,19 @@ export async function createImport(formData: FormData) {
     logImportEvent("url validation passed", {
       hostname: url.hostname,
       importId,
-      sourceUrl: url.toString(),
     });
 
-    normalizedSourceUrl = url.toString();
+    const storedUrl = new URL(url);
+    storedUrl.username = "";
+    storedUrl.password = "";
+    normalizedSourceUrl = storedUrl.toString();
     parserName = "schema-org-recipe-jsonld-v1";
     parserOutput = await extractRecipeFromUrl(url);
     parserOutput = {
       ...parserOutput,
       recipe: {
         ...parserOutput.recipe,
-        sourceUrl: url.toString(),
+        sourceUrl: normalizedSourceUrl,
       },
     };
 

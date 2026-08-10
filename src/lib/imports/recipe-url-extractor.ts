@@ -1,5 +1,11 @@
 import "server-only";
 
+import { lookup as dnsLookup } from "node:dns/promises";
+import type { LookupAddress } from "node:dns";
+import { request as httpRequest, type IncomingHttpHeaders } from "node:http";
+import { request as httpsRequest } from "node:https";
+import { isIP, type LookupFunction } from "node:net";
+
 export type ExtractedRecipe = {
   author: string;
   cookMinutes: number | null;
@@ -30,6 +36,28 @@ type JsonValue =
   | { [key: string]: JsonValue };
 
 type JsonObject = { [key: string]: JsonValue };
+
+type SafeFetchResponse = {
+  body: AsyncIterable<Uint8Array>;
+  cancel: () => void;
+  headers: IncomingHttpHeaders;
+  statusCode: number;
+};
+
+export type SafeFetchDependencies = {
+  lookup: (hostname: string) => Promise<LookupAddress[]>;
+  request: (
+    url: URL,
+    address: LookupAddress,
+    signal: AbortSignal,
+  ) => Promise<SafeFetchResponse>;
+  timeoutMs?: number;
+};
+
+const requestTimeoutMs = 10_000;
+const maxRedirects = 3;
+const maxResponseBytes = 2 * 1024 * 1024;
+const redirectStatuses = new Set([301, 302, 303, 307, 308]);
 
 const emptyRecipe: ExtractedRecipe = {
   author: "",
@@ -80,33 +108,30 @@ export function normalizeRecipeUrl(url: URL) {
   return normalized;
 }
 
-export async function extractRecipeFromUrl(url: URL): Promise<RecipeExtractionResult> {
+export async function extractRecipeFromUrl(
+  url: URL,
+  dependencies: SafeFetchDependencies = defaultSafeFetchDependencies,
+): Promise<RecipeExtractionResult> {
   const sourceSite = url.hostname.replace(/^www\./, "");
-  const fallbackRecipe = { ...emptyRecipe, sourceSite, sourceUrl: url.toString() };
+  const safeSourceUrl = urlWithoutCredentials(url).toString();
+  const fallbackRecipe = { ...emptyRecipe, sourceSite, sourceUrl: safeSourceUrl };
+  const logUrl = safeSourceUrl;
 
   try {
     logExtractionEvent("fetch started", {
       hostname: url.hostname,
-      sourceUrl: url.toString(),
+      sourceUrl: logUrl,
     });
-    const response = await fetchWithTimeout(url);
+    const response = await fetchSafeHtml(url, dependencies);
 
     logExtractionEvent("fetch completed", {
-      contentType: response.headers.get("content-type"),
+      contentType: response.contentType,
       hostname: url.hostname,
-      ok: response.ok,
+      ok: true,
       status: response.status,
     });
 
-    if (!response.ok) {
-      return {
-        message: "Big Al could not read this one automatically. The link is saved, and you can still add the recipe details below.",
-        recipe: fallbackRecipe,
-        status: "failed",
-      };
-    }
-
-    const html = await response.text();
+    const html = response.html;
     const recipeJson = findRecipeJson(html);
 
     if (!recipeJson) {
@@ -153,7 +178,7 @@ export async function extractRecipeFromUrl(url: URL): Promise<RecipeExtractionRe
       errorName: error instanceof Error ? error.name : "UnknownError",
       errorMessage: error instanceof Error ? error.message : String(error),
       hostname: url.hostname,
-      sourceUrl: url.toString(),
+      sourceUrl: logUrl,
     });
     return {
       message: "Big Al could not read this one automatically. The link is saved, and you can still add the recipe details below.",
@@ -171,23 +196,293 @@ function logExtractionWarning(message: string, details: Record<string, unknown>)
   console.warn(`[recipe-extractor] ${message}`, details);
 }
 
-async function fetchWithTimeout(url: URL) {
+export async function fetchSafeHtml(
+  url: URL,
+  dependencies: SafeFetchDependencies = defaultSafeFetchDependencies,
+) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(
+    () => controller.abort(),
+    dependencies.timeoutMs ?? requestTimeoutMs,
+  );
 
   try {
-    return await fetch(url, {
-      headers: {
-        accept: "text/html,application/xhtml+xml",
-        "user-agent": "BigAlRecipeImporter/1.0",
-      },
-      redirect: "follow",
-      signal: controller.signal,
-    });
+    let currentUrl = new URL(url);
+
+    for (let redirectCount = 0; redirectCount <= maxRedirects; redirectCount += 1) {
+      const address = await validatePublicDestination(
+        currentUrl,
+        dependencies.lookup,
+        controller.signal,
+      );
+      const response = await dependencies.request(currentUrl, address, controller.signal);
+
+      if (redirectStatuses.has(response.statusCode)) {
+        response.cancel();
+        const location = firstHeader(response.headers.location);
+
+        if (!location || redirectCount === maxRedirects) {
+          throw new Error("Recipe URL redirected too many times");
+        }
+
+        currentUrl = new URL(location, currentUrl);
+        continue;
+      }
+
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        response.cancel();
+        throw new Error("Recipe page request failed");
+      }
+
+      const contentType = firstHeader(response.headers["content-type"]);
+      if (!contentType || !isHtmlContentType(contentType)) {
+        response.cancel();
+        throw new Error("Recipe page is not HTML");
+      }
+
+      const declaredLength = Number(firstHeader(response.headers["content-length"]));
+      if (Number.isFinite(declaredLength) && declaredLength > maxResponseBytes) {
+        response.cancel();
+        throw new Error("Recipe page is too large");
+      }
+
+      return {
+        contentType,
+        html: await readBoundedBody(response),
+        status: response.statusCode,
+        url: currentUrl,
+      };
+    }
+
+    throw new Error("Recipe URL redirected too many times");
   } finally {
     clearTimeout(timeout);
   }
 }
+
+async function validatePublicDestination(
+  url: URL,
+  lookup: SafeFetchDependencies["lookup"],
+  signal: AbortSignal,
+) {
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    throw new Error("Recipe URL protocol is not allowed");
+  }
+
+  if (url.username || url.password) {
+    throw new Error("Recipe URL credentials are not allowed");
+  }
+
+  const hostname = url.hostname.toLowerCase().replace(/\.$/, "").replace(/^\[|\]$/g, "");
+  if (!hostname || hostname === "localhost" || hostname.endsWith(".localhost")) {
+    throw new Error("Recipe URL destination is not public");
+  }
+
+  const literalFamily = isIP(hostname);
+  const addresses = literalFamily
+    ? [{ address: hostname, family: literalFamily as 4 | 6 }]
+    : await abortable(lookup(hostname), signal);
+
+  if (addresses.length === 0 || addresses.some((address) => !isPublicIp(address.address))) {
+    throw new Error("Recipe URL destination is not public");
+  }
+
+  return addresses[0];
+}
+
+function abortable<T>(promise: Promise<T>, signal: AbortSignal) {
+  if (signal.aborted) return Promise.reject(signal.reason);
+
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => {
+      cleanup();
+      reject(signal.reason);
+    };
+    const cleanup = () => signal.removeEventListener("abort", onAbort);
+
+    signal.addEventListener("abort", onAbort, { once: true });
+    promise.then(
+      (value) => {
+        cleanup();
+        resolve(value);
+      },
+      (error: unknown) => {
+        cleanup();
+        reject(error);
+      },
+    );
+  });
+}
+
+function isPublicIp(address: string) {
+  const family = isIP(address);
+  if (family === 4) return isPublicIpv4(address);
+  if (family === 6) return isPublicIpv6(address);
+  return false;
+}
+
+function isPublicIpv4(address: string) {
+  const octets = address.split(".").map(Number);
+  if (octets.length !== 4 || octets.some((octet) => !Number.isInteger(octet) || octet < 0 || octet > 255)) {
+    return false;
+  }
+
+  const value = octets.reduce((total, octet) => total * 256 + octet, 0) >>> 0;
+  const inRange = (network: number, prefix: number) => {
+    const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+    return (value & mask) === (network & mask);
+  };
+
+  return ![
+    [0x00000000, 8],
+    [0x0a000000, 8],
+    [0x64400000, 10],
+    [0x7f000000, 8],
+    [0xa9fe0000, 16],
+    [0xac100000, 12],
+    [0xc0000000, 24],
+    [0xc0000200, 24],
+    [0xc01fc400, 24],
+    [0xc034c100, 24],
+    [0xc0586300, 24],
+    [0xc0a80000, 16],
+    [0xc0af3000, 24],
+    [0xc6120000, 15],
+    [0xc6336400, 24],
+    [0xcb007100, 24],
+    [0xe0000000, 4],
+    [0xf0000000, 4],
+  ].some(([network, prefix]) => inRange(network, prefix));
+}
+
+function isPublicIpv6(address: string) {
+  const bytes = ipv6Bytes(address);
+  if (!bytes) return false;
+
+  const isIpv4Mapped = bytes.slice(0, 10).every((byte) => byte === 0) && bytes[10] === 0xff && bytes[11] === 0xff;
+  if (isIpv4Mapped) {
+    return isPublicIpv4(bytes.slice(12).join("."));
+  }
+
+  const isGlobalUnicast = (bytes[0] & 0xe0) === 0x20;
+  const isProtocolAssignment = bytes[0] === 0x20 && bytes[1] === 0x01 && (bytes[2] & 0xfe) === 0;
+  const isDocumentation = bytes[0] === 0x20 && bytes[1] === 0x01 && bytes[2] === 0x0d && bytes[3] === 0xb8;
+  const isSixToFour = bytes[0] === 0x20 && bytes[1] === 0x02;
+  const isExtendedDocumentation = bytes[0] === 0x3f && (bytes[1] & 0xf0) === 0xf0;
+
+  return isGlobalUnicast
+    && !isProtocolAssignment
+    && !isDocumentation
+    && !isSixToFour
+    && !isExtendedDocumentation;
+}
+
+function ipv6Bytes(address: string) {
+  const withoutZone = address.split("%")[0].toLowerCase();
+  const [left = "", right = ""] = withoutZone.split("::");
+  if (withoutZone.split("::").length > 2) return null;
+
+  const parsePart = (part: string) => part ? part.split(":").filter(Boolean) : [];
+  const leftParts = parsePart(left);
+  const rightParts = parsePart(right);
+  const missing = 8 - leftParts.length - rightParts.length;
+  const parts = withoutZone.includes("::")
+    ? [...leftParts, ...Array(Math.max(missing, 0)).fill("0"), ...rightParts]
+    : leftParts;
+
+  if (parts.length !== 8 || parts.some((part) => !/^[0-9a-f]{1,4}$/.test(part))) return null;
+
+  return parts.flatMap((part) => {
+    const value = Number.parseInt(part, 16);
+    return [value >> 8, value & 0xff];
+  });
+}
+
+function isHtmlContentType(contentType: string) {
+  const mediaType = contentType.split(";", 1)[0].trim().toLowerCase();
+  return mediaType === "text/html" || mediaType === "application/xhtml+xml";
+}
+
+async function readBoundedBody(response: SafeFetchResponse) {
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+
+  for await (const chunk of response.body) {
+    totalBytes += chunk.byteLength;
+    if (totalBytes > maxResponseBytes) {
+      response.cancel();
+      throw new Error("Recipe page is too large");
+    }
+    chunks.push(chunk);
+  }
+
+  const joined = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    joined.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(joined);
+}
+
+function firstHeader(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function urlWithoutCredentials(url: URL) {
+  const sanitized = new URL(url);
+  sanitized.username = "";
+  sanitized.password = "";
+  return sanitized;
+}
+
+async function lookupAddresses(hostname: string) {
+  return dnsLookup(hostname, { all: true, verbatim: true });
+}
+
+export function createPinnedRequestOptions(address: LookupAddress, signal: AbortSignal) {
+  const pinnedLookup: LookupFunction = (_hostname, options, callback) => {
+    if (typeof options === "object" && options.all) {
+      callback(null, [address]);
+      return;
+    }
+    callback(null, address.address, address.family);
+  };
+
+  return {
+    agent: false as const,
+    headers: {
+      accept: "text/html,application/xhtml+xml",
+      "user-agent": "BigAlRecipeImporter/1.0",
+    },
+    lookup: pinnedLookup,
+    signal,
+  };
+}
+
+function requestPinned(url: URL, address: LookupAddress, signal: AbortSignal) {
+  return new Promise<SafeFetchResponse>((resolve, reject) => {
+    const request = (url.protocol === "https:" ? httpsRequest : httpRequest)(
+      url,
+      createPinnedRequestOptions(address, signal),
+      (response) => {
+        resolve({
+          body: response,
+          cancel: () => response.destroy(),
+          headers: response.headers,
+          statusCode: response.statusCode ?? 0,
+        });
+      },
+    );
+    request.on("error", reject);
+    request.end();
+  });
+}
+
+const defaultSafeFetchDependencies: SafeFetchDependencies = {
+  lookup: lookupAddresses,
+  request: requestPinned,
+};
 
 function findRecipeJson(html: string) {
   const scripts = html.matchAll(
