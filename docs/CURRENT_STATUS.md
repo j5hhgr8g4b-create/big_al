@@ -1,235 +1,94 @@
 # Current Status
 
-## Branch Status
+**Last reconciled:** 2026-08-12
 
-`main` is stale and must not be used for the next Codex task.
+## Position
 
-The current working branch is:
+- Active branch: `clean-milestone-4-sync`
+- Latest application commit before documentation reconciliation: `b9a2abd — M21 prepare Big Al for private beta`
+- `main`: stale and has no common ancestor with the active branch; do not use it for active work
+- M0–M20: complete
+- M20.1 import fetch security hardening: complete
+- M21 Private Beta Preparation: engineering complete
+- M21 live closeout: **NO-GO pending infrastructure restore and live verification**
+- M22: not started
 
-```txt
-clean-milestone-4-sync
+## Automated evidence
+
+M21 implementation report:
+
+- `pnpm test`: 30 passed / 0 failed
+- `pnpm lint`: passed
+- `pnpm typecheck`: passed
+- `pnpm build`: passed
+- `git diff --check`: passed
+
+M20.1 importer security coverage includes protocol restrictions, public DNS/IP validation, pinned connections, redirect validation, response size limits, HTML/XHTML enforcement, timeout handling and safe manual-review recovery.
+
+## Supabase state
+
+Project:
+
+```text
+cqcjacirzibfjecrruie
 ```
 
-## Current Milestone
+On 2026-08-12 the project was found `INACTIVE`. A restore was successfully requested and the latest observed state was `COMING_UP`.
 
-M15-M20 are complete on `clean-milestone-4-sync`. M20 Beta Readiness Review concluded **GO**. The next milestone is M21 — Private Beta Testing, which has not started. M22 remains future/not started.
+Do not infer that the project is still restoring in a future session. Check its live status before continuing.
 
-Founder UAT passed for the full Import -> Save -> Plan -> Shop -> Cook loop. Second-user Restaurant isolation remains a verification gap rather than a demonstrated security failure; current RLS and RPC review found no cross-Restaurant access path.
+M21 migration still requiring live verification/application:
 
-M20 resolved the URL-import security blocker in `17c6b7c — M20 harden recipe URL import security`. Public destination and DNS validation, address pinning with shared-agent reuse disabled, redirect revalidation, HTML/XHTML enforcement, a 2 MiB streamed body cap and the existing manual-review fallback are in place. Focused security tests pass 22/22; lint, typecheck, build and diff-check pass. No technical M20 blocker remains.
-
-Milestones 0-8 are complete for the current build path. M11-M14 are now complete on `clean-milestone-4-sync`.
-
-URL import foundation already exists and has been hardened. Attribution protection, Restaurant cooking preferences foundation, and MVP closeout QA are now in place.
-
-Pantry/Shopping UAT cleanup is also in place on this branch: generated Shopping lists now filter obvious non-shopping basics, treat tiny spice amounts as buyable spice items, combine obvious same-unit duplicates, and show planned meal/date context.
-
-Follow-up Shopping normalisation now strips obvious prep notes from generated item titles, combines garlic/onion-style variants more reliably, categorises tomato purée away from Fresh produce, and prioritises meal/date context over repeated source labels.
-
-Garlic duplicate fallback is in place at both generation time and display time so older generated Shopping rows can render as one Garlic card before the user regenerates the list.
-
-M15 Founder UAT Pantry cleanup also filters generic salt/pepper basics, strips cornflour slurry instructions from Shopping item titles, and categorises carrots as Fresh produce.
-
-Latest M15 Pantry normalisation also filters generic salt/black pepper rows with leading recipe amounts, groups fresh thyme and thyme as Thyme, cleans duplicated oil titles, and categorises green vegetables as Fresh produce. Sugar remains visible pending a future preference decision.
-
-Prepared potato items such as Mashed potatoes, Roast potatoes, and Boiled potatoes now normalise to Potatoes where safe. Red currant jelly and Red wine remain visible as buyable Shopping items.
-
-Potatoes now categorise as Fresh produce. Vague Green vegetables remains the buyable title, and useful parenthetical examples such as asparagus and green beans are preserved as Shopping context rather than turned into invented specific items.
-
-Pantry now includes a confirmed Clear Shopping list action for the active Restaurant and generic salt/pepper filtering uses exact basic-ingredient matches after measured amount stripping.
-
-Founder UAT retesting has now passed for Pantry salt/pepper filtering, Clear Shopping list, duplicate import handling, and the full live core loop: Import -> Save -> Plan -> Shop -> Cook.
-
-The live Supabase project has the `clear_active_shopping_list` RPC applied and permission-checked: authenticated users can execute it, anonymous users cannot.
-
-M16 Core Reliability & Error Handling is complete: app routes now have friendlier loading, error, and not-found fallbacks, expired sessions redirect with a clear login message, and common Menu/Pantry action failures use clearer recovery copy.
-
-M17 Import Quality & Attribution Hardening is complete: Import review now shows a confidence checklist, keeps source/creator attribution prominent, links duplicate pending Imports, and validates attribution field lengths on save.
-
-M18 Shopping List Reliability is complete: Pantry now flags stale generated list ranges, clear-list copy is more explicit, generated item cleanup strips more prep/instruction clutter, and vegetable/onion categorisation is more consistent while preserving M15 salt/pepper filtering.
-
-M19 Cook Mode Beta Polish is complete: current-step hierarchy is clearer, progress is accessible, previous/next controls include step previews, completion copy is clearer, and Cook Mode action failures use friendlier messages.
-
-## Completed Milestones
-
-- Milestone 0 — Project Setup
-- Milestone 1 — Auth + Restaurants
-- Milestone 2 — Cookbook + Recipes
-- Milestone 3 — Imports
-- Milestone 4 — Recipe Books + Search
-- Milestone 5 — Menu
-- Milestone 6 — Shopping
-- Milestone 7 — Cook Mode
-- Milestone 8 — Basic Big Al
-- M11 — URL import hardening
-- M12 — Attribution protection
-- M13 — Restaurant preferences foundation
-- M14 — MVP closeout QA
-- M15 — Founder UAT Closeout
-- M16 — Core Reliability & Error Handling
-- M17 — Import Quality & Attribution Hardening
-- M18 — Shopping List Reliability
-- M19 — Cook Mode Beta Polish
-- M20 — Beta Readiness Review — GO
-
-## Latest Verification Checkpoint
-
-2026-08-10 M20 Beta Readiness Review closeout:
-
-- Branch confirmed as `clean-milestone-4-sync`; `main` remains stale.
-- Founder-authenticated UAT already passed the complete Import -> Save -> Plan -> Shop -> Cook loop.
-- URL importer SSRF, redirect, DNS and response-resource blocker resolved in `17c6b7c`.
-- Focused security tests pass 22/22.
-- `pnpm lint`, `pnpm typecheck`, `pnpm build` and `git diff --check` passed.
-- Final M20 decision: GO. M21 is next and has not started.
-- Live two-user isolation, supported public import and rejected-import recovery are M21 entry checks, not open M20 blockers.
-
-2026-07-04 M15 founder UAT retest checkpoint (historical):
-
-- Branch confirmed as `clean-milestone-4-sync`; `main` remains stale.
-- Live Supabase project `cqcjacirzibfjecrruie` has `clear_active_shopping_list(uuid)` applied.
-- `clear_active_shopping_list(uuid)` is executable by `authenticated`, not executable by `anon`, and clears both to-buy and purchased items from the active Restaurant's current Shopping list.
-- Founder retest passed for Pantry generic salt/pepper filtering.
-- Founder retest passed for Clear Shopping list.
-- Founder retest passed for duplicate import handling.
-- Founder retest passed for the full live core loop: Import -> Save -> Plan -> Shop -> Cook.
-- At that checkpoint, second-user Restaurant isolation was the remaining manual verification item. Later M20 review classified it as an M21 entry check rather than a demonstrated blocker.
-
-2026-07-02 M11-M14 UAT/regression pass completed:
-
-- Branch confirmed as `clean-milestone-4-sync`; `main` remains stale.
-- Supabase migrations are present through the M11-M14 anon RPC execute restriction follow-up.
-- Code inspection covered Auth, Restaurant, Kitchen, Cookbook, URL Import, Recipe Books, Search, Menu, Pantry/Shopping, Cook Mode, and security/RLS paths.
-- Local protected-route smoke tests confirmed logged-out app routes redirect to `/login`.
-- `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `git diff --check` passed.
-- UAT report added at `docs/UAT_MVP_M11_M14.md`.
-- Founder UAT with a live authenticated Supabase session subsequently passed for the core loop. The uncompleted second-user exercise is now an M21 entry verification check.
-
-2026-06-27 M6 live verification passed:
-
-- Existing Supabase user login works.
-- `pnpm lint` passed.
-- `pnpm tsc --noEmit` passed.
-- `pnpm exec next build --webpack` passed.
-- Milestone 6 migration `202606200006_milestone_6_shopping.sql` was applied to the connected Supabase project.
-- `shopping_lists` and `shopping_items` exist in Supabase with RLS enabled.
-- Shopping generation from planned meals works in the app.
-- Manual Shopping item add works.
-- Purchased tick/untick works.
-- Shopping state persists after refresh.
-
-## What Works
-
-- Next.js App Router with TypeScript and Tailwind CSS.
-- Mobile-first application shell.
-- Bottom navigation for Kitchen, Cookbook, Specials, Menu, and Pantry.
-- Supabase browser client with environment variable validation.
-- Lint, type checking, and webpack production build checks.
-- Organized product documentation and milestone tracking indexes.
-- Supabase cookie-based SSR clients and session refresh proxy.
-- Email/password account creation, confirmation callback, sign-in, and sign-out flows.
-- Protected application routes with unauthenticated redirects.
-- Profile and Chef provisioning migration for new and existing Auth users.
-- Membership-secured Restaurants and atomic Restaurant creation.
-- Empty-Restaurant onboarding from Kitchen.
-- Automatic one-per-Restaurant Cookbooks.
-- Structured Recipes with creator, details, timing, servings, and difficulty.
-- Restaurant-scoped normalized Ingredients and ordered Recipe Ingredients.
-- Ordered Recipe Steps.
-- Atomic Recipe creation and editing plus archive-only removal.
-- Cookbook list and Recipe create, view, edit, and archive screens.
-- Restaurant-scoped URL/text Import capture.
-- Explicit placeholder parser metadata with manual review.
-- Cookbook Needs Review queue.
-- Atomic Import-to-Recipe conversion.
-- Import-first Recipe creation from Kitchen and Cookbook.
-- Restaurant-scoped Recipe Books with create, view, edit, and archive flows.
-- Atomic add/remove Recipe Book membership controls on Recipes.
-- Recipe search by title and Ingredient within the current Restaurant.
-- Restaurant-scoped Menu planning with This Week and Next Week sections.
-- Active Cookbook Recipes can be added to planned meal dates.
-- Meal planning captures people eating and displays serving context.
-- Meal events are archived rather than hard deleted.
-- Restaurant-scoped Shopping lists and Shopping items.
-- Pantry generates a Shopping list from planned Menu meals.
-- Generated Shopping items consolidate matching Ingredients by normalized name and unit where practical for MVP.
-- Generated Shopping items filter obvious non-shopping basics such as water, ice, and generic salt/pepper.
-- Generated Shopping items strip slurry instruction text such as cornflour mixed with cold water so the buyable title remains Cornflour.
-- Generated Shopping items show common small measured spices as buyable items, with Recipe amounts in notes instead of as the main item.
-- Generated Shopping items strip obvious prep notes such as peeled, chopped, minced, melted, optional, and note callouts from the display title.
-- Generated Shopping items combine common garlic forms such as cloves garlic, garlic cloves, and garlic clove into Garlic when safe.
-- Pantry defensively canonicalises older generated garlic rows at display time and toggles grouped generated rows together.
-- Pantry defensively filters older generated generic salt/pepper basics at display time.
-- Pantry defensively canonicalises generated herb and oil title variants such as fresh thyme/thyme and Oil Oil.
-- Pantry defensively canonicalises prepared potato titles such as Mashed potatoes to Potatoes.
-- Pantry preserves useful Green vegetables examples from parenthetical text in item context.
-- Pantry can clear the active Restaurant's current Shopping list, including purchased items, only after explicit confirmation.
-- Generated Shopping items include subtle Menu meal/date context and simple buy-closer guidance for obvious short-life items planned later.
-- Pantry groups active Shopping items into lightweight shop sections without adding full inventory management.
-- Pantry supports manual Shopping item additions and purchased tick/untick state.
-- Shopping state persists through Supabase-backed reads after refresh.
-- Recipe detail pages link to Cook Mode.
-- Cook Mode shows one large readable Recipe step at a time with previous/next navigation.
-- Cook Mode includes progress, Recipe context, Ingredients access, a simple timer, screen-awake guidance, and a persisted mark-cooked completion flow.
-- Cook Mode records Recipe cook history and cook-again feedback for future Recipe trust signals.
-- Specials now hosts a Basic Big Al entry point.
-- Basic Big Al uses deterministic Restaurant-scoped reads from saved Recipes, Ingredients, Steps, Menu, Shopping, and cook history.
-- Basic Big Al can find saved Recipes, suggest Recipes, surface planned Recipes, surface recently cooked Recipes, and show cook-again Recipes.
-- Basic Big Al requires no paid AI provider, API key, model, billing setup, usage plan, or subscription.
-- URL import foundation exists: URL/text imports are captured, reviewable, and convertible into saved Recipes.
-- URL imports normalize common tracking parameters, preserve source URLs, extract JSON-LD Recipe data more reliably, and fall back to basic page metadata when structured recipe data is missing.
-- Import review distinguishes extracted, partly extracted, and fallback states.
-- Import review warns when the same source URL already exists as a saved Recipe or another pending Import.
-- Recipes can store creator/source and source-site attribution separately from the Recipe description.
-- Restaurant cooking preferences can store unit preference, oven type, hob type, and simple equipment limits.
-- Recipe detail and Cook Mode show lightweight kitchen preference guidance when preferences are set.
-- Import review now guards exact source URL duplicates: users see a strong warning, can open the existing Recipe, and must choose an explicit duplicate override before another copy can be saved.
-
-## Known Issues / Watch Items
-
-- Specials is now Basic Big Al; it should remain grounded helper behaviour, not a generic chatbot.
-- Pantry is now the Shopping area; it should remain Shopping support and not become full pantry inventory management.
-- Turbopack production output previously produced client-manifest runtime errors; production builds should continue to use webpack unless revalidated.
-- A second-user cross-Restaurant RLS test remains an M21 entry verification gap; no cross-Restaurant security failure has been demonstrated.
-- URL extraction still depends on recipe pages exposing usable JSON-LD or basic metadata. It does not use AI, OCR, browser automation, or unsupported scraping workarounds.
-- Duplicate detection remains MVP-level: exact source URL duplicates are guarded, same-title matches are warned, and existing duplicate Recipes are not deleted automatically.
-- Attribution protection is MVP-level metadata capture and display; it is not a plagiarism checker or licensing system.
-- Restaurant cooking preferences are guidance only. They do not automatically convert units, rewrite recipes, or adapt oven temperatures.
-- Recipe search uses simple literal containment rather than ranked full-text search.
-- Shopping cleanup is MVP-level and keyword-based. It combines only matching normalized Ingredient names with compatible units and simple numeric quantities. Unit conversion, pack-size inference, grocery pricing, pantry inventory, and expiry prediction are intentionally deferred.
-- Cook Mode records cook history but does not yet display Times Cooked or Cook Again Rate in the UI.
-- Basic Big Al is deterministic and intentionally simple. It does not generate new meal plans, search the internet, use paid AI, convert units, or make unsupported claims.
-
-## Blocked Items
-
-None, provided Codex confirms it is working inside `/workspaces/big_al` before editing.
-
-## Next Task
-
-Use `clean-milestone-4-sync` for the next Codex task. Do not use `main`; it is stale.
-
-M15-M20 are complete and M20 concluded GO. M21 Private Beta Testing is next and has not started. Begin with live two-user Restaurant isolation, a supported public recipe import, and rejected/unsafe import manual-review recovery before broad tester activity.
-
-Do not build paid AI integration, grocery price comparison, full pantry inventory management, calorie tracking, unscoped meal generation, social mechanics, or features beyond M8 without explicit approval.
-
-## Codex Working Directory Rule
-
-Before any Codex task, run:
-
-```bash
-pwd
-git status --short
+```text
+20260812202748_m21_beta_feedback.sql
 ```
 
-Codex must only inspect and edit files inside:
+## M21 closeout gates
 
-```txt
-/workspaces/big_al
-```
+M21 becomes GO only when all of the following pass:
 
-Before starting the next task, Codex must confirm:
+1. Supabase project is ACTIVE.
+2. M21 migration is present in live migration history or is safely applied.
+3. `beta_feedback`, RLS, grants and `submit_beta_feedback` RPC are verified live.
+4. Two ordinary authenticated users have separate Restaurants.
+5. Cross-Restaurant read/mutation attempts fail for Recipes, Imports, Menu, Shopping, preferences, Cook records and feedback.
+6. One supported public HTTPS recipe import passes.
+7. `http://127.0.0.1/recipe` is safely rejected into manual review.
+8. User A completes Import → Save → Plan → Shop → Cook → Feedback.
+9. User B independently completes the same loop.
+10. Automated checks remain green.
 
-- Branch is `clean-milestone-4-sync`.
-- `main` is stale and is not the working source.
-- Milestones 0-8 are complete.
-- URL import foundation already exists.
+## What works
+
+The validated application spine remains:
+
+**Import → Save → Plan → Shop → Cook**
+
+Founder UAT previously passed the full live core loop. M16–M19 hardening improved reliability, import quality/attribution, Shopping reliability and Cook Mode. M20/M20.1 cleared the recipe importer security blocker. M21 added lightweight beta feedback, clearer first-use messaging and safer auth error copy.
+
+## Known limitations accepted for beta
+
+- Shopping normalisation is keyword/rule based rather than AI-driven.
+- Recipe import quality depends on usable page metadata/JSON-LD.
+- Unit/oven/hob preferences provide guidance rather than automatic recipe rewriting.
+- Basic Big Al remains deterministic and intentionally simple.
+- Cook Mode and Shopping still need real beta feedback for refinement.
+
+These are not current M21 blockers unless live use demonstrates that they prevent the cooking loop.
+
+## GitHub structural audit
+
+- Active branch is not protected.
+- No GitHub Actions workflow exists on the active branch.
+- The repository default branch remains `main`, but `main` is stale/unrelated to the active history.
+- No open pull request currently reconciles the active branch to `main`.
+
+Do not change branch strategy casually. Resolve the default-branch/history problem deliberately before wider release or multi-contributor development.
+
+## Next exact action
+
+1. Check Supabase project status.
+2. When ACTIVE, verify/apply the M21 migration.
+3. Run the live two-user M21 closeout matrix.
+4. If every gate passes, mark M21 GO and begin the controlled 3–5 Restaurant private beta.
+5. Do not start M22 until real beta evidence exists.
