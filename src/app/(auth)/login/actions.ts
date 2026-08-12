@@ -25,7 +25,8 @@ export async function signIn(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    loginRedirect("error", error.message);
+    console.warn("[auth] sign in failed", { code: error.code });
+    loginRedirect("error", "We could not sign you in. Check your email and password, then try again.");
   }
 
   redirect("/");
@@ -56,7 +57,8 @@ export async function signUp(formData: FormData) {
   });
 
   if (error) {
-    loginRedirect("error", error.message);
+    console.warn("[auth] sign up failed", { code: error.code });
+    loginRedirect("error", "We could not create that account. Check the details or try signing in instead.");
   }
 
   if (data.session) {

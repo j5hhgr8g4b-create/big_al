@@ -30,7 +30,7 @@ export default async function KitchenPage() {
       <section className="bistro-card" aria-label="Restaurant kitchen">
         <div className="bistro-badge">{restaurant?.name ?? "Your Restaurant"}</div>
         <p className="intro-copy-card">
-          Dinner, the week ahead, and the shop — kept together without making a meal of it.
+          Save something you want to cook → plan it → shop for it → cook it.
         </p>
       </section>
 

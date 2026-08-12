@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 
 import { signOut } from "@/app/(app)/actions";
+import { BetaSupportLink } from "@/components/beta-support-link";
 import { BottomNav } from "@/components/bottom-nav";
 import { createClient } from "@/lib/supabase/server";
 
@@ -34,6 +35,7 @@ export default async function AppLayout({ children }: Readonly<{ children: React
         </form>
       </header>
       <main className="app-main">{children}</main>
+      <BetaSupportLink />
       <BottomNav />
     </div>
   );

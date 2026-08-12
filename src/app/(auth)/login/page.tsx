@@ -17,7 +17,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         Welcome to
       </p>
       <h1 className="screen-title mt-2 inline-block text-5xl">Big Al</h1>
-      <p className="mt-6 leading-7 text-[var(--color-text-muted)]">Your private cooking companion.</p>
+      <p className="mt-6 leading-7 text-[var(--color-text-muted)]">
+        Your private cooking companion. Save something you want to cook, plan it, shop for it, then cook it.
+      </p>
 
       {(error || message) && (
         <p

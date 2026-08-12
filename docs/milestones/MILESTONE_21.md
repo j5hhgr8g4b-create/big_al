@@ -2,9 +2,9 @@
 
 ## Status
 
-Next in Phase 3 — not started. M20 completed with a GO decision.
+Preparation implemented on 2026-08-12. M20 completed with a GO decision.
 
-M21 is currently paused at the mandatory entry checks. On 2026-08-10 the checks were prepared but could not be executed because two authenticated test users / Restaurants and accessible live sessions were not available.
+M21 remains paused at the mandatory live entry checks because two authenticated test users / Restaurants and accessible live sessions were not available in the implementation environment.
 
 This is an operational dependency, not a demonstrated product, RLS, importer, or recovery failure.
 
@@ -15,6 +15,75 @@ Before broad tester activity, run the three entry checks recorded in M20:
 3. Rejected/unsafe import → manual-review recovery.
 
 Do not mark M21 active until these checks are completed and recorded.
+
+## Preparation delivered
+
+- The sign-in and Kitchen screens state the core loop in plain language.
+- Existing first-use states in Kitchen, Cookbook, Menu, Pantry and Specials were reviewed and retained; each explains its purpose and points to the next useful action.
+- Every authenticated app page has one unobtrusive `Send feedback` link and private-beta note.
+- Feedback captures category, text, originating page, authenticated submitter, active Restaurant and database timestamp.
+- Feedback rows are protected by RLS and an authenticated membership-checking submission RPC. Direct writes are not granted.
+- Authentication failures now show generic practical messages while server logs retain the Supabase error code.
+- Existing Restaurant-scoped records provide lifecycle evidence without a duplicate analytics system.
+
+## Minimal lifecycle evidence
+
+Use existing first-party rows rather than adding behavioural analytics:
+
+| Beta milestone | Existing evidence |
+| --- | --- |
+| Restaurant established | `restaurants` / `restaurant_members` |
+| Recipe imported or saved | `imports` / `recipes` |
+| Meal planned | `meal_events` |
+| Shopping list generated | `shopping_lists.generated_at` |
+| Cook Mode completed / marked cooked | `recipe_cooks` |
+| Feedback submitted | `beta_feedback` |
+
+The application logs feedback success with category, page path and Restaurant ID. Failures log only the Supabase error code and Restaurant ID; feedback text and account details are not logged.
+
+## Founder feedback review
+
+Review `public.beta_feedback` in the authenticated Supabase Dashboard. Keep access to project administrators; do not expose a cross-Restaurant review screen to beta users. Sort by `created_at desc` and use `category`, `page_path` and `restaurant_id` to reproduce the report. Feedback text may contain user-provided personal information and should not be copied into public channels.
+
+## Manual two-user UAT checklist
+
+Use separate browser profiles or private sessions. Record user IDs, Restaurant IDs, timestamps and pass/fail outcomes in the beta evidence log; do not record passwords or session tokens.
+
+### User A / Restaurant A
+
+1. Create or sign into User A.
+2. Create or access Restaurant A and reach Kitchen without prompting.
+3. Import a supported public recipe URL.
+4. Review extraction, source/creator attribution and duplicate warning behaviour.
+5. Save the Recipe and confirm it appears in Cookbook.
+6. Add it to Menu for a meal.
+7. Generate the Shopping list and tick one item.
+8. Open Cook Mode, complete the Recipe and mark it cooked.
+9. Use `Send feedback` from Cook Mode and submit a test report.
+
+### User B / Restaurant B
+
+Repeat steps 1–9 with a different normal account and Restaurant B.
+
+### Isolation attempts
+
+While signed in as User A:
+
+1. Confirm Restaurant B does not appear in Cookbook, Menu, Pantry/Shopping, Specials or preferences.
+2. Open known Restaurant B Recipe, Recipe edit, Import review, Recipe Book and Cook Mode URLs. Each must return not-found/access-denied behaviour without leaking content.
+3. Submit Restaurant B IDs to the existing Recipe, Menu, Shopping, Cook and preferences RPCs using the authenticated client or Supabase RLS Tester. Reads must return no B rows and mutations must fail or affect zero rows.
+4. Query `beta_feedback` as User A. User A must not see User B's feedback.
+
+Repeat the same attempts as User B against Restaurant A.
+
+### Import-security entry checks
+
+1. Complete one supported public HTTPS import through the live app and verify review, attribution, save and Cookbook visibility.
+2. Submit a safe rejected destination such as `http://127.0.0.1/recipe` and confirm manual-review recovery, no crash and no internal diagnostic detail in the UI.
+
+### Stop conditions
+
+Stop the beta and record a blocker for any cross-Restaurant read/mutation, importer security regression, broken manual recovery, raw exception, or core-loop crash.
 
 ## Goal
 
