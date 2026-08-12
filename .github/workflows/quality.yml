@@ -3,8 +3,10 @@ name: Quality
 on:
   push:
     branches:
-      - clean-milestone-4-sync
+      - main
   pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
