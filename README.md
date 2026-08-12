@@ -10,7 +10,7 @@ Big Al is a mobile-first living cookbook for Restaurants.
 
 - Canonical branch: `main`
 - Legacy June history preserved at `archive/legacy-main-2026-06`
-- Old recovery branch `clean-milestone-4-sync` is no longer the canonical working branch
+- Old recovery branch `clean-milestone-4-sync` is retired for new work
 - M0–M20: complete
 - M20.1 import security hardening: complete
 - M21: engineering preparation complete; live closeout is the current focus
@@ -32,19 +32,20 @@ Do not maintain duplicate task trackers in both systems.
 
 ## Branch model
 
-`main` is the only long-lived working branch.
+`main` is the only long-lived working branch and should remain deployable.
 
-For meaningful work, branch from `main`, for example:
+All repository changes should branch from current `main`, for example:
 
 - `milestone/m22-beta-findings`
 - `feature/recipe-scaling`
 - `fix/shopping-list-duplicates`
 - `polish/cook-mode-wording`
 - `security/import-validation`
+- `docs/update-handover`
 
-Then implement, run quality checks, open a PR to `main`, merge only when green, and delete the short-lived branch.
+Then implement, run quality checks, open a PR to `main`, merge only when green, and retire the short-lived branch.
 
-Tiny documentation corrections may be committed directly to `main` when low risk.
+Do not push directly to `main` except in an explicit founder-approved emergency.
 
 ## Current delivery control
 
