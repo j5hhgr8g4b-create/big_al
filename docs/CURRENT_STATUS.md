@@ -17,9 +17,11 @@
 
 - The real Big Al application history is now on `main`.
 - The old unrelated June history was preserved before `main` was repointed.
-- GitHub Actions Quality workflow targets `main`.
-- The corrected pnpm build-approval configuration passed the Quality workflow before branch promotion.
-- Branch protection still needs to be enabled in GitHub repository settings when available.
+- GitHub Actions Quality workflow targets pushes to `main` and pull requests targeting `main`.
+- The corrected pnpm build-approval configuration passes Quality CI.
+- The repaired canonical `main` passes Quality CI.
+- `clean-milestone-4-sync` has been fast-forwarded to the canonical code state and is retired for new work.
+- Branch protection still needs to be enabled in GitHub repository settings.
 
 ## Automated evidence
 
@@ -76,17 +78,18 @@ These are not current blockers unless live use demonstrates they prevent the coo
 
 ## Branch workflow from now on
 
-- `main` is the only long-lived working branch.
-- Create a short-lived branch for each milestone, feature, fix, security change or meaningful polish task.
+- `main` is the only long-lived working branch and should remain deployable.
+- Create a short-lived branch for every repository change.
 - Open a PR back to `main`.
 - Require Quality CI to pass before merge.
-- Delete the temporary branch after merge.
-- Tiny low-risk documentation corrections may go directly to `main`.
+- Delete/retire the temporary branch after merge.
+- Do not push directly to `main` except in an explicit founder-approved emergency.
 
 ## Next exact action
 
-1. Check Supabase project status.
-2. When ACTIVE, verify/apply the M21 migration.
-3. Run the live two-user M21 closeout matrix.
-4. If every gate passes, mark M21 GO and begin the controlled 3–5 Restaurant private beta.
-5. Do not start M22 until real beta evidence exists.
+1. Enable lightweight branch protection/rules for `main` when repository settings access is available.
+2. Check Supabase project status.
+3. When ACTIVE, verify/apply the M21 migration.
+4. Run the live two-user M21 closeout matrix.
+5. If every gate passes, mark M21 GO and begin the controlled 3–5 Restaurant private beta.
+6. Do not start M22 until real beta evidence exists.
