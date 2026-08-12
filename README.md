@@ -8,8 +8,9 @@ Big Al is a mobile-first living cookbook for Restaurants.
 
 ## Current project state
 
-- Active branch: `clean-milestone-4-sync`
-- `main`: stale, unrelated history; do not use for active work
+- Canonical branch: `main`
+- Legacy June history preserved at `archive/legacy-main-2026-06`
+- Old recovery branch `clean-milestone-4-sync` is no longer the canonical working branch
 - M0–M20: complete
 - M20.1 import security hardening: complete
 - M21: engineering preparation complete; live closeout is the current focus
@@ -21,26 +22,29 @@ The Big Al Supabase project is `cqcjacirzibfjecrruie`. It was restored on 2026-0
 
 ### GitHub — delivery truth
 
-GitHub holds:
-
-- code and migrations;
-- tests and CI;
-- working technical documentation;
-- milestone control issues;
-- bugs and polish items;
-- ideas and future candidates;
-- implementation evidence and technical handover.
+GitHub holds code, migrations, tests, CI, working technical documentation, milestone control issues, bugs, polish, ideas, implementation evidence and technical handover.
 
 ### Notion — founder and business truth
 
-Notion holds:
-
-- business plans and financial thinking;
-- founder decisions and rationale;
-- durable product/brand strategy;
-- launch/business context that is not an engineering work queue.
+Notion holds business plans, founder decisions and rationale, durable product/brand strategy, and launch/business context that is not an engineering work queue.
 
 Do not maintain duplicate task trackers in both systems.
+
+## Branch model
+
+`main` is the only long-lived working branch.
+
+For meaningful work, branch from `main`, for example:
+
+- `milestone/m22-beta-findings`
+- `feature/recipe-scaling`
+- `fix/shopping-list-duplicates`
+- `polish/cook-mode-wording`
+- `security/import-validation`
+
+Then implement, run quality checks, open a PR to `main`, merge only when green, and delete the short-lived branch.
+
+Tiny documentation corrections may be committed directly to `main` when low risk.
 
 ## Current delivery control
 
@@ -80,7 +84,7 @@ git status --short
 git pull --ff-only
 ```
 
-Expected branch: `clean-milestone-4-sync`.
+Expected base branch: `main`.
 
 ## Standard checks
 
@@ -92,7 +96,7 @@ pnpm build
 git diff --check
 ```
 
-GitHub Actions also runs the same core quality checks on the active branch and pull requests.
+GitHub Actions runs the same core quality checks on pushes and pull requests targeting `main`.
 
 ## Product guardrails
 
