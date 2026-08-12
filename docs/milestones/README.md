@@ -2,15 +2,16 @@
 
 Current working branch: `clean-milestone-4-sync`.
 
-`main` is stale and must not be used for the next Codex task.
+`main` is stale/unrelated and must not be used for active work.
 
-Milestones 0-8 and M11-M20 are complete on `clean-milestone-4-sync`. Founder UAT passed for the full Import -> Save -> Plan -> Shop -> Cook loop. M20 concluded GO after the URL importer security blocker was resolved. Second-user Restaurant isolation remains an M21 entry verification gap, not a demonstrated security failure.
+## Current position
 
-The current phase is Phase 3 — MVP Hardening & Beta Preparation. The next milestone is M21 — Private Beta Testing. M21 has not started.
+- M0–M20: complete
+- M20.1 import security hardening: complete
+- M21 Private Beta Testing: **engineering complete / live closeout NO-GO**
+- M22 Beta Findings & Launch Decision: **not started**
 
-Latest UAT report: [MVP UAT M11-M14](../UAT_MVP_M11_M14.md).
-
-Phase 3 planning is now prepared: [Phase 3 — MVP Hardening & Beta Preparation](PHASE_3_MVP_HARDENING_AND_BETA_PREPARATION.md).
+Founder UAT previously passed the full Import → Save → Plan → Shop → Cook loop. M21 is now proving the same experience with two independent users/Restaurants and preparing the product for a controlled private beta.
 
 | Milestone | Scope | Status | Record |
 | --- | --- | --- | --- |
@@ -26,42 +27,31 @@ Phase 3 planning is now prepared: [Phase 3 — MVP Hardening & Beta Preparation]
 | 11 | URL import hardening | Complete | [Milestone 11](MILESTONE_11.md) |
 | 12 | Attribution protection | Complete | [Milestone 12](MILESTONE_12.md) |
 | 13 | Restaurant preferences foundation | Complete | [Milestone 13](MILESTONE_13.md) |
-| 14 | MVP closeout QA | Complete / Founder UAT | [Milestone 14](MILESTONE_14.md) |
+| 14 | MVP closeout QA | Complete | [Milestone 14](MILESTONE_14.md) |
 | 15 | Founder UAT Closeout | Complete | [Milestone 15](MILESTONE_15.md) |
 | 16 | Core Reliability & Error Handling | Complete | [Milestone 16](MILESTONE_16.md) |
 | 17 | Import Quality & Attribution Hardening | Complete | [Milestone 17](MILESTONE_17.md) |
 | 18 | Shopping List Reliability | Complete | [Milestone 18](MILESTONE_18.md) |
 | 19 | Cook Mode Beta Polish | Complete | [Milestone 19](MILESTONE_19.md) |
 | 20 | Beta Readiness Review | Complete / GO | [Milestone 20](MILESTONE_20.md) |
-| 21 | Private Beta Testing | Next / Not started | [Milestone 21](MILESTONE_21.md) |
-| 22 | Beta Findings & Launch Decision | Future / Not started | [Milestone 22](MILESTONE_22.md) |
+| 20.1 | Import Fetch Security Hardening | Complete | M20/M20.1 commit history |
+| 21 | Private Beta Testing | Engineering complete / live closeout NO-GO | [Milestone 21](MILESTONE_21.md) |
+| 22 | Beta Findings & Launch Decision | Not started | [Milestone 22](MILESTONE_22.md) |
 
-## Completed Approved Batch
+## M21 live gate
 
-| Batch | Scope | Status |
-| --- | --- | --- |
-| M11 | URL import hardening | Complete |
-| M12 | Attribution protection | Complete |
-| M13 | Restaurant preferences foundation | Complete |
-| M14 | MVP closeout QA | Complete / Founder UAT |
+Private beta may begin only after:
 
-## Phase 3 Batch
+1. Supabase project `cqcjacirzibfjecrruie` is ACTIVE.
+2. `20260812202748_m21_beta_feedback.sql` is verified/applied live.
+3. Feedback table/RLS/grants/RPC are verified.
+4. Two-user Restaurant isolation passes.
+5. Supported public import passes.
+6. Rejected localhost import safely falls back to manual review.
+7. Both users independently complete Import → Save → Plan → Shop → Cook → Feedback.
 
-M15-M20 are complete. M20 concluded GO; M21 is next and has not started.
+## Phase rule
 
-| Batch | Scope | Status |
-| --- | --- | --- |
-| M15 | Founder UAT Closeout | Complete |
-| M16 | Core Reliability & Error Handling | Complete |
-| M17 | Import Quality & Attribution Hardening | Complete |
-| M18 | Shopping List Reliability | Complete |
-| M19 | Cook Mode Beta Polish | Complete |
-| M20 | Beta Readiness Review | Complete / GO |
-| M21 | Private Beta Testing | Next / Not started |
-| M22 | Beta Findings & Launch Decision | Future / Not started |
+The current phase validates and hardens the product already built. Do not add new product areas to manufacture progress.
 
-## Phase 3 rule
-
-Phase 3 hardens the current MVP and prepares for beta. It does not add new product areas.
-
-Do not build social mechanics, grocery comparison, full pantry inventory, calorie tracking, smart appliance integrations, generic chatbot behaviour or public launch features during Phase 3.
+Do not build social mechanics, grocery comparison, full pantry inventory, calorie tracking, generic chatbot behaviour or wider-launch features during M21.
