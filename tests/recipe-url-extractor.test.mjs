@@ -5,6 +5,7 @@ import {
   createPinnedRequestOptions,
   extractRecipeFromUrl,
   fetchSafeHtml,
+  validateRecipeUrl,
 } from "../src/lib/imports/recipe-url-extractor.ts";
 
 const publicIpv4 = { address: "93.184.216.34", family: 4 };
@@ -46,6 +47,21 @@ test("accepts normal public HTTP and HTTPS destinations", async () => {
     dependencies({ addresses: [publicIpv6] }),
   );
   assert.equal(ipv6Result.status, 200);
+});
+
+test("rejects unsupported URL protocols", async () => {
+  for (const value of [
+    "file:///etc/passwd",
+    "ftp://recipes.example/dinner",
+    "data:text/html,<h1>Recipe</h1>",
+    "javascript:alert(1)",
+  ]) {
+    assert.equal(validateRecipeUrl(value), null);
+  }
+
+  await assert.rejects(
+    fetchSafeHtml(new URL("ftp://recipes.example/dinner"), dependencies()),
+  );
 });
 
 test("rejects localhost", async () => {
@@ -268,6 +284,34 @@ test("rejects an oversized streamed response even without Content-Length", async
     ),
   );
   assert.equal(canceled, true);
+});
+
+test("rejects an oversized declared Content-Length before reading the body", async () => {
+  let canceled = false;
+  let bodyRead = false;
+  await assert.rejects(
+    fetchSafeHtml(
+      new URL("https://recipes.example/huge"),
+      dependencies({
+        request: async () => ({
+          body: (async function* () {
+            bodyRead = true;
+            yield new Uint8Array();
+          })(),
+          cancel() {
+            canceled = true;
+          },
+          headers: {
+            "content-length": String(2 * 1024 * 1024 + 1),
+            "content-type": "text/html",
+          },
+          statusCode: 200,
+        }),
+      }),
+    ),
+  );
+  assert.equal(canceled, true);
+  assert.equal(bodyRead, false);
 });
 
 test("rejected automatic fetching returns the existing manual-review fallback", async () => {
