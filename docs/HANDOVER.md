@@ -8,20 +8,27 @@ Big Al is in **M21 — Private Beta Testing**.
 
 M21 engineering is complete. The milestone remains **NO-GO** because live deployment and two-user verification have not yet passed.
 
-Active branch:
+Canonical branch:
 
 ```text
-clean-milestone-4-sync
+main
 ```
 
-Do not use `main`; it is stale and unrelated to the active branch history.
+The old unrelated June `main` history is preserved at:
+
+```text
+archive/legacy-main-2026-06
+```
+
+`clean-milestone-4-sync` is now a retired recovery branch. Do not start new work from it.
 
 ## Latest implementation state
 
 - `5fb4d1f — M20.1 complete import security test coverage`
 - `b9a2abd — M21 prepare Big Al for private beta`
 - M21 automated checks: 30 tests passed, lint/typecheck/build/diff-check passed
-- Working tree was reported clean and synchronized after M21
+- GitHub Quality CI is installed for `main`
+- The application history has been promoted safely to `main`
 
 ## Infrastructure state
 
@@ -31,9 +38,7 @@ Supabase project:
 cqcjacirzibfjecrruie
 ```
 
-The project was found inactive on 2026-08-12. Restore was requested successfully. Latest observed status: `COMING_UP`.
-
-Always check the live status again before acting.
+The project was found inactive on 2026-08-12 and a restore was requested successfully. Always check live status again before acting.
 
 M21 migration requiring live verification/application:
 
@@ -56,16 +61,23 @@ M21 migration requiring live verification/application:
 11. Record pass/fail evidence.
 12. Only if every gate passes, mark M21 **GO — ready to begin private beta**.
 
+## Branch workflow for future work
+
+Start each meaningful task from `main` using a short-lived branch such as:
+
+- `milestone/m22-beta-findings`
+- `feature/<name>`
+- `fix/<name>`
+- `polish/<name>`
+- `security/<name>`
+
+Then implement, run checks, open a PR to `main`, merge only when Quality CI passes, and retire the branch.
+
 ## After M21 GO
 
 Run a controlled beta with roughly 3–5 friendly Restaurants and minimal founder guidance. Collect evidence about completion of the cooking loop, confusion, defects, Shopping usefulness, Cook Mode usefulness and whether testers would use Big Al again the following week.
 
-Classify findings as:
-
-- BLOCKER
-- IMPORTANT
-- POLISH
-- IDEA
+Classify findings as BLOCKER / IMPORTANT / POLISH / IDEA.
 
 Do not turn every tester suggestion into a feature.
 
@@ -75,7 +87,7 @@ Do not turn every tester suggestion into a feature.
 - Do not add speculative features during closeout.
 - Do not weaken RLS or security to make testing easier.
 - Do not reset or destructively alter the live database.
-- Do not use or merge into `main` without an explicit branch-strategy decision.
+- Do not use `clean-milestone-4-sync` for new work.
 - Do not build followers, likes, public feeds, influencer mechanics, grocery comparison, calorie tracking, full pantry inventory or generic chatbot behaviour.
 
 ## Standard validation
