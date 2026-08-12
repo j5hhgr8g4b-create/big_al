@@ -1,40 +1,29 @@
-# First Prompt For Codex — Local VS Code Version
+# Legacy Local Codex Start Prompt
 
-You are working locally in Visual Studio Code for the Big Al project.
+This file is retained only so old links do not break.
 
-The only allowed project folder is:
+It is **not** the current Codex start prompt and must not be used to determine the working directory, branch, milestone or permissions.
 
-/Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App
+## Current setup
 
-Before writing code, do these checks:
+Primary environment:
 
-1. Confirm the current working directory is exactly /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App.
-2. Confirm these files exist:
-   - SAFE_CODEX_LOCAL_VSCODE_SETUP.md
-   - CODEX_RULES.md
-   - docs/PROJECT_GOVERNANCE.md
-   - README.md
-   - docs/product/PRODUCT_SPEC.md
-   - docs/product/DATABASE_SCHEMA.md
-   - docs/product/APP_SCREENS.md
-   - docs/product/BUILD_PLAN.md
-3. Check whether this is a Git repository.
-4. If it is not a Git repository, stop and ask permission before running git init.
-5. Do not install anything yet.
-6. Do not write code yet.
-7. Summarise your understanding of the safety rules, project goal, current milestone, and proposed Milestone 0 plan.
-8. Wait for approval before making changes.
+```text
+/workspaces/big_al
+```
 
-Safety rules:
-- Work only inside /Users/Alex/Library/CloudStorage/OneDrive-Personal/Cookbook App.
-- Do not use sudo.
-- Do not run destructive commands.
-- Do not install global dependencies.
-- Do not deploy.
-- Do not push to GitHub.
-- Do not spend money.
-- Do not expose secrets.
-- Build one milestone at a time.
-- Maintain audit logs.
+Active branch:
 
-Start with Milestone 0 only.
+```text
+clean-milestone-4-sync
+```
+
+Before starting work, read:
+
+1. `AGENTS.md`
+2. `README.md`
+3. `docs/CURRENT_STATUS.md`
+4. `docs/HANDOVER.md`
+5. the active milestone record
+
+The previous OneDrive/Mac path and Milestone 0 instructions in this file have been retired.
