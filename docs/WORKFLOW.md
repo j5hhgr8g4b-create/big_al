@@ -20,7 +20,7 @@ Do not maintain duplicate task trackers in both systems.
 
 `main` is the only long-lived working branch and represents the canonical Big Al product history.
 
-Meaningful work should use a short-lived branch from current `main`:
+All repository changes should use a short-lived branch from current `main`:
 
 - `milestone/<name>`
 - `feature/<name>`
@@ -46,7 +46,7 @@ The old June repository history is preserved at `archive/legacy-main-2026-06`.
 9. Merge only when Quality CI passes and any required live/manual acceptance evidence is satisfied.
 10. Delete/retire the short-lived branch.
 
-Tiny, low-risk documentation/control corrections may be committed directly to `main`.
+Do not push directly to `main` except in an explicit founder-approved emergency.
 
 Do not maintain long-running development branches.
 
