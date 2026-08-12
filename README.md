@@ -1,81 +1,89 @@
-# Big Al — Local VS Code Codex Build Pack
+# Big Al
 
-Big Al is a mobile-first cooking companion for Restaurants.
+Big Al is a mobile-first living cookbook for Restaurants.
 
-Mission: Make cooking easy and enjoyable.
+**Mission:** Make cooking easy and enjoyable.
 
-Vision: The cooking companion that made me enjoy cooking.
+**Core loop:** Import → Save → Plan → Shop → Cook
 
-## MVP Loop
+## Current project state
 
-Import → Save → Plan → Shop → Cook
+- Active branch: `clean-milestone-4-sync`
+- `main`: stale, unrelated history; do not use for active work
+- M0–M20: complete
+- M20.1 import security hardening: complete
+- M21 Private Beta Preparation: engineering complete
+- M21 status: **NO-GO pending infrastructure restore and live closeout validation**
+- M22: closed until M21 passes and private-beta evidence exists
 
-Build this loop first.
+Latest application commit before this documentation reconciliation: `b9a2abd — M21 prepare Big Al for private beta`.
 
-## Current Branch State
+The Big Al Supabase project is `cqcjacirzibfjecrruie`. It was found inactive on 2026-08-12 and a restore was initiated. Verify the current project status before attempting migration or live UAT work.
 
-`main` is stale and must not be used for the next Codex task.
+## What happens next
 
-The current working branch is `clean-milestone-4-sync`.
+1. Confirm Supabase project `cqcjacirzibfjecrruie` is ACTIVE.
+2. Verify migration history and apply `20260812202748_m21_beta_feedback.sql` if missing.
+3. Verify `beta_feedback`, its RLS, grants and `submit_beta_feedback` RPC.
+4. Run live two-user Restaurant isolation checks.
+5. Run one supported public recipe import and one rejected localhost import.
+6. Complete Import → Save → Plan → Shop → Cook as both users.
+7. Verify feedback submission and isolation.
+8. Only then mark M21 GO and begin the controlled private beta.
 
-Milestones 0-8 are complete. URL import foundation already exists.
+## Working environment
 
-The next approved batch is:
+Primary Codespaces path:
 
-- M11 URL import hardening
-- M12 attribution protection
-- M13 Restaurant preferences foundation
-- M14 MVP closeout QA
-
-## Workspace Folder
-
+```text
 /workspaces/big_al
+```
 
-Codex must not work outside this folder.
+Before editing:
 
-## Recommended Stack
+```bash
+pwd
+git branch --show-current
+git status --short
+git pull --ff-only
+```
 
-- Next.js
-- TypeScript
-- Tailwind CSS
-- Supabase
-- PostgreSQL
-- Supabase Auth
-- Supabase Storage
+Expected branch: `clean-milestone-4-sync`.
 
-## Local Setup
+## Standard checks
 
-Requirements: Node.js 22 and pnpm.
+```bash
+pnpm test
+pnpm lint
+pnpm typecheck
+pnpm build
+git diff --check
+```
 
-1. Run `pnpm install`.
-2. Run the SQL files in `supabase/migrations` against the intended Supabase project, in filename order.
-3. Copy `.env.example` to `.env.local` and replace the placeholders with Supabase project values.
-4. Add `http://localhost:3000/auth/callback` to the Supabase Auth redirect URLs.
-5. Run `pnpm dev`.
-6. Open `http://localhost:3000`.
+## Source of truth
 
-Useful checks:
+- Notion **App HQ**: live project position, founder decisions and next action.
+- GitHub: implementation, migrations, tests, milestone records and technical audit trail.
+- `docs/CURRENT_STATUS.md`: concise repository snapshot.
+- `docs/HANDOVER.md`: exact resume point when work pauses.
+- `AGENTS.md`: standing Codex permissions and safety boundaries.
 
-- `pnpm lint`
-- `pnpm typecheck`
-- `pnpm build`
+Do not let repository snapshots contradict App HQ. If they diverge, reconcile them before new feature work.
 
-## Project Structure
+## Product guardrails
 
-- `src/app` — App Router pages, layouts, and global styles.
-- `src/components` — Shared interface components.
-- `src/lib` — External service clients and shared application utilities.
-- `supabase/migrations` — Ordered database schema and security changes.
-- `docs/product` — Product specification, schema, screens, and build plan.
-- `docs/milestones` — Milestone index and completion records.
-- `docs` — Governance, decisions, changelog, and current status.
+Big Al is a living cookbook, planning tool, shopping companion and cooking companion. Keep food as the hero and prefer simplicity over feature quantity.
 
-## Required Codex Reading Order
+Do not introduce followers, likes, view counts, influencer mechanics, grocery price comparison, calorie tracking, full pantry inventory, or a generic AI chatbot.
 
-1. SAFE_CODEX_LOCAL_VSCODE_SETUP.md
-2. CODEX_RULES.md
-3. docs/PROJECT_GOVERNANCE.md
-4. docs/product/PRODUCT_SPEC.md
-5. docs/product/DATABASE_SCHEMA.md
-6. docs/product/APP_SCREENS.md
-7. docs/product/BUILD_PLAN.md
+## Documentation
+
+Start here:
+
+1. `AGENTS.md`
+2. `docs/CURRENT_STATUS.md`
+3. `docs/HANDOVER.md`
+4. `docs/milestones/README.md`
+5. `docs/milestones/MILESTONE_21.md`
+6. `docs/product/USER_STORIES_AND_PROCESS_MAP.md`
+7. `docs/PROJECT_GOVERNANCE.md`
