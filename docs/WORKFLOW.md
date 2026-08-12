@@ -8,38 +8,55 @@ Keep delivery simple, visible and auditable without duplicating the same informa
 
 ### GitHub — delivery truth
 
-GitHub holds:
-
-- application code;
-- Supabase migrations;
-- tests and CI;
-- working technical documentation;
-- active milestones and delivery issues;
-- bugs;
-- polish items;
-- ideas and future feature candidates;
-- implementation evidence and technical handover.
+GitHub holds application code, Supabase migrations, tests, CI, working technical documentation, active milestones/issues, bugs, polish, ideas/future candidates, implementation evidence and technical handover.
 
 ### Notion — founder and business truth
 
-Notion holds:
-
-- business case and financial thinking;
-- founder decisions and rationale;
-- product principles and durable strategy;
-- brand/founder story;
-- launch/business planning that is not an engineering work queue.
+Notion holds business plans, founder decisions/rationale, durable product/brand strategy and launch/business context that is not an engineering work queue.
 
 Do not maintain duplicate task trackers in both systems.
 
-## Delivery hierarchy
+## Branch model
 
-Use this hierarchy:
+`main` is the only long-lived working branch and represents the canonical Big Al product history.
+
+Meaningful work should use a short-lived branch from current `main`:
+
+- `milestone/<name>`
+- `feature/<name>`
+- `fix/<name>`
+- `polish/<name>`
+- `security/<name>`
+- `docs/<name>`
+
+The old June repository history is preserved at `archive/legacy-main-2026-06`.
+
+`clean-milestone-4-sync` was a recovery branch and is retired for new work.
+
+### Standard branch lifecycle
+
+1. Pull current `main`.
+2. Create a short-lived task branch.
+3. Implement only the approved issue/milestone scope.
+4. Add/update focused tests.
+5. Run `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `git diff --check` where practical.
+6. Review the diff.
+7. Commit and push the task branch.
+8. Open a PR targeting `main`.
+9. Merge only when Quality CI passes and any required live/manual acceptance evidence is satisfied.
+10. Delete/retire the short-lived branch.
+
+Tiny, low-risk documentation/control corrections may be committed directly to `main`.
+
+Do not maintain long-running development branches.
+
+## Delivery hierarchy
 
 1. **Milestone issue** — one outcome with entry/exit criteria.
 2. **Child issues** — only when the milestone genuinely needs separable pieces of work.
 3. **Bug / Polish / Idea issues** — independent backlog items.
-4. **Pull requests / commits** — implementation evidence.
+4. **Task branch + PR** — implementation unit and review boundary.
+5. **Merge to `main`** — canonical completion evidence.
 
 For the current solo-founder workflow, do not create dozens of tiny issues for work Codex can complete safely in one milestone prompt.
 
@@ -49,7 +66,7 @@ Use labels consistently:
 
 - `milestone` — milestone control issue
 - `active` — current delivery focus
-- `blocked` — cannot proceed because a concrete dependency is missing
+- `blocked` — concrete dependency missing
 - `bug` — behaviour is wrong or broken
 - `important` — meaningful non-blocking work
 - `polish` — quality improvement that does not block the core loop
@@ -61,8 +78,6 @@ Use labels consistently:
 - `documentation` — working documentation change
 
 ## Milestone states
-
-Represent milestone state in the issue title/body and labels:
 
 - **Planned** — defined but not active
 - **Active** — current work
@@ -82,39 +97,13 @@ Do not invent M23+ scope until M22 evidence and a founder decision justify it.
 
 ### Bug
 
-A bug must include:
-
-- what the user was trying to do;
-- what happened;
-- expected behaviour;
-- reproduction steps;
-- Restaurant/user context if relevant without exposing secrets;
-- severity: Blocker / Important / Polish.
+A bug must include what the user was trying to do, what happened, expected behaviour, reproduction steps, relevant Restaurant/user context without secrets, and severity: Blocker / Important / Polish.
 
 ### Idea
 
-An idea must explain:
-
-- the cooking problem it solves;
-- why the current product is insufficient;
-- whether it supports Import → Save → Plan → Shop → Cook;
-- complexity/risk;
-- whether it should stay parked until beta evidence supports it.
+An idea must explain the cooking problem it solves, why the current product is insufficient, whether it supports Import → Save → Plan → Shop → Cook, complexity/risk, and whether it should stay parked until beta evidence supports it.
 
 Ideas are not automatically roadmap commitments.
-
-## Standard milestone workflow
-
-1. Confirm the active branch and clean status.
-2. Read the milestone issue and relevant repository docs.
-3. Implement only the approved scope.
-4. Add/update focused tests.
-5. Run `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `git diff --check` where practical.
-6. Review the final diff.
-7. Commit and push to the active branch.
-8. Record manual/live UAT still required.
-9. Close the milestone issue only after its acceptance criteria pass.
-10. Update `docs/CURRENT_STATUS.md` and `docs/HANDOVER.md` only when the project state actually changes.
 
 ## Product guardrail
 
