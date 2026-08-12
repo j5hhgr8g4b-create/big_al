@@ -1,0 +1,54 @@
+name: Bug
+about: Report something that is broken or behaving incorrectly
+title: "Bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep this practical. Describe the cooking task, what happened, and what should have happened.
+  - type: textarea
+    id: goal
+    attributes:
+      label: What were you trying to do?
+      description: Include the relevant Big Al area and journey step.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open...
+        2. Tap...
+        3. See...
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Blocker — prevents the core loop or creates a security/data risk
+        - Important — materially harms the experience but has a workaround
+        - Polish — annoying or confusing but does not prevent cooking
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Useful context
+      description: Browser/device, page, Restaurant context or IDs if useful. Never include passwords, tokens or secrets.
