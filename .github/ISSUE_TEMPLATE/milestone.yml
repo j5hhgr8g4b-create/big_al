@@ -1,0 +1,49 @@
+name: Milestone
+about: Define one delivery outcome with explicit entry and exit criteria
+title: "MXX — "
+labels:
+  - milestone
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What must be true when this milestone is complete?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why this matters
+      description: Tie it to making cooking easy and enjoyable.
+    validations:
+      required: true
+  - type: textarea
+    id: entry
+    attributes:
+      label: Entry criteria
+      description: What must already be true before work starts?
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Must-have work only.
+    validations:
+      required: true
+  - type: textarea
+    id: out
+    attributes:
+      label: Explicitly out of scope
+      description: Protect the milestone from feature creep.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance / exit criteria
+      description: Include required automated and live/manual verification.
+    validations:
+      required: true
+  - type: textarea
+    id: uat
+    attributes:
+      label: Manual UAT
+      description: What Alex or beta users must verify that automated checks cannot prove.
