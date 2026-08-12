@@ -4,14 +4,22 @@
 
 ## Position
 
-- Active branch: `clean-milestone-4-sync`
-- Latest application commit before documentation reconciliation: `b9a2abd — M21 prepare Big Al for private beta`
-- `main`: stale and has no common ancestor with the active branch; do not use it for active work
+- Canonical branch: `main`
+- Legacy June `main` history preserved at `archive/legacy-main-2026-06`
+- `clean-milestone-4-sync` is a retired recovery branch and must not be used for new work
 - M0–M20: complete
 - M20.1 import fetch security hardening: complete
 - M21 Private Beta Preparation: engineering complete
-- M21 live closeout: **NO-GO pending infrastructure restore and live verification**
+- M21 live closeout: **NO-GO pending live Supabase and two-user verification**
 - M22: not started
+
+## Repository health
+
+- The real Big Al application history is now on `main`.
+- The old unrelated June history was preserved before `main` was repointed.
+- GitHub Actions Quality workflow targets `main`.
+- The corrected pnpm build-approval configuration passed the Quality workflow before branch promotion.
+- Branch protection still needs to be enabled in GitHub repository settings when available.
 
 ## Automated evidence
 
@@ -33,11 +41,9 @@ Project:
 cqcjacirzibfjecrruie
 ```
 
-On 2026-08-12 the project was found `INACTIVE`. A restore was successfully requested and the latest observed state was `COMING_UP`.
+On 2026-08-12 the project was found `INACTIVE` and a restore was requested. Always check live status before continuing.
 
-Do not infer that the project is still restoring in a future session. Check its live status before continuing.
-
-M21 migration still requiring live verification/application:
+M21 migration requiring live verification/application:
 
 ```text
 20260812202748_m21_beta_feedback.sql
@@ -58,15 +64,7 @@ M21 becomes GO only when all of the following pass:
 9. User B independently completes the same loop.
 10. Automated checks remain green.
 
-## What works
-
-The validated application spine remains:
-
-**Import → Save → Plan → Shop → Cook**
-
-Founder UAT previously passed the full live core loop. M16–M19 hardening improved reliability, import quality/attribution, Shopping reliability and Cook Mode. M20/M20.1 cleared the recipe importer security blocker. M21 added lightweight beta feedback, clearer first-use messaging and safer auth error copy.
-
-## Known limitations accepted for beta
+## Accepted beta limitations
 
 - Shopping normalisation is keyword/rule based rather than AI-driven.
 - Recipe import quality depends on usable page metadata/JSON-LD.
@@ -74,16 +72,16 @@ Founder UAT previously passed the full live core loop. M16–M19 hardening impro
 - Basic Big Al remains deterministic and intentionally simple.
 - Cook Mode and Shopping still need real beta feedback for refinement.
 
-These are not current M21 blockers unless live use demonstrates that they prevent the cooking loop.
+These are not current blockers unless live use demonstrates they prevent the cooking loop.
 
-## GitHub structural audit
+## Branch workflow from now on
 
-- Active branch is not protected.
-- No GitHub Actions workflow exists on the active branch.
-- The repository default branch remains `main`, but `main` is stale/unrelated to the active history.
-- No open pull request currently reconciles the active branch to `main`.
-
-Do not change branch strategy casually. Resolve the default-branch/history problem deliberately before wider release or multi-contributor development.
+- `main` is the only long-lived working branch.
+- Create a short-lived branch for each milestone, feature, fix, security change or meaningful polish task.
+- Open a PR back to `main`.
+- Require Quality CI to pass before merge.
+- Delete the temporary branch after merge.
+- Tiny low-risk documentation corrections may go directly to `main`.
 
 ## Next exact action
 
