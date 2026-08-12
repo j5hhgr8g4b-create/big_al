@@ -1,0 +1,49 @@
+name: Idea
+about: Capture a product idea without turning it into an automatic commitment
+title: "Idea: "
+labels:
+  - idea
+  - future
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What cooking problem does this solve?
+      description: Start with the user problem, not the proposed feature.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: Describe the simplest version.
+    validations:
+      required: true
+  - type: dropdown
+    id: loop
+    attributes:
+      label: Which part of the core loop does it support?
+      options:
+        - Import
+        - Save / Cookbook
+        - Plan / Menu
+        - Shop / Pantry
+        - Cook
+        - Return next week
+        - Cross-cutting
+        - None / unclear
+    validations:
+      required: true
+  - type: textarea
+    id: simpler
+    attributes:
+      label: Is there a simpler way to solve it?
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / reason to consider it
+      description: Beta feedback, founder observation, recurring problem, or other evidence.
+  - type: markdown
+    attributes:
+      value: |
+        Ideas stay parked until deliberately prioritised. GitHub issue creation does not approve product scope.
