@@ -1,14 +1,15 @@
 # Documentation Index
 
-## Live control documents
+GitHub is the working delivery system. Notion is reserved for business plans, founder decisions and durable strategic context.
 
-Use these for current work:
+## Start here
 
+- [Working Roadmap](ROADMAP.md)
+- [Delivery Workflow](WORKFLOW.md)
 - [Current Status](CURRENT_STATUS.md)
 - [Project Handover](HANDOVER.md)
 - [Milestone Tracker](milestones/README.md)
 - [M21 — Private Beta Testing](milestones/MILESTONE_21.md)
-- [Project Governance](PROJECT_GOVERNANCE.md)
 
 Repository-root controls:
 
@@ -33,6 +34,19 @@ Repository-root controls:
 
 Historical milestone records remain under `docs/milestones`. They are evidence, not competing current-status documents.
 
-## Source-of-truth rule
+## System-of-record rule
 
-Notion **App HQ** owns the live project position and founder decisions. GitHub owns implementation, migrations, tests and the technical audit trail. If a live repository control document contradicts App HQ, reconcile it before starting unrelated work.
+### GitHub owns
+- working roadmap and milestone status;
+- delivery issues, bugs, polish and ideas;
+- technical implementation decisions/evidence;
+- code, migrations, tests and CI;
+- technical handover.
+
+### Notion owns
+- founder decisions and rationale;
+- business case and financial planning;
+- durable brand/product strategy;
+- business/launch documentation that is not a delivery queue.
+
+When a founder decision changes delivery direction, record the decision in Notion and then update the GitHub roadmap/issues to execute it. Do not run parallel task trackers.
