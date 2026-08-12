@@ -22,12 +22,27 @@ archive/legacy-main-2026-06
 
 `clean-milestone-4-sync` is now a retired recovery branch. Do not start new work from it.
 
+## Local Codespace branch migration
+
+A Codespace created before the branch repair may still have a local `main` pointing at the old unrelated June history.
+
+Before the next implementation task:
+
+1. Confirm the working tree is clean.
+2. Run `git fetch origin`.
+3. If local `main` already matches `origin/main`, switch to it normally.
+4. If local `main` is the old unrelated history, **do not merge or pull the histories together**. Delete/recreate only the local `main` reference from `origin/main` while on another clean branch.
+5. Create the new task branch from the corrected local `main`.
+
+The remote `main` is the source of truth. The archived June history must not be merged back into it.
+
 ## Latest implementation state
 
 - `5fb4d1f — M20.1 complete import security test coverage`
 - `b9a2abd — M21 prepare Big Al for private beta`
 - M21 automated checks: 30 tests passed, lint/typecheck/build/diff-check passed
 - GitHub Quality CI is installed for `main`
+- Canonical `main` Quality CI is green
 - The application history has been promoted safely to `main`
 
 ## Infrastructure state
@@ -63,15 +78,18 @@ M21 migration requiring live verification/application:
 
 ## Branch workflow for future work
 
-Start each meaningful task from `main` using a short-lived branch such as:
+Start every repository change from `main` using a short-lived branch such as:
 
 - `milestone/m22-beta-findings`
 - `feature/<name>`
 - `fix/<name>`
 - `polish/<name>`
 - `security/<name>`
+- `docs/<name>`
 
 Then implement, run checks, open a PR to `main`, merge only when Quality CI passes, and retire the branch.
+
+Do not push directly to `main` except in an explicit founder-approved emergency.
 
 ## After M21 GO
 
@@ -88,6 +106,7 @@ Do not turn every tester suggestion into a feature.
 - Do not weaken RLS or security to make testing easier.
 - Do not reset or destructively alter the live database.
 - Do not use `clean-milestone-4-sync` for new work.
+- Do not merge the archived June history into `main`.
 - Do not build followers, likes, public feeds, influencer mechanics, grocery comparison, calorie tracking, full pantry inventory or generic chatbot behaviour.
 
 ## Standard validation
