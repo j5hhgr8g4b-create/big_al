@@ -2,219 +2,126 @@
 
 ## Status
 
-Preparation implemented on 2026-08-12. M20 completed with a GO decision.
+**Engineering complete — live closeout NO-GO.**
 
-M21 remains paused at the mandatory live entry checks because two authenticated test users / Restaurants and accessible live sessions were not available in the implementation environment.
+M21 implementation was completed on 2026-08-12 in `b9a2abd — M21 prepare Big Al for private beta`.
 
-This is an operational dependency, not a demonstrated product, RLS, importer, or recovery failure.
+Automated verification passed:
 
-Before broad tester activity, run the three entry checks recorded in M20:
+- 30 tests passed / 0 failed
+- lint passed
+- typecheck passed
+- build passed
+- `git diff --check` passed
 
-1. Live two-user Restaurant isolation.
-2. Supported public recipe import.
-3. Rejected/unsafe import → manual-review recovery.
+No new code defect was found during the closeout attempt. The remaining blocker is live environment access and verification.
 
-Do not mark M21 active until these checks are completed and recorded.
+## Infrastructure state
+
+Supabase project:
+
+```text
+cqcjacirzibfjecrruie
+```
+
+On 2026-08-12 the project was found inactive. Restore was requested successfully; latest observed state was `COMING_UP`.
+
+Check the live project status before continuing.
+
+Migration requiring live verification/application:
+
+```text
+20260812202748_m21_beta_feedback.sql
+```
 
 ## Preparation delivered
 
-- The sign-in and Kitchen screens state the core loop in plain language.
-- Existing first-use states in Kitchen, Cookbook, Menu, Pantry and Specials were reviewed and retained; each explains its purpose and points to the next useful action.
-- Every authenticated app page has one unobtrusive `Send feedback` link and private-beta note.
-- Feedback captures category, text, originating page, authenticated submitter, active Restaurant and database timestamp.
-- Feedback rows are protected by RLS and an authenticated membership-checking submission RPC. Direct writes are not granted.
-- Authentication failures now show generic practical messages while server logs retain the Supabase error code.
-- Existing Restaurant-scoped records provide lifecycle evidence without a duplicate analytics system.
+M21 added:
 
-## Minimal lifecycle evidence
+- concise core-loop messaging on sign-in and Kitchen;
+- lightweight in-app `Send feedback` access across authenticated pages;
+- feedback validation and Restaurant-aware submission;
+- `beta_feedback` migration with RLS/restricted grants and membership-checking RPC;
+- safer generic authentication error messages;
+- focused automated feedback/security coverage;
+- a two-user UAT plan for live Restaurant isolation.
 
-Use existing first-party rows rather than adding behavioural analytics:
+The implementation deliberately did **not** add heavyweight analytics, a support platform, a new onboarding wizard or speculative features.
 
-| Beta milestone | Existing evidence |
-| --- | --- |
-| Restaurant established | `restaurants` / `restaurant_members` |
-| Recipe imported or saved | `imports` / `recipes` |
-| Meal planned | `meal_events` |
-| Shopping list generated | `shopping_lists.generated_at` |
-| Cook Mode completed / marked cooked | `recipe_cooks` |
-| Feedback submitted | `beta_feedback` |
+## GO gates
 
-The application logs feedback success with category, page path and Restaurant ID. Failures log only the Supabase error code and Restaurant ID; feedback text and account details are not logged.
+M21 can move to **GO — ready to begin private beta** only when every gate below passes.
 
-## Founder feedback review
+- [ ] Supabase project is ACTIVE.
+- [ ] Live migration history is checked.
+- [ ] `20260812202748_m21_beta_feedback.sql` is applied if missing.
+- [ ] `beta_feedback`, RLS, grants and `submit_beta_feedback` RPC are verified live.
+- [ ] User A and User B exist as ordinary authenticated users.
+- [ ] Restaurant A and Restaurant B are separate.
+- [ ] Cross-Restaurant access attempts fail for Recipes.
+- [ ] Cross-Restaurant access attempts fail for Imports.
+- [ ] Cross-Restaurant access attempts fail for Menu.
+- [ ] Cross-Restaurant access attempts fail for Shopping.
+- [ ] Cross-Restaurant access attempts fail for preferences.
+- [ ] Cross-Restaurant access attempts fail for Cook records.
+- [ ] Cross-Restaurant access attempts fail for feedback.
+- [ ] One supported public HTTPS recipe import succeeds.
+- [ ] `http://127.0.0.1/recipe` is safely rejected into manual review.
+- [ ] User A completes Import → Save → Plan → Shop → Cook → Feedback.
+- [ ] User B independently completes Import → Save → Plan → Shop → Cook → Feedback.
+- [ ] Required automated checks remain green.
 
-Review `public.beta_feedback` in the authenticated Supabase Dashboard. Keep access to project administrators; do not expose a cross-Restaurant review screen to beta users. Sort by `created_at desc` and use `category`, `page_path` and `restaurant_id` to reproduce the report. Feedback text may contain user-provided personal information and should not be copied into public channels.
+## Two-user live UAT
 
-## Manual two-user UAT checklist
+Use separate browser profiles/sessions and normal authenticated access. Do not substitute service-role or mocked identities for the isolation check.
 
-Use separate browser profiles or private sessions. Record user IDs, Restaurant IDs, timestamps and pass/fail outcomes in the beta evidence log; do not record passwords or session tokens.
+For each user:
 
-### User A / Restaurant A
+1. Sign in and access their own Restaurant.
+2. Import a supported public recipe.
+3. Review attribution and save it.
+4. Confirm it appears in Cookbook.
+5. Plan it in Menu.
+6. Generate/use Shopping.
+7. Open Cook Mode and mark the recipe cooked.
+8. Submit beta feedback.
 
-1. Create or sign into User A.
-2. Create or access Restaurant A and reach Kitchen without prompting.
-3. Import a supported public recipe URL.
-4. Review extraction, source/creator attribution and duplicate warning behaviour.
-5. Save the Recipe and confirm it appears in Cookbook.
-6. Add it to Menu for a meal.
-7. Generate the Shopping list and tick one item.
-8. Open Cook Mode, complete the Recipe and mark it cooked.
-9. Use `Send feedback` from Cook Mode and submit a test report.
+Then attempt known-ID/URL and RPC access against the other Restaurant. Reads must return no other-Restaurant data; mutations must fail or affect zero rows.
 
-### User B / Restaurant B
+## Import security check
 
-Repeat steps 1–9 with a different normal account and Restaurant B.
+Run both:
 
-### Isolation attempts
+1. A normal public HTTPS recipe import through the live app.
+2. `http://127.0.0.1/recipe` and confirm no private request succeeds, no raw diagnostic detail is exposed, and manual-review recovery remains available.
 
-While signed in as User A:
+## Private beta after GO
 
-1. Confirm Restaurant B does not appear in Cookbook, Menu, Pantry/Shopping, Specials or preferences.
-2. Open known Restaurant B Recipe, Recipe edit, Import review, Recipe Book and Cook Mode URLs. Each must return not-found/access-denied behaviour without leaking content.
-3. Submit Restaurant B IDs to the existing Recipe, Menu, Shopping, Cook and preferences RPCs using the authenticated client or Supabase RLS Tester. Reads must return no B rows and mutations must fail or affect zero rows.
-4. Query `beta_feedback` as User A. User A must not see User B's feedback.
+Run a controlled beta with approximately **3–5 friendly Restaurants**.
 
-Repeat the same attempts as User B against Restaurant A.
+The primary task is:
 
-### Import-security entry checks
+**Import → Save → Plan → Shop → Cook**
 
-1. Complete one supported public HTTPS import through the live app and verify review, attribution, save and Cookbook visibility.
-2. Submit a safe rejected destination such as `http://127.0.0.1/recipe` and confirm manual-review recovery, no crash and no internal diagnostic detail in the UI.
+Capture:
 
-### Stop conditions
+- whether the loop was completed;
+- where users stopped;
+- founder help required;
+- errors and confusion;
+- Shopping usefulness;
+- Cook Mode usefulness;
+- defects;
+- whether they would use Big Al again the following week.
 
-Stop the beta and record a blocker for any cross-Restaurant read/mutation, importer security regression, broken manual recovery, raw exception, or core-loop crash.
+Classify findings as **BLOCKER / IMPORTANT / POLISH / IDEA**.
 
-## Goal
+## Guardrails
 
-Run a small controlled beta with invited Restaurants.
+M21 validates the product already built. Do not expand it into public launch, social mechanics, advanced AI, grocery comparison, calorie tracking, full pantry inventory or a redesign.
 
-## Why this matters
+## Exit
 
-Private beta is where Big Al proves it works for people who are not the founder. The goal is evidence, not growth.
+If any live gate fails, fix only the demonstrated blocker and rerun the affected check.
 
-This milestone should reveal what confuses users, what breaks, what feels useful and what must be fixed before wider release.
-
-## Entry checks
-
-### 1. Two-user Restaurant isolation
-
-Use two separate normal authenticated users / Restaurants and verify that each cannot read or mutate the other's Cookbook, Menu, Shopping/Pantry, cooking history, or known-ID/detail routes.
-
-The current M20 review found strong implementation evidence for isolation; the missing live second-user exercise remains a verification gap rather than a demonstrated failure.
-
-### 2. Supported public recipe import
-
-Use a normal public recipe URL through the live authenticated app and confirm fetch, extraction/review, attribution, save, and Cookbook visibility still work after M20 import-security hardening.
-
-### 3. Rejected import recovery
-
-Use a safe clearly rejected/non-public destination test and confirm the app fails safely into the existing manual-review path without crashing or exposing sensitive internal details.
-
-### Entry stop conditions
-
-Stop before broad beta activity if any check demonstrates:
-
-- cross-Restaurant read or mutation
-- importer security regression
-- broken manual recovery
-- core-loop crash
-
-Do not silently patch a failed entry check; report and remediate deliberately.
-
-## Scope
-
-- Invite a small number of trusted testers after entry checks pass.
-- Provide clear beta instructions.
-- Ask testers to complete practical cooking tasks.
-- Collect feedback and bug reports.
-- Observe where testers get stuck.
-- Log confusion points.
-- Avoid adding new features during the beta unless a blocker prevents testing.
-
-## Proposed beta size
-
-3–5 Restaurants.
-
-## Must have
-
-- Entry checks passed and recorded.
-- Small controlled tester group.
-- Clear tester task list.
-- Feedback collection route.
-- Bug/confusion log.
-- Evidence from real use of the core loop.
-- Clear separation between blockers and nice-to-have requests.
-
-## Nice to have
-
-- Short onboarding note.
-- Simple tester survey.
-- Founder observation notes.
-- Evidence grouped by Import, Cookbook, Menu, Pantry and Cook Mode.
-
-## Do not include
-
-- Public launch.
-- Public waitlist.
-- Referral mechanics.
-- Social sharing features.
-- Feature request free-for-all.
-- New product areas during testing.
-
-## Acceptance criteria
-
-- All three M21 entry checks pass.
-- At least a small number of invited testers attempt the core loop.
-- Tester feedback is captured in a structured way.
-- Bugs are logged with enough detail to reproduce.
-- Confusion points are logged separately from bugs.
-- Founder can identify whether Big Al helped testers decide what to cook, shop and cook successfully.
-
-## Suggested tester tasks
-
-1. Create or join a Restaurant.
-2. Import or save one recipe.
-3. Add that recipe to Menu.
-4. Generate Pantry/Shopping support.
-5. Cook from Cook Mode or review whether they would cook from it.
-6. Report what felt easy, confusing or unnecessary.
-
-## Feedback evidence
-
-Capture where practical:
-
-- whether the core loop was completed
-- where the tester stopped
-- whether founder help was required
-- errors encountered
-- Shopping usefulness
-- Cook Mode usefulness
-- major confusion points
-- defects found
-- whether the tester would use Big Al again next week
-
-Classify findings as BLOCKER, IMPORTANT, POLISH, or IDEA. Do not turn every suggestion into a roadmap item.
-
-## Edge cases
-
-- Tester cannot sign up.
-- Tester does not understand Restaurants.
-- Tester imports a weak recipe source.
-- Tester creates duplicates.
-- Tester does not understand Pantry.
-- Tester abandons before Cook Mode.
-- Tester asks for features outside MVP scope.
-
-## Final report required
-
-The beta report must include:
-
-1. Number of testers invited.
-2. Number of testers active.
-3. Core tasks completed.
-4. Bugs found.
-5. Confusion points.
-6. Positive signals.
-7. Feature requests parked.
-8. Recommended fixes before wider release.
+Do not start M22 until M21 is GO and real private-beta evidence exists.
