@@ -4,31 +4,49 @@
 
 Work milestone by milestone, protect the core cooking loop, and avoid unnecessary approval interruptions for routine repository work.
 
-## Current branch and milestone
+## Canonical branch and milestone
 
-- Active branch: `clean-milestone-4-sync`
-- `main` is stale and must not be used for active work.
+- Canonical branch: `main`
+- `main` is the only long-lived working branch.
+- `clean-milestone-4-sync` is retired and must not be used for new work.
 - M0–M20 and M20.1 are complete.
 - M21 engineering is complete; live closeout is still required before private beta.
 - Do not start M22 until M21 is GO and private-beta evidence exists.
+
+## Branch rule
+
+For meaningful work, branch from current `main` using a short-lived branch such as `milestone/...`, `feature/...`, `fix/...`, `polish/...`, `security/...` or `docs/...`.
+
+Implementation workflow:
+
+1. update local `main`;
+2. create the task branch;
+3. implement and test;
+4. push the task branch;
+5. open a PR to `main`;
+6. merge only when Quality CI passes and required acceptance evidence is satisfied;
+7. retire the branch.
+
+Tiny low-risk documentation corrections may be committed directly to `main`.
 
 ## Standing working rules
 
 Follow `AGENTS.md` for detailed permissions.
 
-Within the active milestone Codex may routinely:
+Within approved scope Codex may routinely:
 
 - inspect and edit repository files;
+- create a short-lived working branch;
 - add or update tests;
 - run project commands;
 - inspect Git status, history and diffs;
 - run `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `git diff --check`;
 - create migrations when explicitly required by the milestone;
-- commit completed milestone work;
-- push to the current working branch;
-- perform a safe non-destructive rebase of the current branch onto its remote counterpart when required to reconcile remote changes before push.
+- commit and push completed work to the task branch;
+- open a PR to `main`;
+- safely rebase the task branch onto current `main` when needed.
 
-Codex must stop before force-pushing, merging to `main`, destructive database operations, changing production secrets, weakening RLS/security, or making product-scope changes outside the approved milestone.
+Codex must stop before force-pushing, destructive database operations, changing production secrets, weakening RLS/security, bypassing failed CI, changing branch strategy, or making product-scope changes outside the approved task.
 
 ## Product guardrails
 
@@ -43,11 +61,9 @@ Do not add followers, following, likes, view counts, influencer mechanics, publi
 
 ## Source of truth
 
-- Notion **App HQ** owns the live project position, founder decisions and immediate next action.
-- GitHub owns code, migrations, tests and technical audit history.
-- Repository status documents must remain concise and aligned with App HQ.
-
-Do not use the old Work Tracker as a live source of truth; it has been archived in Notion.
+- GitHub owns delivery: code, migrations, tests, CI, working documentation, issues, ideas and technical evidence.
+- Notion owns founder/business context: business plans, founder decisions and durable strategy.
+- Do not maintain duplicate delivery trackers in Notion.
 
 ## Milestone completion
 
@@ -57,5 +73,5 @@ After meaningful work, update only the repository control documents that genuine
 
 - `docs/CURRENT_STATUS.md`
 - `docs/HANDOVER.md`
-- active milestone record
+- active milestone issue/record
 - `docs/CHANGELOG.md` when implementation or milestone state materially changes
