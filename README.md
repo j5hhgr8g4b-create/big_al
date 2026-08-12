@@ -12,13 +12,45 @@ Big Al is a mobile-first living cookbook for Restaurants.
 - `main`: stale, unrelated history; do not use for active work
 - M0–M20: complete
 - M20.1 import security hardening: complete
-- M21 Private Beta Preparation: engineering complete
-- M21 status: **NO-GO pending infrastructure restore and live closeout validation**
-- M22: closed until M21 passes and private-beta evidence exists
+- M21: engineering preparation complete; live closeout is the current focus
+- M22: planned after sufficient private-beta evidence exists
 
-Latest application commit before this documentation reconciliation: `b9a2abd — M21 prepare Big Al for private beta`.
+The Big Al Supabase project is `cqcjacirzibfjecrruie`. It was restored on 2026-08-12 after being found inactive. Verify its current status before migration or live UAT work.
 
-The Big Al Supabase project is `cqcjacirzibfjecrruie`. It was found inactive on 2026-08-12 and a restore was initiated. Verify the current project status before attempting migration or live UAT work.
+## Operating model
+
+### GitHub — delivery truth
+
+GitHub holds:
+
+- code and migrations;
+- tests and CI;
+- working technical documentation;
+- milestone control issues;
+- bugs and polish items;
+- ideas and future candidates;
+- implementation evidence and technical handover.
+
+### Notion — founder and business truth
+
+Notion holds:
+
+- business plans and financial thinking;
+- founder decisions and rationale;
+- durable product/brand strategy;
+- launch/business context that is not an engineering work queue.
+
+Do not maintain duplicate task trackers in both systems.
+
+## Current delivery control
+
+- Working roadmap: `docs/ROADMAP.md`
+- Delivery workflow: `docs/WORKFLOW.md`
+- Current status: `docs/CURRENT_STATUS.md`
+- Handover: `docs/HANDOVER.md`
+- M21 control issue: #19
+- M22 control issue: #20
+- Repository hygiene: #18
 
 ## What happens next
 
@@ -29,7 +61,7 @@ The Big Al Supabase project is `cqcjacirzibfjecrruie`. It was found inactive on 
 5. Run one supported public recipe import and one rejected localhost import.
 6. Complete Import → Save → Plan → Shop → Cook as both users.
 7. Verify feedback submission and isolation.
-8. Only then mark M21 GO and begin the controlled private beta.
+8. Only then begin the controlled private beta.
 
 ## Working environment
 
@@ -60,15 +92,7 @@ pnpm build
 git diff --check
 ```
 
-## Source of truth
-
-- Notion **App HQ**: live project position, founder decisions and next action.
-- GitHub: implementation, migrations, tests, milestone records and technical audit trail.
-- `docs/CURRENT_STATUS.md`: concise repository snapshot.
-- `docs/HANDOVER.md`: exact resume point when work pauses.
-- `AGENTS.md`: standing Codex permissions and safety boundaries.
-
-Do not let repository snapshots contradict App HQ. If they diverge, reconcile them before new feature work.
+GitHub Actions also runs the same core quality checks on the active branch and pull requests.
 
 ## Product guardrails
 
@@ -76,14 +100,12 @@ Big Al is a living cookbook, planning tool, shopping companion and cooking compa
 
 Do not introduce followers, likes, view counts, influencer mechanics, grocery price comparison, calorie tracking, full pantry inventory, or a generic AI chatbot.
 
-## Documentation
-
-Start here:
+## Start here
 
 1. `AGENTS.md`
-2. `docs/CURRENT_STATUS.md`
-3. `docs/HANDOVER.md`
-4. `docs/milestones/README.md`
-5. `docs/milestones/MILESTONE_21.md`
-6. `docs/product/USER_STORIES_AND_PROCESS_MAP.md`
-7. `docs/PROJECT_GOVERNANCE.md`
+2. `docs/ROADMAP.md`
+3. `docs/WORKFLOW.md`
+4. `docs/CURRENT_STATUS.md`
+5. `docs/HANDOVER.md`
+6. `docs/milestones/MILESTONE_21.md`
+7. `docs/product/USER_STORIES_AND_PROCESS_MAP.md`
