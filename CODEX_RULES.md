@@ -7,7 +7,7 @@ Work milestone by milestone, protect the core cooking loop, and avoid unnecessar
 ## Canonical branch and milestone
 
 - Canonical branch: `main`
-- `main` is the only long-lived working branch.
+- `main` is the only long-lived working branch and should remain deployable.
 - `clean-milestone-4-sync` is retired and must not be used for new work.
 - M0–M20 and M20.1 are complete.
 - M21 engineering is complete; live closeout is still required before private beta.
@@ -15,7 +15,7 @@ Work milestone by milestone, protect the core cooking loop, and avoid unnecessar
 
 ## Branch rule
 
-For meaningful work, branch from current `main` using a short-lived branch such as `milestone/...`, `feature/...`, `fix/...`, `polish/...`, `security/...` or `docs/...`.
+All repository changes should branch from current `main` using a short-lived branch such as `milestone/...`, `feature/...`, `fix/...`, `polish/...`, `security/...` or `docs/...`.
 
 Implementation workflow:
 
@@ -27,7 +27,7 @@ Implementation workflow:
 6. merge only when Quality CI passes and required acceptance evidence is satisfied;
 7. retire the branch.
 
-Tiny low-risk documentation corrections may be committed directly to `main`.
+Do not push directly to `main` except in an explicit founder-approved emergency.
 
 ## Standing working rules
 
@@ -44,9 +44,10 @@ Within approved scope Codex may routinely:
 - create migrations when explicitly required by the milestone;
 - commit and push completed work to the task branch;
 - open a PR to `main`;
-- safely rebase the task branch onto current `main` when needed.
+- safely rebase the task branch onto current `main` when needed;
+- merge after required checks and acceptance evidence pass.
 
-Codex must stop before force-pushing, destructive database operations, changing production secrets, weakening RLS/security, bypassing failed CI, changing branch strategy, or making product-scope changes outside the approved task.
+Codex must stop before force-pushing, destructive database operations, changing production secrets, weakening RLS/security, bypassing failed CI, direct pushes to `main`, changing branch strategy, or making product-scope changes outside the approved task.
 
 ## Product guardrails
 
