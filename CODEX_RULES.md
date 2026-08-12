@@ -1,51 +1,61 @@
 # Codex Rules
 
-## Main Instruction
+## Purpose
 
-Build efficiently with minimal token waste. Work milestone by milestone. Do not attempt the full product in one prompt.
+Work milestone by milestone, protect the core cooking loop, and avoid unnecessary approval interruptions for routine repository work.
 
-## Current Branch Rule
+## Current branch and milestone
 
-- `main` is stale and must not be used for the next Codex task.
-- The current working branch is `clean-milestone-4-sync`.
-- Milestones 0-8 are complete.
-- URL import foundation already exists.
-- The next approved batch is M11-M14:
-  - M11 URL import hardening
-  - M12 attribution protection
-  - M13 Restaurant preferences foundation
-  - M14 MVP closeout QA
+- Active branch: `clean-milestone-4-sync`
+- `main` is stale and must not be used for active work.
+- M0–M20 and M20.1 are complete.
+- M21 engineering is complete; live closeout is still required before private beta.
+- Do not start M22 until M21 is GO and private-beta evidence exists.
 
-## Hard Rules
+## Standing working rules
 
-- Do not add features not listed in the current milestone.
-- Do not build social/community features in MVP.
-- Do not add followers, likes, comments, or view counts.
-- Do not build public Restaurants in MVP.
-- Do not build pantry inventory management.
-- Do not build grocery price comparison.
-- Do not build calorie tracking.
-- Do not create a blank AI chat homepage.
-- Do not over-engineer.
-- Do not skip audit log updates.
-- Do not work outside /workspaces/big_al.
-- Do not run migrations unless the approved milestone explicitly requires it.
+Follow `AGENTS.md` for detailed permissions.
 
-## Source Of Truth
+Within the active milestone Codex may routinely:
 
-- Notion "App HQ" is the source of truth for project progress, decisions, work tracking, and validation.
-- Record direction changes in the App HQ Decision Tracker.
-- Record delivery tasks and progress in the App HQ Work Tracker.
-- Keep validation evidence and status aligned with the validation resources linked from App HQ.
-- Local audit documents are supporting snapshots and must not supersede or contradict App HQ.
+- inspect and edit repository files;
+- add or update tests;
+- run project commands;
+- inspect Git status, history and diffs;
+- run `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`, and `git diff --check`;
+- create migrations when explicitly required by the milestone;
+- commit completed milestone work;
+- push to the current working branch;
+- perform a safe non-destructive rebase of the current branch onto its remote counterpart when required to reconcile remote changes before push.
 
-## Response Format After Each Milestone
+Codex must stop before force-pushing, merging to `main`, destructive database operations, changing production secrets, weakening RLS/security, or making product-scope changes outside the approved milestone.
 
-1. What was built
-2. Files changed
-3. Commands run
-4. Database changes
-5. Audit files updated
-6. Setup needed
-7. What to test
-8. Next recommended prompt
+## Product guardrails
+
+- Mission: **Make cooking easy and enjoyable.**
+- Core loop: **Import → Save → Plan → Shop → Cook**.
+- Food is the hero.
+- Simplicity beats feature quantity.
+- Restaurants, not households.
+- Reward cooking behaviour, not popularity.
+
+Do not add followers, following, likes, view counts, influencer mechanics, public feeds, grocery price comparison, calorie tracking, full pantry inventory, or generic chatbot behaviour.
+
+## Source of truth
+
+- Notion **App HQ** owns the live project position, founder decisions and immediate next action.
+- GitHub owns code, migrations, tests and technical audit history.
+- Repository status documents must remain concise and aligned with App HQ.
+
+Do not use the old Work Tracker as a live source of truth; it has been archived in Notion.
+
+## Milestone completion
+
+A milestone is not complete merely because code builds. Required automated checks, database work, live UAT and founder acceptance must pass where the milestone calls for them.
+
+After meaningful work, update only the repository control documents that genuinely changed, especially:
+
+- `docs/CURRENT_STATUS.md`
+- `docs/HANDOVER.md`
+- active milestone record
+- `docs/CHANGELOG.md` when implementation or milestone state materially changes
