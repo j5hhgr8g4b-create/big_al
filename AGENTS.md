@@ -16,9 +16,9 @@ Canonical branch:
 main
 ```
 
-`main` is the only long-lived working branch.
+`main` is the only long-lived working branch and should remain deployable.
 
-For meaningful implementation work, create a short-lived branch from current `main`, using a clear name such as:
+All repository changes should use a short-lived branch from current `main`, using a clear name such as:
 
 - `milestone/<name>`
 - `feature/<name>`
@@ -47,7 +47,9 @@ Do not start new work from `clean-milestone-4-sync`. The old June history is pre
 - Commit completed work to the short-lived branch.
 - Push the short-lived branch.
 - Open a pull request targeting `main` when the implementation is ready.
-- Perform a safe, non-destructive rebase of a short-lived branch onto current `main` or its remote counterpart when required before PR/merge.
+- Perform a safe, non-destructive rebase of a short-lived branch onto current `main` when required before PR/merge.
+- Merge a PR to `main` only after required automated checks pass and the approved task does not still require unresolved live/manual acceptance evidence.
+- Retire/delete the short-lived branch after merge where tooling permits.
 
 Routine actions covered above should not trigger repeated approval prompts.
 
@@ -56,6 +58,7 @@ Routine actions covered above should not trigger repeated approval prompts.
 - force pushing;
 - rewriting shared remote history destructively;
 - bypassing failed required CI to merge into `main`;
+- pushing changes directly to `main` outside an explicit founder-approved emergency;
 - changing the repository branch strategy;
 - deleting substantial existing functionality;
 - changing agreed product scope;
@@ -66,8 +69,6 @@ Routine actions covered above should not trigger repeated approval prompts.
 - resetting, dropping or destructively modifying production data;
 - changing Supabase projects;
 - making unrelated changes outside the requested milestone.
-
-Direct commits to `main` are acceptable only for tiny, low-risk documentation/control corrections. Product, database, security and meaningful implementation work should use a branch + PR.
 
 ## Product guardrails
 
@@ -104,7 +105,7 @@ Do not maintain duplicate task trackers across GitHub and Notion.
 
 1. Start from current `main`.
 2. Confirm clean status and pull latest `main`.
-3. Create a short-lived branch for meaningful work.
+3. Create a short-lived branch.
 4. Read the active milestone/issue and relevant implementation.
 5. Implement only approved scope.
 6. Run relevant tests and required quality checks.
