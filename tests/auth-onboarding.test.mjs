@@ -23,6 +23,17 @@ test("uses the current request origin for a forwarded Codespaces preview", () =>
   );
 });
 
+test("prefers the public forwarded origin over an internal localhost request origin", () => {
+  assert.equal(
+    resolveAuthRedirectOrigin({
+      requestOrigin: "https://localhost:3000",
+      forwardedHost: "bug-free-rotary-phone-r7q7v5xxqp73pqpp-3000.app.github.dev",
+      forwardedProto: "https",
+    }),
+    "https://bug-free-rotary-phone-r7q7v5xxqp73pqpp-3000.app.github.dev",
+  );
+});
+
 test("builds a safe origin from forwarded headers and rejects unsafe values", () => {
   assert.equal(
     resolveAuthRedirectOrigin({

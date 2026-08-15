@@ -35,15 +35,13 @@ export function resolveAuthRedirectOrigin({
     return configuredOrigin;
   }
 
-  const currentOrigin = safeOrigin(requestOrigin);
-
-  if (currentOrigin) {
-    return currentOrigin;
-  }
-
   const host = forwardedHost?.split(",")[0]?.trim();
   const protocol = forwardedProto?.split(",")[0]?.trim();
   const forwardedOrigin = host && protocol ? safeOrigin(`${protocol}://${host}`) : null;
 
-  return forwardedOrigin ?? "http://localhost:3000";
+  if (forwardedOrigin) {
+    return forwardedOrigin;
+  }
+
+  return safeOrigin(requestOrigin) ?? "http://localhost:3000";
 }
