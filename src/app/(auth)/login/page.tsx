@@ -1,4 +1,6 @@
-import { signIn, signUp } from "@/app/(auth)/login/actions";
+import Link from "next/link";
+
+import { signIn } from "@/app/(auth)/login/actions";
 import { SubmitButton } from "@/components/submit-button";
 
 type LoginPageProps = {
@@ -51,39 +53,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </label>
           <SubmitButton pendingLabel="Signing in…">Sign in</SubmitButton>
         </form>
-      </section>
-
-      <section className="visual-card mt-5 p-6">
-        <h2 className="section-kicker text-2xl">Create account</h2>
-        <form action={signUp} className="mt-5 space-y-4">
-          <label className="block text-sm font-medium">
-            Display name
-            <input
-              className={inputClassName}
-              name="displayName"
-              type="text"
-              autoComplete="name"
-              maxLength={80}
-              required
-            />
-          </label>
-          <label className="block text-sm font-medium">
-            Email
-            <input className={inputClassName} name="email" type="email" autoComplete="email" required />
-          </label>
-          <label className="block text-sm font-medium">
-            Password
-            <input
-              className={inputClassName}
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              minLength={8}
-              required
-            />
-          </label>
-          <SubmitButton pendingLabel="Creating account…">Create account</SubmitButton>
-        </form>
+        <div className="mt-5 flex flex-wrap items-center gap-4 text-sm">
+          <Link href="/forgot-password" className="font-semibold text-[var(--color-purple-800)] underline">
+            Forgot password?
+          </Link>
+          <Link href="/signup" className="font-semibold text-[var(--color-purple-800)] underline">
+            Create account
+          </Link>
+        </div>
       </section>
     </div>
   );
