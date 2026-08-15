@@ -99,6 +99,8 @@ Run both:
 
 Run a controlled beta with approximately **3–5 friendly Restaurants**.
 
+Send each tester the stable beta URL together with the concise [private beta tester guide](../PRIVATE_BETA_TESTER_GUIDE.md).
+
 The primary task is:
 
 **Import → Save → Plan → Shop → Cook**
