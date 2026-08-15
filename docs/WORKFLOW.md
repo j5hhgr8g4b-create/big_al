@@ -60,6 +60,59 @@ Do not maintain long-running development branches.
 
 For the current solo-founder workflow, do not create dozens of tiny issues for work Codex can complete safely in one milestone prompt.
 
+## Issue-first execution handoff
+
+GitHub issues are the working handoff between the founder, ChatGPT and Codex.
+
+### ChatGPT prepares the work
+
+ChatGPT should create or update the appropriate issue so it contains enough information for Codex to act without a separate long prompt. The ticket should include:
+
+- desired outcome;
+- current context/state;
+- scope and explicit exclusions;
+- implementation or verification steps where order matters;
+- acceptance criteria / GO gates;
+- required tests and evidence;
+- branch/PR safety constraints;
+- expected Codex completion-report format.
+
+Avoid duplicating an existing milestone issue when the work belongs inside it.
+
+### Codex executes the work
+
+The founder can then give Codex a short instruction such as: `Action the current active GitHub work item.`
+
+Codex must read the issue, follow `AGENTS.md`, complete only the ticket scope, and use the normal branch/PR lifecycle.
+
+### Codex posts the durable handoff
+
+At the end of each work item Codex must post a comment to the originating issue containing:
+
+- work item number/title;
+- branch, commit and PR references where applicable;
+- concise summary of changes or verification performed;
+- commands/checks run and pass/fail results;
+- live/manual evidence;
+- acceptance criteria marked PASS / FAIL / NOT TESTED with evidence;
+- unresolved blockers and limitations;
+- exact recommended next action.
+
+Terminal output is transient and should not be the only completion record.
+
+### ChatGPT reviews from GitHub
+
+After Codex comments, the founder can ask ChatGPT to review the work item. ChatGPT should read the issue comment and linked PR/code directly, challenge unsupported PASS claims, identify gaps, and then either:
+
+- approve the result and prepare the next work item; or
+- update/create the smallest corrective work item required.
+
+This keeps the loop:
+
+**ChatGPT defines → Codex executes → GitHub records → ChatGPT reviews**
+
+with minimal founder copy/paste.
+
 ## Issue labels
 
 Use labels consistently:
