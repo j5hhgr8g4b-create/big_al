@@ -101,6 +101,23 @@ Do not introduce followers, likes, view counts, influencer mechanics, public fee
 
 Do not maintain duplicate task trackers across GitHub and Notion.
 
+## GitHub work-item handoff
+
+GitHub issues are the default execution handoff between the founder, ChatGPT and Codex.
+
+When the founder tells Codex to action a GitHub work item:
+
+1. Treat the named/open active issue as the authoritative task scope.
+2. Read the entire issue and linked milestone documentation before editing.
+3. Execute the work using the normal short-lived branch and PR workflow.
+4. Post the final execution report back to the same GitHub issue as a comment.
+5. The issue comment must include branch/commit/PR references, changes made, verification commands and results, live/manual evidence, PASS/FAIL/NOT TESTED acceptance gates, blockers/limitations, and the exact recommended next action.
+6. Link the PR to the issue when code or documentation changes are required.
+7. Do not rely on terminal output as the durable handoff record.
+8. Do not close milestone or live-verification issues until their acceptance evidence is complete.
+
+ChatGPT will review the issue comment and linked PR/code directly from GitHub. The founder should not need to copy Codex output between tools.
+
 ## Standard implementation workflow
 
 1. Start from current `main`.
@@ -115,6 +132,6 @@ Do not maintain duplicate task trackers across GitHub and Notion.
 10. Open a PR to `main`.
 11. Merge only when Quality CI passes and required live/manual evidence is satisfied for the task.
 12. Retire the branch after merge.
-13. Return a concise completion report including remaining limitations and required manual UAT.
+13. Post the durable completion report to the originating GitHub issue.
 
 Do not declare a live/deployment milestone complete solely from automated tests when live verification is required.
