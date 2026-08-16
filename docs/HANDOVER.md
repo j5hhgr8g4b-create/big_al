@@ -1,12 +1,12 @@
 # Project Handover
 
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-16
 
 ## Resume point
 
-Big Al is in **M21 — Private Beta Testing**.
+Big Al is in **M21 — Controlled Private Beta**.
 
-M21 engineering is complete. The milestone remains **NO-GO** because live deployment and two-user verification have not yet passed.
+Engineering preparation and founder closeout are complete enough to proceed. The next session should **not re-audit the backlog before starting** unless something has materially changed since this handover.
 
 Canonical branch:
 
@@ -14,38 +14,11 @@ Canonical branch:
 main
 ```
 
-The old unrelated June `main` history is preserved at:
+Production app:
 
 ```text
-archive/legacy-main-2026-06
+https://big-al-kappa.vercel.app
 ```
-
-`clean-milestone-4-sync` is now a retired recovery branch. Do not start new work from it.
-
-## Local Codespace branch migration
-
-A Codespace created before the branch repair may still have a local `main` pointing at the old unrelated June history.
-
-Before the next implementation task:
-
-1. Confirm the working tree is clean.
-2. Run `git fetch origin`.
-3. If local `main` already matches `origin/main`, switch to it normally.
-4. If local `main` is the old unrelated history, **do not merge or pull the histories together**. Delete/recreate only the local `main` reference from `origin/main` while on another clean branch.
-5. Create the new task branch from the corrected local `main`.
-
-The remote `main` is the source of truth. The archived June history must not be merged back into it.
-
-## Latest implementation state
-
-- `5fb4d1f — M20.1 complete import security test coverage`
-- `b9a2abd — M21 prepare Big Al for private beta`
-- M21 automated checks: 30 tests passed, lint/typecheck/build/diff-check passed
-- GitHub Quality CI is installed for `main`
-- Canonical `main` Quality CI is green
-- The application history has been promoted safely to `main`
-
-## Infrastructure state
 
 Supabase project:
 
@@ -53,61 +26,141 @@ Supabase project:
 cqcjacirzibfjecrruie
 ```
 
-The project was found inactive on 2026-08-12 and a restore was requested successfully. Always check live status again before acting.
-
-M21 migration requiring live verification/application:
+The old unrelated June `main` history remains preserved at:
 
 ```text
-20260812202748_m21_beta_feedback.sql
+archive/legacy-main-2026-06
 ```
 
-## Exact next actions
+`clean-milestone-4-sync` remains retired. Do not start new work from it.
 
-1. Confirm Supabase project is ACTIVE.
-2. Inspect live migration history.
-3. Apply the M21 feedback migration only if it is missing.
-4. Verify `beta_feedback`, its RLS/policies/grants and `submit_beta_feedback` RPC.
-5. Create/use two normal users with separate Restaurants.
-6. Run cross-Restaurant negative-access tests for Recipes, Imports, Menu, Shopping, preferences, Cook records and feedback.
-7. Run one normal public HTTPS recipe import.
-8. Submit `http://127.0.0.1/recipe` and confirm safe manual-review recovery.
-9. Complete Import → Save → Plan → Shop → Cook → Feedback as User A.
-10. Repeat independently as User B.
-11. Record pass/fail evidence.
-12. Only if every gate passes, mark M21 **GO — ready to begin private beta**.
+## Current project state
 
-## Branch workflow for future work
+### Complete / accepted
 
-Start every repository change from `main` using a short-lived branch such as:
+- M0–M20 complete.
+- M21 engineering preparation complete.
+- Stable Vercel production deployment from `main` exists.
+- Production smoke checks exist.
+- Supabase production is healthy and current required M21 migrations are live.
+- Auth onboarding/recovery foundation is live for email/password private-beta use.
+- Restaurant creation retry/duplicate defect is fixed.
+- Browser-facing two-Restaurant isolation closeout was completed sufficiently to proceed.
+- Supported public HTTPS recipe import works.
+- `http://127.0.0.1/recipe` safely falls back to manual review.
+- Core Import → Save → Plan → Shop → Cook founder retest was accepted sufficiently to proceed.
+- Issue #50 is complete: every fresh Restaurant receives the five beta starter recipes automatically, including images.
+- GitHub backlog was audited on 2026-08-16 and reconciled to the current state.
 
-- `milestone/m22-beta-findings`
+### Accepted limitations / not blockers for controlled beta
+
+- Cook completion/persisted-cook evidence and beta feedback submission were not fully exercised in the final founder closeout. Treat as **NOT TESTED**, not FAIL.
+- Ingredient/shopping interpretation remains literal in places; semantic AI refinement is deferred.
+- Cook Mode instructions and general visual design still need later refinement.
+
+## Next session focus
+
+### Primary objective — begin controlled private beta
+
+Do **not** start M22 yet.
+
+Use approximately **3–5 friendly Restaurants** with minimal founder coaching and gather real usage evidence.
+
+For each tester, observe whether they can naturally move through:
+
+**Create account / sign in → Create Restaurant → Import → Save → Plan → Shop → Cook → Feedback**
+
+Capture:
+
+- whether the core loop is completed;
+- where founder help is required;
+- errors or blockers;
+- confusing wording or flows;
+- Shopping usefulness;
+- Cook Mode usefulness;
+- mobile/UI friction;
+- whether the tester would use Big Al again the following week;
+- whether the Restaurant concept is understood.
+
+Classify every finding as:
+
+- **BLOCKER**
+- **IMPORTANT**
+- **POLISH**
+- **IDEA**
+
+Do not turn every tester suggestion into product scope.
+
+## Current active / relevant GitHub tickets
+
+### #19 — M21 Private Beta closeout and execution
+
+**Status:** READY FOR CONTROLLED PRIVATE BETA.
+
+This is the main control issue for the next session. Add private-beta evidence here as it arrives. Keep M21 open until enough tester evidence exists for M22.
+
+### #52 — Cookbook image-led recipe cards
+
+Open UI polish. Replace the plain recipe-name list with food-led image cards while preserving Cookbook behaviour and Restaurant isolation.
+
+Coordinate responsive work with #56.
+
+### #56 — Mobile responsive UI cleanup
+
+Open whole-app UI ticket.
+
+Known founder observations:
+
+- some mobile pages are slightly wider than the viewport and scroll horizontally;
+- some inputs/forms overlap at mobile widths;
+- responsive sizing needs a whole-app cleanup rather than a one-page patch.
+
+Audit at 320px, 375px, 390px and 430px when this work is picked up.
+
+### #47 — Existing Restaurant member create/edit UX
+
+Open UX polish. Database duplicate protection is already fixed; remaining issue is that an existing member should not be shown a misleading create-another-Restaurant flow.
+
+### #49 — Auth hardening
+
+**PAUSED BY FOUNDER.**
+
+Google OAuth code was built and merged, then deliberately hidden from testers. Do not configure or expose Google sign-in next session unless the founder explicitly reactivates #49.
+
+Custom SMTP and the broader social-auth decision remain future hardening before broader beta/release.
+
+### #20 — M22 Beta Findings and Launch Decision
+
+Future milestone. Do not start until M21 has produced enough genuine tester evidence.
+
+## Recommended next-session order
+
+1. Read this handover and the latest state of #19 only.
+2. Do **not** perform another whole-backlog audit unless evidence suggests drift.
+3. Decide whether the session is primarily:
+   - running/recording private-beta evidence; or
+   - fixing a demonstrated beta blocker.
+4. If a tester exposes a BLOCKER, create/update the smallest focused GitHub ticket and fix that before continuing beta.
+5. If no blocker exists, keep collecting beta evidence rather than polishing speculative issues.
+6. Address #52/#56/#47 only when founder priority or beta evidence justifies the polish work.
+7. Leave #49 paused.
+8. Start #20/M22 only after enough real beta evidence exists.
+
+## GitHub working rules
+
+GitHub owns live engineering/task truth. Notion owns durable founder/business/product truth.
+
+Start repository changes from `main` using a short-lived branch such as:
+
 - `feature/<name>`
 - `fix/<name>`
 - `polish/<name>`
 - `security/<name>`
 - `docs/<name>`
 
-Then implement, run checks, open a PR to `main`, merge only when Quality CI passes, and retire the branch.
+Run the required checks, open a PR to `main`, merge only when Quality CI passes, then retire the branch.
 
-Do not push directly to `main` except in an explicit founder-approved emergency.
-
-## After M21 GO
-
-Run a controlled beta with roughly 3–5 friendly Restaurants and minimal founder guidance. Collect evidence about completion of the cooking loop, confusion, defects, Shopping usefulness, Cook Mode usefulness and whether testers would use Big Al again the following week.
-
-Classify findings as BLOCKER / IMPORTANT / POLISH / IDEA.
-
-Do not turn every tester suggestion into a feature.
-
-## Do not do next
-
-- Do not start M22 before M21 GO and real beta evidence.
-- Do not add speculative features during closeout.
-- Do not weaken RLS or security to make testing easier.
-- Do not reset or destructively alter the live database.
-- Do not use `clean-milestone-4-sync` for new work.
-- Do not merge the archived June history into `main`.
-- Do not build followers, likes, public feeds, influencer mechanics, grocery comparison, calorie tracking, full pantry inventory or generic chatbot behaviour.
+Do not push directly to `main` except for an explicit founder-approved emergency.
 
 ## Standard validation
 
@@ -118,6 +171,19 @@ pnpm typecheck
 pnpm build
 git diff --check
 ```
+
+For production-facing changes, also verify the live Vercel deployment and appropriate smoke/browser checks before treating the work as accepted.
+
+## Do not do next
+
+- Do not re-open #50; starter recipe seeding with images passed live acceptance.
+- Do not expose Google sign-in; #49 is paused.
+- Do not start M22 before private-beta evidence exists.
+- Do not add speculative features during M21.
+- Do not weaken RLS/security to make testing easier.
+- Do not use `clean-milestone-4-sync` for new work.
+- Do not merge the archived June history into `main`.
+- Do not build followers, likes, public feeds, influencer mechanics, grocery comparison, calorie tracking, full pantry inventory or generic chatbot behaviour.
 
 ## Core control
 
