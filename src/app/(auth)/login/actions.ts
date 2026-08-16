@@ -38,6 +38,30 @@ export async function signIn(formData: FormData) {
   redirect("/");
 }
 
+export async function signInWithGoogle() {
+  const supabase = await createClient();
+  const requestHeaders = await headers();
+  const redirectOrigin = resolveAuthRedirectOrigin({
+    configuredSiteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+    forwardedHost: requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host"),
+    forwardedProto: requestHeaders.get("x-forwarded-proto") ?? "https",
+    requestOrigin: requestHeaders.get("origin"),
+  });
+  const callbackUrl = new URL("/auth/callback", redirectOrigin);
+  callbackUrl.searchParams.set("next", "/");
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: callbackUrl.toString() },
+  });
+
+  if (error || !data.url) {
+    console.warn("[auth] Google sign in could not start", { code: error?.code });
+    loginRedirect("error", "Google sign in is not available right now. Use email and password instead.");
+  }
+
+  redirect(data.url);
+}
+
 export async function signUp(formData: FormData) {
   const displayName = field(formData, "displayName");
   const email = field(formData, "email");

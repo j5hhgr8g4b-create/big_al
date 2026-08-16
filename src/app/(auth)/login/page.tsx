@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { signIn } from "@/app/(auth)/login/actions";
+import { signIn, signInWithGoogle } from "@/app/(auth)/login/actions";
 import { SubmitButton } from "@/components/submit-button";
 
 type LoginPageProps = {
@@ -36,6 +36,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
       <section className="visual-card mt-8 p-6">
         <h2 className="section-kicker text-2xl">Sign in</h2>
+        <form action={signInWithGoogle} className="mt-5">
+          <SubmitButton pendingLabel="Opening Google…">Continue with Google</SubmitButton>
+        </form>
+        <div className="my-5 flex items-center gap-3 text-xs text-[var(--color-text-muted)]">
+          <span className="h-px flex-1 bg-[var(--color-border)]" />
+          <span>or use email</span>
+          <span className="h-px flex-1 bg-[var(--color-border)]" />
+        </div>
         <form action={signIn} className="mt-5 space-y-4">
           <label className="block text-sm font-medium">
             Email
@@ -51,7 +59,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               required
             />
           </label>
-          <SubmitButton pendingLabel="Signing in…">Sign in</SubmitButton>
+          <SubmitButton className="btn-secondary" pendingLabel="Signing in…">Sign in</SubmitButton>
         </form>
         <div className="mt-5 flex flex-wrap items-center gap-4 text-sm">
           <Link href="/forgot-password" className="font-semibold text-[var(--color-purple-800)] underline">
