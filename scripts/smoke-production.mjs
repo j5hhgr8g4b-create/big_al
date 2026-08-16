@@ -31,17 +31,21 @@ for (const path of paths) {
     const server = response.headers.get("server") ?? "";
     const poweredBy = response.headers.get("x-powered-by") ?? "";
 
-    if (!isExpectedStatus(response.status)) {
-      fail(`${path} returned HTTP ${response.status}; inspect the deployment/runtime logs.`);
-      continue;
-    }
+    if (path === "/") {
+      if (response.status < 300 || response.status >= 400) {
+        fail(`${path} must redirect unauthenticated users to /login (returned HTTP ${response.status}).`);
+        continue;
+      }
 
-    if (path === "/" && response.status >= 300 && response.status < 400) {
       const location = response.headers.get("location") ?? "";
-      if (!location.includes("/login")) {
+      const redirect = new URL(location, url);
+      if (redirect.origin !== origin || redirect.pathname !== "/login") {
         fail(`${path} redirected to an unexpected location.`);
         continue;
       }
+    } else if (!isExpectedStatus(response.status)) {
+      fail(`${path} returned HTTP ${response.status}; inspect the deployment/runtime logs.`);
+      continue;
     }
 
     if (server.toLowerCase() !== "vercel" && poweredBy.toLowerCase() !== "next.js") {
