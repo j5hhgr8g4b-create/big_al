@@ -73,6 +73,8 @@ M21 can move to **GO — ready to begin private beta** only when every gate belo
 
 ## Two-user live UAT
 
+Use the deterministic [M21 core-loop UAT runbook](../M21_CORE_LOOP_UAT_RUNBOOK.md) and the [two-Restaurant isolation matrix](../M21_ISOLATION_VERIFICATION.md) for the evidence sequence below.
+
 Use separate browser profiles/sessions and normal authenticated access. Do not substitute service-role or mocked identities for the isolation check.
 
 For each user:
