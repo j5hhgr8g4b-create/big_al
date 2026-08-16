@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
-  
+    "smoke:production": "node scripts/smoke-production.mjs",
     "start": "next start",
     "lint": "eslint .",
     "test": "node --import ./tests/register-server-only.mjs --test tests/*.test.mjs",
