@@ -9,7 +9,6 @@ const nextConfig: NextConfig = {
       allowedOrigins: isDev
         ? [
             "localhost:3000",
-            "bug-free-rotary-phone-r7q7v5xxqp73pqpp-3000.app.github.dev",
             "*.app.github.dev",
           ]
         : [],
