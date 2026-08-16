@@ -12,6 +12,13 @@ export async function GET(request: NextRequest) {
   const tokenHash = request.nextUrl.searchParams.get("token_hash");
   const type = request.nextUrl.searchParams.get("type") as EmailOtpType | null;
   const next = safeNextPath(request.nextUrl.searchParams.get("next"));
+
+  if (request.nextUrl.searchParams.has("error")) {
+    return NextResponse.redirect(
+      new URL("/login?error=Google+sign-in+was+cancelled+or+could+not+be+completed.", request.url),
+    );
+  }
+
   const supabase = await createClient();
 
   const result = code
