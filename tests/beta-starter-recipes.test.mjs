@@ -6,9 +6,16 @@ const migrationPath = new URL(
   "../supabase/migrations/20260816103000_m21_beta_starter_recipes.sql",
   import.meta.url,
 );
+const imageMigrationPath = new URL(
+  "../supabase/migrations/20260816121500_m21_beta_starter_recipe_images.sql",
+  import.meta.url,
+);
 
 test("Restaurant creation atomically seeds the five attributed beta recipes", async () => {
-  const migration = await readFile(migrationPath, "utf8");
+  const [migration, imageMigration] = await Promise.all([
+    readFile(migrationPath, "utf8"),
+    readFile(imageMigrationPath, "utf8"),
+  ]);
 
   for (const [title, sourceUrl, creatorSource] of [
     ["Fried Sausages", "https://www.bbcgoodfood.com/howto/guide/how-cook-sausages", "Good Food team / Good Food"],
@@ -27,6 +34,10 @@ test("Restaurant creation atomically seeds the five attributed beta recipes", as
   assert.match(migration, /starter -> 'ingredients'/i);
   assert.match(migration, /starter -> 'steps'/i);
   assert.match(migration, /source_url = starter ->> 'source_url'/i);
+  assert.match(imageMigration, /image_url', 'https:\/\/images\.immediate\.co\.uk/i);
+  assert.match(imageMigration, /starter ->> 'image_url'/i);
+  assert.match(imageMigration, /backfill_beta_starter_recipe_images\(created_restaurant\.id\)/i);
+  assert.match(imageMigration, /perform public\.save_recipe\(/i);
   assert.match(migration, /inner join public\.cookbooks on cookbooks\.id = recipes\.cookbook_id/i);
   assert.match(migration, /where cookbooks\.restaurant_id = target_restaurant_id/i);
 });
