@@ -11,7 +11,7 @@ Use two separate browser profiles and two ordinary Supabase Auth users:
 - Record opaque IDs locally during the run; never post email addresses, passwords, access tokens or service-role values.
 - Use the stable beta origin documented in issue #32.
 
-Create one clearly identifiable test record per domain for each user. Capture the resulting URL or record ID privately so the opposite session can attempt the same read or mutation.
+Create one clearly identifiable test record per domain for each user. Capture the resulting URL or record ID privately so the opposite session can attempt the same read or mutation. For Imports, retain a second pending import per user: a converted/saved import is no longer exposed by the review query and cannot prove ownership isolation.
 
 ## Deterministic run order
 
@@ -32,7 +32,7 @@ Then run the matrix in both directions. User A tests User B's identifiers, and U
 | Domain | Own-session positive check | Opposite-session read check | Opposite-session mutation check | Evidence to record |
 |---|---|---|---|---|
 | Recipes | Own saved Recipe is visible and editable | Known other Recipe URL/ID returns not-found, no row, or no usable data | Edit/archive other Recipe fails or changes zero rows | Recipe IDs and response/result for A→B and B→A |
-| Imports | Own import and review state are visible | Known other Import URL/ID returns no data | Discard/save other Import fails or changes zero rows | Import IDs and review/discard result both directions |
+| Imports | Own pending Import review state is visible; saved Import appears in Cookbook | Known other pending Import URL/ID returns no data | Discard/save other pending Import fails or changes zero rows | Pending Import IDs and review/discard result both directions |
 | Menu | Own planned meal is visible for its Restaurant | Other Menu event is absent | Add/edit/delete using other Restaurant context fails or changes zero rows | Menu event IDs/dates and mutation result both directions |
 | Shopping | Own generated list/items are visible | Other list/items are absent | Purchased/clear/add operations against other IDs fail or change zero rows | List/item IDs and mutation result both directions |
 | Preferences | Own Restaurant preferences load and save | Other Restaurant preferences are not returned | Save using other Restaurant ID fails | Before/after own values and cross-ID result both directions |
@@ -40,6 +40,40 @@ Then run the matrix in both directions. User A tests User B's identifiers, and U
 | Beta feedback | Own submitted feedback is visible to its submitter | Other user's feedback is absent | `submit_beta_feedback` for other Restaurant is denied | Feedback IDs, read result, and RPC result both directions |
 
 Do not treat a UI link being hidden as sufficient evidence. Where practical, use the known URL/ID through the normal authenticated browser session and capture the user-visible result. Do not use service-role SQL or impersonated identities as acceptance evidence.
+
+### Ordinary-user feedback API check
+
+The feedback page intentionally supplies the current Restaurant server-side and shows a success message rather than exposing internal IDs. For the two cross-Restaurant feedback cells, use the browser's own ordinary session locally through DevTools, never an admin or service-role key:
+
+1. In each authenticated profile, obtain the current Supabase project URL and publishable key from the deployed app configuration, and read the session's `access_token` from that profile's Supabase Auth storage. Keep all three values local; do not paste them into GitHub.
+2. Use the browser console to query the current user's feedback rows:
+
+   ```js
+   const projectUrl = "<current Supabase project URL>";
+   const publishableKey = "<current publishable key>";
+   const accessToken = JSON.parse(
+     Object.entries(localStorage).find(([key]) => key.startsWith("sb-") && key.endsWith("-auth-token"))[1],
+   ).access_token;
+   const headers = { apikey: publishableKey, Authorization: `Bearer ${accessToken}` };
+   await fetch(`${projectUrl}/rest/v1/beta_feedback?select=id,restaurant_id,submitted_by`, { headers });
+   ```
+
+3. Replace the target Restaurant ID locally and call the ordinary-user RPC:
+
+   ```js
+   await fetch(`${projectUrl}/rest/v1/rpc/submit_beta_feedback`, {
+     method: "POST",
+     headers: { ...headers, "Content-Type": "application/json" },
+     body: JSON.stringify({
+       target_restaurant_id: "<other Restaurant ID>",
+       feedback_category: "general",
+       feedback_page_path: "/feedback",
+       feedback_text_value: "Isolation check for the other Restaurant.",
+     }),
+   });
+   ```
+
+The read must omit the other user's rows and the RPC must return an access-denied error. Run the reverse direction in the other profile. Do not save console output containing access tokens, keys, email addresses or other secrets.
 
 ## Evidence block for issue #19
 
