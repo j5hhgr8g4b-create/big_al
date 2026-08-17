@@ -24,7 +24,7 @@ export async function getRecipeBook(recipeBookId: string) {
   const { data: recipes } = recipeIds.length
     ? await supabase
         .from("recipes")
-        .select("id, title, description, prep_minutes, cook_minutes, servings, difficulty")
+        .select("id, title, description, image_url, prep_minutes, cook_minutes, servings, difficulty")
         .in("id", recipeIds)
         .is("archived_at", null)
     : { data: [] };
