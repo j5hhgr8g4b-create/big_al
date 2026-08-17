@@ -60,7 +60,7 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
       : cookbook
       ? supabase
           .from("recipes")
-          .select("id, title, description, prep_minutes, cook_minutes, servings, difficulty, created_at")
+          .select("id, title, description, image_url, prep_minutes, cook_minutes, servings, difficulty, created_at")
           .eq("cookbook_id", cookbook.id)
           .is("archived_at", null)
           .order("created_at", { ascending: false })
@@ -79,7 +79,21 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
       .is("archived_at", null)
       .order("created_at", { ascending: false }),
   ]);
-  const recipes = recipesResult.data;
+  let recipes = (recipesResult.data ?? []) as RecipeCardValue[];
+  if (searchQuery && recipes.length) {
+    const { data: recipeImages } = await supabase
+      .from("recipes")
+      .select("id, image_url")
+      .in("id", recipes.map((recipe) => recipe.id))
+      .is("archived_at", null);
+    const imageByRecipeId = new Map(
+      (recipeImages ?? []).map((recipe) => [recipe.id, recipe.image_url]),
+    );
+    recipes = recipes.map((recipe) => ({
+      ...recipe,
+      image_url: imageByRecipeId.get(recipe.id) ?? null,
+    }));
+  }
   const pendingImports = importsResult.data;
   const recipeBooks = booksResult.data;
 
@@ -198,8 +212,8 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
         )}
       </section>
 
-      {recipes?.length ? (
-        <section className="mt-10 space-y-4" aria-labelledby="recipes-heading">
+      {recipes.length ? (
+        <section className="mt-10" aria-labelledby="recipes-heading">
           <div className="flex items-center justify-between gap-4">
             <h2 id="recipes-heading" className="section-kicker text-2xl">
               {searchQuery ? `Results for “${searchQuery}”` : "All Recipes"}
@@ -210,9 +224,11 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
               </Link>
             )}
           </div>
-          {recipes.map((recipe: RecipeCardValue) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {recipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </div>
         </section>
       ) : (
         <section className="warm-section mt-10 border-dashed p-8 text-center">
