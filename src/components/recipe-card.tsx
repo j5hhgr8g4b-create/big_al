@@ -53,7 +53,7 @@ export function RecipeCard({ recipe, restaurantId }: { recipe: RecipeCardValue; 
           </div>
         </div>
       </Link>
-      <div className="flex justify-end px-4 pb-4">
+      <div className="flex min-h-14 items-center justify-end border-t border-[var(--color-border)] px-4 py-2">
         <HouseFavouriteButton
           isFavourite={Boolean(recipe.house_favourite)}
           recipeId={recipe.id}
