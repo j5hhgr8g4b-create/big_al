@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { saveRestaurantCookingPreferences } from "@/app/(app)/restaurants/preferences/actions";
+import {
+  saveRestaurantCookingPreferences,
+  updateRestaurantName,
+} from "@/app/(app)/restaurants/preferences/actions";
 import { SubmitButton } from "@/components/submit-button";
 import { getCurrentRestaurant } from "@/lib/restaurants/current";
 import {
@@ -10,13 +13,18 @@ import {
 } from "@/lib/restaurants/preferences";
 
 type PreferencesPageProps = {
-  searchParams: Promise<{ error?: string; saved?: string }>;
+  searchParams: Promise<{
+    error?: string;
+    nameError?: string;
+    nameSaved?: string;
+    saved?: string;
+  }>;
 };
 
 const inputClassName = "input-control mt-2 px-4 py-3 text-base";
 
 export default async function RestaurantPreferencesPage({ searchParams }: PreferencesPageProps) {
-  const [{ error, saved }, { restaurant }] = await Promise.all([
+  const [{ error, nameError, nameSaved, saved }, { restaurant }] = await Promise.all([
     searchParams,
     getCurrentRestaurant(),
   ]);
@@ -36,6 +44,34 @@ export default async function RestaurantPreferencesPage({ searchParams }: Prefer
         Save simple kitchen defaults so Big Al can flag recipe details worth checking while you cook.
       </p>
 
+      <form action={updateRestaurantName} className="visual-card mt-8 p-6">
+        <input type="hidden" name="restaurantId" value={restaurant.id} />
+        <label className="block text-sm font-medium">
+          Restaurant name
+          <input
+            className={inputClassName}
+            name="name"
+            type="text"
+            defaultValue={restaurant.name}
+            maxLength={100}
+            required
+          />
+        </label>
+        {nameSaved && (
+          <p className="mt-4 text-sm font-semibold text-[var(--color-text-soft)]">
+            Restaurant name saved.
+          </p>
+        )}
+        {nameError && (
+          <p role="alert" className="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">
+            {nameError}
+          </p>
+        )}
+        <SubmitButton className="btn-primary mt-5" pendingLabel="Saving...">
+          Save Restaurant name
+        </SubmitButton>
+      </form>
+
       {saved && (
         <p className="note-card mt-6 px-4 py-3 text-sm font-semibold text-[var(--color-text-soft)]">
           Cooking preferences saved.
@@ -48,7 +84,7 @@ export default async function RestaurantPreferencesPage({ searchParams }: Prefer
         </p>
       )}
 
-      <form action={saveRestaurantCookingPreferences} className="visual-card mt-8 space-y-6 p-6">
+      <form action={saveRestaurantCookingPreferences} className="visual-card mt-6 space-y-6 p-6">
         <input type="hidden" name="restaurantId" value={restaurant.id} />
 
         <label className="block text-sm font-medium">

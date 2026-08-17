@@ -1,14 +1,23 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { createRestaurant } from "@/app/(app)/restaurants/new/actions";
 import { SubmitButton } from "@/components/submit-button";
+import { getCurrentRestaurant } from "@/lib/restaurants/current";
 
 type NewRestaurantPageProps = {
   searchParams: Promise<{ error?: string }>;
 };
 
 export default async function NewRestaurantPage({ searchParams }: NewRestaurantPageProps) {
-  const { error } = await searchParams;
+  const [{ error }, { restaurant }] = await Promise.all([
+    searchParams,
+    getCurrentRestaurant(),
+  ]);
+
+  if (restaurant) {
+    redirect("/restaurants/preferences");
+  }
 
   return (
     <section>
