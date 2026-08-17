@@ -135,7 +135,7 @@ export function RecipeForm({
             placeholder="Author, publication or website"
           />
         </label>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="mobile-form-grid grid grid-cols-2 gap-4">
           <label className="block text-sm font-medium">
             Prep minutes
             <input
@@ -289,7 +289,7 @@ export function RecipeForm({
                   required
                 />
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="mobile-form-grid grid grid-cols-2 gap-3">
                 <label className="mt-3 block text-sm font-medium">
                   Quantity
                   <input
