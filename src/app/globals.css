@@ -162,6 +162,10 @@ textarea {
   min-width: 0;
 }
 
+.app-main .cook-mode-panel {
+  max-width: none;
+}
+
 .screen-title {
   position: relative;
   margin: 0;
