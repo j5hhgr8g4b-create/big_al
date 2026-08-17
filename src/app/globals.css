@@ -56,12 +56,16 @@
 }
 
 html {
+  max-width: 100%;
+  overflow-x: clip;
   background: #ede3d5;
 }
 
 body {
+  max-width: 100%;
   min-height: 100vh;
   margin: 0;
+  overflow-x: clip;
   background:
     radial-gradient(circle at 14% -10%, rgba(185, 84, 60, 0.16), transparent 340px),
     radial-gradient(circle at 100% 86%, rgba(53, 35, 71, 0.1), transparent 360px),
@@ -90,7 +94,7 @@ textarea {
   width: min(100%, 430px);
   min-height: 100vh;
   margin: 0 auto;
-  overflow: hidden;
+  overflow: clip;
   border-left: 1px solid rgba(207, 201, 187, 0.9);
   border-right: 1px solid rgba(207, 201, 187, 0.9);
   background: var(--color-bg);
@@ -143,7 +147,23 @@ textarea {
 }
 
 .app-main {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: 6px 16px calc(104px + env(safe-area-inset-bottom)) 16px;
+}
+
+.app-main > *,
+.app-main form,
+.app-main label,
+.app-main section,
+.app-main article,
+.app-main nav,
+.app-main div {
+  min-width: 0;
+}
+
+.app-main .cook-mode-panel {
+  max-width: none;
 }
 
 .screen-title {
@@ -187,6 +207,7 @@ textarea {
 
 .bistro-card,
 .visual-card {
+  max-width: 100%;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-2xl);
   background: rgba(255, 252, 246, 0.92);
@@ -420,6 +441,7 @@ textarea {
   letter-spacing: -0.01em;
   line-height: 1.15;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .btn-primary {
@@ -456,6 +478,8 @@ textarea {
 }
 
 .input-control {
+  min-width: 0;
+  max-width: 100%;
   width: 100%;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -473,6 +497,7 @@ textarea {
 }
 
 .note-card {
+  max-width: 100%;
   border: 1px solid var(--color-note-border);
   border-radius: 20px;
   background: var(--color-note);
@@ -480,6 +505,7 @@ textarea {
 }
 
 .warm-section {
+  max-width: 100%;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-2xl);
   background: rgba(238, 240, 228, 0.7);
@@ -592,6 +618,32 @@ textarea {
 }
 
 @media (max-width: 370px) {
+  .app-header {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .app-main {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .app-main .cook-mode-panel {
+    margin-right: -12px;
+    margin-left: -12px;
+  }
+
+  .visual-card.p-6,
+  .note-card.p-6,
+  .warm-section.p-6,
+  .warm-section.p-8 {
+    padding: 18px;
+  }
+
+  .mobile-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .hero-grid {
     grid-template-columns: 1fr;
   }
@@ -607,4 +659,12 @@ textarea {
   .screen-title {
     font-size: 2.125rem;
   }
+}
+
+.specials-prompt-active {
+  border-color: var(--color-purple-800);
+  background: var(--color-purple-800);
+  color: var(--color-text-inverse);
+  font-weight: 800;
+  opacity: 1;
 }
