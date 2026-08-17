@@ -179,7 +179,7 @@ export default async function PantryPage({ searchParams }: PantryPageProps) {
               className="input-control mt-2 px-4 py-3 text-sm"
             />
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="mobile-form-grid grid grid-cols-2 gap-3">
             <label className="block">
               <span className="text-sm font-semibold">Quantity</span>
               <input
