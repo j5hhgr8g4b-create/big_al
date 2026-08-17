@@ -628,6 +628,11 @@ textarea {
     padding-left: 12px;
   }
 
+  .app-main .cook-mode-panel {
+    margin-right: -12px;
+    margin-left: -12px;
+  }
+
   .visual-card.p-6,
   .note-card.p-6,
   .warm-section.p-6,
