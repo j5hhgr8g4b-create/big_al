@@ -13,6 +13,37 @@ function errorRedirect(message: string): never {
   redirect(`/restaurants/preferences?${new URLSearchParams({ error: message }).toString()}`);
 }
 
+function nameErrorRedirect(message: string): never {
+  redirect(`/restaurants/preferences?${new URLSearchParams({ nameError: message }).toString()}`);
+}
+
+export async function updateRestaurantName(formData: FormData) {
+  const restaurantId = field(formData, "restaurantId");
+  const name = field(formData, "name");
+
+  if (!restaurantId) {
+    redirect("/restaurants/new");
+  }
+
+  if (name.length < 1 || name.length > 100) {
+    nameErrorRedirect("Restaurant name must be between 1 and 100 characters.");
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("restaurants")
+    .update({ name })
+    .eq("id", restaurantId)
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    nameErrorRedirect("Only the Restaurant owner can change its name.");
+  }
+
+  redirect("/restaurants/preferences?nameSaved=1");
+}
+
 export async function saveRestaurantCookingPreferences(formData: FormData) {
   const restaurantId = field(formData, "restaurantId");
   const unitPreference = field(formData, "unitPreference");
