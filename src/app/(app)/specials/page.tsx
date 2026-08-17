@@ -143,7 +143,7 @@ export default async function SpecialsPage({ searchParams }: SpecialsPageProps) 
               href={prompt.href}
               className={`rounded-full border px-4 py-2 text-sm font-semibold ${
                 mode === prompt.mode
-                  ? "border-[var(--color-purple-800)] bg-[var(--color-purple-800)] text-[var(--color-text-inverse)]"
+                  ? "specials-prompt-active"
                   : "border-[var(--color-border)] bg-[var(--color-surface)]"
               }`}
             >
