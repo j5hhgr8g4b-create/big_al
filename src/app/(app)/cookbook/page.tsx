@@ -6,7 +6,7 @@ import { decodeParserOutputFallback } from "@/lib/imports/get-import";
 import { getCurrentRestaurant } from "@/lib/restaurants/current";
 
 type CookbookPageProps = {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ error?: string; q?: string; view?: string }>;
 };
 
 type PendingImport = {
@@ -24,8 +24,9 @@ type PendingImport = {
 };
 
 export default async function CookbookPage({ searchParams }: CookbookPageProps) {
-  const { q } = await searchParams;
+  const { error, q, view } = await searchParams;
   const searchQuery = q?.trim().slice(0, 100) ?? "";
+  const houseFavouritesOnly = view === "house-favourites";
   const { restaurant, supabase } = await getCurrentRestaurant();
 
   if (!restaurant) {
@@ -51,7 +52,7 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
     .select("id")
     .eq("restaurant_id", restaurant.id)
     .maybeSingle();
-  const [recipesResult, importsResult, booksResult] = await Promise.all([
+  const [recipesResult, importsResult, booksResult, favouritesResult] = await Promise.all([
     searchQuery
       ? supabase.rpc("search_recipes", {
           target_restaurant_id: restaurant.id,
@@ -78,8 +79,15 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
       .eq("restaurant_id", restaurant.id)
       .is("archived_at", null)
       .order("created_at", { ascending: false }),
+    supabase
+      .from("house_favourites")
+      .select("recipe_id")
+      .eq("restaurant_id", restaurant.id),
   ]);
-  let recipes = (recipesResult.data ?? []) as RecipeCardValue[];
+  const favouriteIds = new Set((favouritesResult.data ?? []).map((favourite) => favourite.recipe_id));
+  let recipes = ((recipesResult.data ?? []) as RecipeCardValue[])
+    .filter((recipe) => !houseFavouritesOnly || favouriteIds.has(recipe.id))
+    .map((recipe) => ({ ...recipe, house_favourite: favouriteIds.has(recipe.id) }));
   if (searchQuery && recipes.length) {
     const { data: recipeImages } = await supabase
       .from("recipes")
@@ -112,6 +120,12 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
           Import recipe
         </Link>
       </div>
+
+      {error && (
+        <p className="mt-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+          {error}
+        </p>
+      )}
 
       <form action="/cookbook" method="get" className="visual-card mt-8 flex gap-2 p-3">
         <label className="sr-only" htmlFor="recipe-search">
@@ -216,29 +230,65 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
         <section className="mt-10" aria-labelledby="recipes-heading">
           <div className="flex items-center justify-between gap-4">
             <h2 id="recipes-heading" className="section-kicker text-2xl">
-              {searchQuery ? `Results for “${searchQuery}”` : "All Recipes"}
+              {houseFavouritesOnly
+                ? "House Favourites"
+                : searchQuery
+                  ? `Results for “${searchQuery}”`
+                  : "All Recipes"}
             </h2>
-            {searchQuery && (
+            {(searchQuery || houseFavouritesOnly) && (
               <Link href="/cookbook" className="btn-secondary min-h-0 px-3 py-2 text-xs">
                 Clear
               </Link>
             )}
           </div>
+          <div className="mt-4 flex flex-wrap gap-2" aria-label="Cookbook filters">
+            <Link
+              href={searchQuery ? `/cookbook?q=${encodeURIComponent(searchQuery)}` : "/cookbook"}
+              className={`rounded-full border px-3 py-2 text-xs font-semibold ${
+                !houseFavouritesOnly
+                  ? "border-[var(--color-purple-800)] bg-[var(--color-purple-800)] text-[var(--color-text-inverse)]"
+                  : "border-[var(--color-border)] bg-[var(--color-surface)]"
+              }`}
+            >
+              All Recipes
+            </Link>
+            <Link
+              href={
+                searchQuery
+                  ? `/cookbook?q=${encodeURIComponent(searchQuery)}&view=house-favourites`
+                  : "/cookbook?view=house-favourites"
+              }
+              className={`rounded-full border px-3 py-2 text-xs font-semibold ${
+                houseFavouritesOnly
+                  ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-text-inverse)]"
+                  : "border-[var(--color-border)] bg-[var(--color-surface)]"
+              }`}
+            >
+              ★ House Favourites
+            </Link>
+          </div>
           <div className="mt-4 grid grid-cols-2 gap-3">
             {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <RecipeCard key={recipe.id} recipe={recipe} restaurantId={restaurant.id} />
             ))}
           </div>
         </section>
       ) : (
         <section className="warm-section mt-10 border-dashed p-8 text-center">
           <h2 className="text-xl font-semibold">
-            {searchQuery ? "No matching Recipes" : "Your Cookbook is ready"}
+            {houseFavouritesOnly
+              ? "No House Favourites yet"
+              : searchQuery
+                ? "No matching Recipes"
+                : "Your Cookbook is ready"}
           </h2>
           <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
-            {searchQuery
-              ? "Try a different Recipe title or Ingredient."
-              : "Import your first recipe to start filling it."}
+            {houseFavouritesOnly
+              ? "Mark a Recipe with a star when it becomes one of your Restaurant's go-to dishes."
+              : searchQuery
+                ? "Try a different Recipe title or Ingredient."
+                : "Import your first recipe to start filling it."}
           </p>
           {searchQuery && (
             <Link

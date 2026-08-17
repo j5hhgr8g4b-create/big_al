@@ -28,7 +28,17 @@ export async function getRecipeBook(recipeBookId: string) {
         .in("id", recipeIds)
         .is("archived_at", null)
     : { data: [] };
-  const recipesById = new Map((recipes ?? []).map((recipe) => [recipe.id, recipe]));
+  const { data: favourites } = recipeIds.length
+    ? await supabase
+        .from("house_favourites")
+        .select("recipe_id")
+        .eq("restaurant_id", recipeBook.restaurant_id)
+        .in("recipe_id", recipeIds)
+    : { data: [] };
+  const favouriteIds = new Set((favourites ?? []).map((favourite) => favourite.recipe_id));
+  const recipesById = new Map(
+    (recipes ?? []).map((recipe) => [recipe.id, { ...recipe, house_favourite: favouriteIds.has(recipe.id) }]),
+  );
 
   return {
     ...recipeBook,

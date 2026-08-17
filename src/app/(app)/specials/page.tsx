@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { SectionIntro } from "@/components/section-intro";
+import { HouseFavouriteButton } from "@/components/house-favourite-button";
 import {
   getBigAlData,
   normalizeBigAlMode,
@@ -30,22 +31,27 @@ function BigAlRecipeCard({ recipe }: { recipe: BigAlRecipe }) {
   const time = totalMinutes(recipe);
 
   return (
-    <Link
-      href={`/cookbook/recipes/${recipe.id}`}
-      className="visual-card block p-5"
-    >
+    <article className="visual-card p-5">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <Link href={`/cookbook/recipes/${recipe.id}`} className="min-w-0">
           <h3 className="text-xl font-semibold tracking-tight">{recipe.title}</h3>
           <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
             {recipeReason(recipe)}
           </p>
+        </Link>
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          <HouseFavouriteButton
+            isFavourite={recipe.houseFavourite}
+            recipeId={recipe.id}
+            restaurantId={recipe.restaurantId}
+            returnPath="/specials"
+          />
+          {recipe.cookAgainCount > 0 && (
+            <span className="warm-pill shrink-0 text-[var(--color-accent)]">
+              Cook again
+            </span>
+          )}
         </div>
-        {recipe.cookAgainCount > 0 && (
-          <span className="warm-pill shrink-0 text-[var(--color-accent)]">
-            Cook again
-          </span>
-        )}
       </div>
       {recipe.description && (
         <p className="mt-3 line-clamp-2 text-sm leading-6 text-[var(--color-text-muted)]">
@@ -61,7 +67,7 @@ function BigAlRecipeCard({ recipe }: { recipe: BigAlRecipe }) {
           </span>
         ))}
       </div>
-    </Link>
+    </article>
   );
 }
 
