@@ -58,7 +58,7 @@ export default async function CookModePage({ params, searchParams }: CookModePag
   const stepCount = recipe.steps.length;
   if (stepCount === 0) {
     return (
-      <article className="-mx-4 -mt-6 min-h-[calc(100vh-104px)] bg-gradient-to-b from-[var(--color-purple-900)] to-[#1f1628] px-4 py-6 text-[var(--color-text-inverse)]">
+      <article className="cook-mode-panel -mx-4 -mt-6 min-h-[calc(100vh-104px)] bg-gradient-to-b from-[var(--color-purple-900)] to-[#1f1628] px-4 py-6 text-[var(--color-text-inverse)]">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="section-kicker text-[var(--color-honey)]">
@@ -103,7 +103,7 @@ export default async function CookModePage({ params, searchParams }: CookModePag
 
   if (cooked === "yes") {
     return (
-      <article className="-mx-4 -mt-6 min-h-[calc(100vh-104px)] bg-gradient-to-b from-[var(--color-purple-900)] to-[#1f1628] px-4 py-6 text-[var(--color-text-inverse)]">
+      <article className="cook-mode-panel -mx-4 -mt-6 min-h-[calc(100vh-104px)] bg-gradient-to-b from-[var(--color-purple-900)] to-[#1f1628] px-4 py-6 text-[var(--color-text-inverse)]">
         <p className="section-kicker text-[var(--color-honey)]">
           Cook Mode
         </p>
@@ -150,7 +150,7 @@ export default async function CookModePage({ params, searchParams }: CookModePag
   }
 
   return (
-    <article className="-mx-4 -mt-6 min-h-[calc(100vh-104px)] bg-gradient-to-b from-[var(--color-purple-900)] to-[#1f1628] px-4 py-6 text-[var(--color-text-inverse)]">
+    <article className="cook-mode-panel -mx-4 -mt-6 min-h-[calc(100vh-104px)] bg-gradient-to-b from-[var(--color-purple-900)] to-[#1f1628] px-4 py-6 text-[var(--color-text-inverse)]">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="section-kicker text-[var(--color-honey)]">
