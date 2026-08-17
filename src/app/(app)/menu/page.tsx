@@ -86,7 +86,7 @@ function AddMealForm({
           </select>
         </label>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="mobile-form-grid grid grid-cols-2 gap-3">
           <label className="block">
             <span className="text-sm font-semibold">Date</span>
             <input
