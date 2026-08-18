@@ -31,7 +31,7 @@ export function HouseFavouriteButton({
   returnPath: string;
 }) {
   return (
-    <form action={toggleHouseFavourite}>
+    <form action={toggleHouseFavourite} className="house-favourite-form">
       <input type="hidden" name="recipeId" value={recipeId} />
       <input type="hidden" name="restaurantId" value={restaurantId} />
       <input type="hidden" name="returnPath" value={returnPath} />
@@ -41,7 +41,7 @@ export function HouseFavouriteButton({
         aria-label={isFavourite ? "Remove from House Favourites" : "Add to House Favourites"}
         aria-pressed={isFavourite}
         title={isFavourite ? "Remove from House Favourites" : "Add to House Favourites"}
-        className={`inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border px-3 text-sm font-semibold shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] ${
+        className={`house-favourite-button inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border px-3 text-sm font-semibold shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] ${
           isFavourite
             ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-text-inverse)]"
             : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-purple-800)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
