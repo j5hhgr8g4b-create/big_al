@@ -1,47 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #f6f3ea;
-  --color-surface: #fffcf6;
-  --color-surface-soft: #faf6ee;
-  --color-surface-warm: #eef0e4;
+  --color-bg: #fff8f5;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f5ece7;
+  --color-surface-warm: #f4f1e8;
 
-  --color-purple-900: #291939;
-  --color-purple-800: #352347;
-  --color-purple-700: #433056;
+  --color-purple-900: #050235;
+  --color-purple-800: #1d1b4b;
+  --color-purple-700: #39366b;
 
-  --color-text: #211c18;
-  --color-text-soft: #2d2621;
-  --color-text-muted: #6a655d;
-  --color-text-faint: #8a857c;
-  --color-text-inverse: #fffcf6;
+  --color-text: #1e1b18;
+  --color-text-soft: #302c29;
+  --color-text-muted: #625d5a;
+  --color-text-faint: #817b78;
+  --color-text-inverse: #fff8f5;
 
-  --color-green-700: #5d6d41;
-  --color-green-600: #70824c;
-  --color-green-100: #e6ebd8;
+  --color-green-700: #76652b;
+  --color-green-600: #a08e3e;
+  --color-green-100: #f4f1e8;
 
-  --color-accent: #b9543c;
-  --color-accent-soft: #d98a77;
-  --color-honey: #d8a85b;
+  --color-accent: #e54b2d;
+  --color-accent-soft: #f18168;
+  --color-honey: #d6b34c;
 
-  --color-note: #f4e7b7;
-  --color-note-border: #d7b96c;
+  --color-note: #fff1d8;
+  --color-note-border: #e2c37a;
 
-  --color-border: #ddd7ca;
-  --color-border-strong: #cfc9bb;
+  --color-border: #e9e1dc;
+  --color-border-strong: #c8c5d0;
 
-  --radius-md: 14px;
-  --radius-lg: 18px;
-  --radius-xl: 22px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
   --radius-2xl: 24px;
   --radius-full: 999px;
 
-  --shadow-card: 0 4px 14px rgba(43, 23, 65, 0.08);
-  --shadow-hero: 0 14px 30px rgba(43, 23, 65, 0.2);
+  --shadow-card: 0 4px 14px rgba(29, 27, 75, 0.08);
+  --shadow-hero: 0 14px 30px rgba(29, 27, 75, 0.2);
 
-  --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter",
-    "Nunito Sans", system-ui, sans-serif;
-  --font-hand: "Marker Felt", "Bradley Hand", "Segoe Print", "Comic Sans MS", cursive;
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: var(--font-body);
+  --font-hand: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
 
   --background: var(--color-bg);
   --foreground: var(--color-text);
@@ -58,7 +59,7 @@
 html {
   max-width: 100%;
   overflow-x: clip;
-  background: #ede3d5;
+  background: #f4ece7;
 }
 
 body {
@@ -66,10 +67,7 @@ body {
   min-height: 100vh;
   margin: 0;
   overflow-x: clip;
-  background:
-    radial-gradient(circle at 14% -10%, rgba(185, 84, 60, 0.16), transparent 340px),
-    radial-gradient(circle at 100% 86%, rgba(53, 35, 71, 0.1), transparent 360px),
-    #ede3d5;
+  background: #f4ece7;
   color: var(--foreground);
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
@@ -95,10 +93,10 @@ textarea {
   min-height: 100vh;
   margin: 0 auto;
   overflow: clip;
-  border-left: 1px solid rgba(207, 201, 187, 0.9);
-  border-right: 1px solid rgba(207, 201, 187, 0.9);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
   background: var(--color-bg);
-  box-shadow: 0 30px 80px rgba(43, 23, 65, 0.18);
+  box-shadow: 0 30px 80px rgba(29, 27, 75, 0.12);
 }
 
 .app-shell::before {
@@ -107,9 +105,9 @@ textarea {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.2;
-  background-image: radial-gradient(rgba(91, 51, 24, 0.09) 0.5px, transparent 0.5px);
-  background-size: 12px 12px;
+  opacity: 0.12;
+  background-image: radial-gradient(rgba(29, 27, 75, 0.08) 0.5px, transparent 0.5px);
+  background-size: 14px 14px;
   mix-blend-mode: multiply;
 }
 
@@ -118,17 +116,17 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px 18px 6px;
+  padding: 16px 20px 8px;
 }
 
 .brand-mark,
 .header-action {
   min-height: 38px;
-  border: 1px solid rgba(207, 201, 187, 0.85);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: rgba(255, 252, 246, 0.72);
+  background: var(--color-surface);
   color: var(--color-text-soft);
-  box-shadow: 0 2px 8px rgba(43, 23, 65, 0.05);
+  box-shadow: 0 2px 8px rgba(29, 27, 75, 0.05);
 }
 
 .brand-mark {
@@ -149,7 +147,7 @@ textarea {
 .app-main {
   min-width: 0;
   overflow-wrap: anywhere;
-  padding: 6px 16px calc(104px + env(safe-area-inset-bottom)) 16px;
+  padding: 8px 20px calc(104px + env(safe-area-inset-bottom)) 20px;
 }
 
 .app-main > *,
@@ -169,48 +167,33 @@ textarea {
 .screen-title {
   position: relative;
   margin: 0;
-  color: #3f2b24;
-  font-family: var(--font-hand);
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.01em;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
-  transform: rotate(-1.1deg) translateY(1px);
-}
-
-.screen-title::after {
-  content: "";
-  position: absolute;
-  right: 6%;
-  bottom: -8px;
-  left: 10%;
-  height: 5px;
-  border-radius: var(--radius-full);
-  background: rgba(216, 168, 91, 0.95);
-  transform: rotate(-1.2deg);
+  color: var(--color-purple-900);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 .section-kicker,
 .hand-label {
   font-family: var(--font-hand);
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--color-accent);
 }
 
 .section-kicker {
-  font-size: 1rem;
-  line-height: 1.15;
-  transform: rotate(-0.6deg);
+  font-size: 0.875rem;
+  line-height: 1.25;
 }
 
 .bistro-card,
 .visual-card {
   max-width: 100%;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-2xl);
-  background: rgba(255, 252, 246, 0.92);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
   box-shadow: var(--shadow-card);
 }
 
@@ -219,9 +202,7 @@ textarea {
   margin: 8px 0 14px;
   padding: 18px 18px 16px;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(255, 252, 246, 0.96), rgba(250, 246, 238, 0.92)),
-    var(--color-surface);
+  background: var(--color-surface);
   text-align: center;
 }
 
@@ -271,9 +252,9 @@ textarea {
   max-width: 328px;
   margin: 2px auto 0;
   padding: 12px 14px;
-  border: 1px solid rgba(207, 201, 187, 0.68);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: rgba(238, 240, 228, 0.72);
+  background: var(--color-surface-warm);
   color: var(--color-text-muted);
   font-size: 0.875rem;
   font-weight: 570;
@@ -288,7 +269,7 @@ textarea {
   margin: 0 0 14px;
   padding: 18px;
   overflow: hidden;
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-lg);
   background:
     radial-gradient(circle at 86% 22%, rgba(216, 168, 91, 0.18), transparent 80px),
     linear-gradient(135deg, var(--color-purple-800), var(--color-purple-900));
@@ -310,11 +291,11 @@ textarea {
   max-width: 170px;
   margin: 0;
   color: var(--color-text-inverse);
-  font-family: var(--font-hand);
-  font-size: 2.44rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
   transform: rotate(-0.35deg);
   white-space: nowrap;
@@ -432,21 +413,21 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  min-height: 40px;
-  border-radius: var(--radius-md);
-  padding: 10px 14px;
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  padding: 11px 18px;
   font-family: var(--font-ui);
   font-size: 0.875rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.25;
   text-align: center;
   overflow-wrap: anywhere;
 }
 
 .btn-primary {
-  border: 1px solid var(--color-purple-800);
-  background: var(--color-purple-800);
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
   color: var(--color-text-inverse);
   box-shadow: 0 6px 16px rgba(53, 35, 71, 0.16);
 }
@@ -482,7 +463,8 @@ textarea {
   max-width: 100%;
   width: 100%;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  min-height: 44px;
+  border-radius: var(--radius-full);
   background: var(--color-surface);
   color: var(--color-text);
   outline: none;
@@ -521,19 +503,19 @@ textarea {
   height: calc(78px + env(safe-area-inset-bottom));
   margin: 0 auto;
   padding: 8px 10px calc(10px + env(safe-area-inset-bottom));
-  border-top: 1px solid var(--color-border);
-  background: rgba(255, 252, 246, 0.96);
-  box-shadow: 0 -8px 26px rgba(43, 23, 65, 0.08);
+  border-top: 0;
+  background: var(--color-purple-800);
+  box-shadow: 0 -8px 26px rgba(29, 27, 75, 0.18);
   backdrop-filter: blur(16px);
 }
 
 .nav-item {
   height: 58px;
-  border-radius: var(--radius-lg);
-  color: var(--color-text-muted);
+  border-radius: 12px;
+  color: rgba(255, 248, 245, 0.78);
   font-family: var(--font-hand);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.1;
   transform: rotate(-0.15deg);
@@ -543,7 +525,7 @@ textarea {
   align-items: center;
   justify-items: center;
   font-family: var(--font-ui);
-  color: var(--color-text-muted);
+  color: currentColor;
   opacity: 0.9;
 }
 
@@ -565,10 +547,10 @@ textarea {
 }
 
 .nav-item.active {
-  background: #352347;
-  color: #fffcf6;
-  box-shadow: 0 5px 14px rgba(53, 35, 71, 0.18);
-  transform: rotate(-0.35deg) translateY(-1px);
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+  box-shadow: none;
+  transform: translateY(-1px);
 }
 
 .nav-item.active .nav-icon,
@@ -605,14 +587,14 @@ textarea {
 
   .app-shell {
     min-height: calc(100vh - 48px);
-    border: 1px solid rgba(207, 201, 187, 0.9);
+    border: 1px solid var(--color-border);
     border-radius: 36px;
   }
 
   .bottom-nav {
     bottom: 24px;
-    border-right: 1px solid rgba(207, 201, 187, 0.9);
-    border-left: 1px solid rgba(207, 201, 187, 0.9);
+    border-right: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
     border-radius: 0 0 36px 36px;
   }
 }
@@ -657,7 +639,7 @@ textarea {
   }
 
   .screen-title {
-    font-size: 2.125rem;
+    font-size: 2rem;
   }
 }
 
