@@ -1,0 +1,5 @@
+# Preserve verbatim design exports and upstream license text.
+docs/stitch/DESIGN.md -whitespace
+docs/stitch/reference/KITCHEN_HEARTH_LEGACY_DESIGN.md -whitespace
+docs/stitch/reference/KITCHEN_SOURCE.html -whitespace
+src/app/fonts/LICENSE-*.txt -whitespace

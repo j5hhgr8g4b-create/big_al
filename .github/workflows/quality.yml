@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Test
         run: pnpm test
 
@@ -40,6 +43,19 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Visual test
+        run: pnpm test:visual
+
+      - name: Upload visual test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
 
       - name: Build
         run: pnpm build

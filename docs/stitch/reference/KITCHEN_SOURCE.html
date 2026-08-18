@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Big Al's Kitchen - Home</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;family=Work+Sans:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-surface-variant": "#4a454d",
+                "primary-container": "#352347",
+                "inverse-on-surface": "#f3f0eb",
+                "error": "#ba1a1a",
+                "on-secondary": "#ffffff",
+                "tertiary-fixed": "#d4e8d2",
+                "on-primary-container": "#a089b4",
+                "on-primary": "#ffffff",
+                "cook-mode-bg": "#1E1B18",
+                "tertiary-container": "#1f2f20",
+                "tertiary-fixed-dim": "#b8ccb6",
+                "secondary-container": "#fe8770",
+                "on-tertiary": "#ffffff",
+                "inverse-primary": "#d6bdeb",
+                "surface-bright": "#fcf9f3",
+                "surface-container-low": "#f6f3ed",
+                "on-tertiary-fixed-variant": "#3a4b3b",
+                "on-error": "#ffffff",
+                "on-secondary-fixed": "#3f0300",
+                "surface-container-lowest": "#ffffff",
+                "surface-variant": "#e5e2dc",
+                "primary-fixed-dim": "#d6bdeb",
+                "on-background": "#1c1c18",
+                "secondary-fixed-dim": "#ffb4a6",
+                "surface-tint": "#6a567e",
+                "burnt-clay": "#8C392A",
+                "on-secondary-container": "#741f11",
+                "aubergine-deep": "#2A1C38",
+                "primary": "#200e31",
+                "surface": "#fcf9f3",
+                "on-surface": "#1c1c18",
+                "error-container": "#ffdad6",
+                "tertiary": "#0a1a0d",
+                "outline": "#7b757e",
+                "inverse-surface": "#31312d",
+                "surface-container-highest": "#e5e2dc",
+                "surface-container": "#f0eee8",
+                "primary-fixed": "#f0dbff",
+                "on-tertiary-container": "#859784",
+                "on-error-container": "#93000a",
+                "on-secondary-fixed-variant": "#802919",
+                "secondary": "#a03f2e",
+                "outline-variant": "#ccc4ce",
+                "on-primary-fixed-variant": "#523f65",
+                "background": "#fcf9f3",
+                "secondary-fixed": "#ffdad3",
+                "surface-container-high": "#ebe8e2",
+                "clove-tint": "#E8E1D9",
+                "surface-dim": "#dcdad4",
+                "on-tertiary-fixed": "#0f1f11",
+                "on-primary-fixed": "#251336"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "24px",
+                "margin-desktop": "64px",
+                "unit": "8px",
+                "section-gap": "48px",
+                "gutter": "16px"
+        },
+        "fontFamily": {
+                "accent-hand": [
+                        "Bricolage Grotesque"
+                ],
+                "label-md": [
+                        "Work Sans"
+                ],
+                "display-lg": [
+                        "Plus Jakarta Sans"
+                ],
+                "body-md": [
+                        "Work Sans"
+                ],
+                "label-sm": [
+                        "Work Sans"
+                ],
+                "headline-lg": [
+                        "Plus Jakarta Sans"
+                ],
+                "body-lg": [
+                        "Work Sans"
+                ],
+                "headline-lg-mobile": [
+                        "Plus Jakarta Sans"
+                ],
+                "headline-md": [
+                        "Plus Jakarta Sans"
+                ]
+        },
+        "fontSize": {
+                "accent-hand": [
+                        "18px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg": [
+                        "40px",
+                        {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.03em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "26px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "30px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "26px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "30px",
+                                "fontWeight": "600"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen pb-24 md:pb-0 selection:bg-secondary/20 selection:text-primary antialiased">
+<!-- TopAppBar -->
+<header class="bg-background flex items-center justify-between px-margin-mobile h-16 w-full sticky top-0 z-40">
+<button class="text-primary hover:text-secondary-container transition-colors active:scale-95 duration-100 flex items-center justify-center p-2 -ml-2 rounded-full">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-accent-hand text-headline-lg-mobile text-primary">Big Al's Kitchen</h1>
+<button class="text-primary hover:text-secondary-container transition-colors active:scale-95 duration-100 flex items-center justify-center p-2 -mr-2 rounded-full">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="px-margin-mobile md:max-w-3xl md:mx-auto pt-sm space-y-4">
+<!-- Next Dinner Card (Hero) -->
+<section class="bg-primary rounded-[1.5rem] p-5 relative overflow-hidden flex shadow-[0_8px_30px_rgba(32,14,49,0.15)]">
+<!-- Decorative Background Element -->
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-primary-container rounded-full opacity-60 pointer-events-none blur-2xl"></div>
+<div class="flex-1 flex flex-col justify-between z-10 pr-4">
+<div>
+<span class="font-label-md text-secondary-fixed tracking-widest uppercase text-[10px] mb-2 block">NEXT DINNER</span>
+<h2 class="font-headline-md text-on-primary leading-tight mb-2">Creamy Garlic Sausages</h2>
+<p class="font-body-md text-primary-fixed-dim text-sm opacity-90">30 min • Easy • Serves 4</p>
+</div>
+<button class="mt-6 bg-secondary text-on-secondary font-label-md text-sm py-2.5 px-6 rounded-full self-start shadow-md hover:bg-secondary-container transition-transform active:scale-95 flex items-center gap-2">
+                    Let's Cook
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+<div class="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-primary-container z-10 shrink-0 shadow-inner bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="A top-down, high-quality, mouth-watering food photography shot of sizzling creamy garlic sausages in a rustic cast iron skillet. The dish looks rich and comforting, garnished with fresh chopped green herbs. The lighting is warm and inviting, emphasizing the tactile, home-cooked nature of the meal. The background implies a clean, soft-minimalist kitchen setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYgJTLzf9IWkh4y1iuqPf_BTJXA62MoISdnbmxw46YApDRmX3t3y2PIMUuiHcG9D9cz69Q4QFxYVKQsE2njFzYdKZTq9bF88ER0kUnrXMU-C4y9I_VIZvJrFgI626lERD_VLtJEuDZjlkcjZq6uvYsvDEVw_L8qcIvav-zN65iWnIXzEHan1e-afgFa7khhbPXMd9oArhCK3dytq6njiIaARgctK2YyKSwfmkPCSq2soM067ZiLGiqxw"/>
+</div>
+</section>
+<!-- This Week Planner -->
+<section class="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_20px_rgba(32,14,49,0.04)] border border-outline-variant/20">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="font-label-md text-on-surface-variant tracking-widest uppercase text-[10px] mb-1 block">THIS WEEK</span>
+<h3 class="font-headline-md text-primary text-lg">5 dinners planned</h3>
+</div>
+<button class="font-label-md text-secondary hover:text-secondary-container transition-colors flex items-center text-sm group">
+                    View Menu 
+                    <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<!-- Progress Tracker -->
+<div class="flex justify-between items-center px-1">
+<div class="flex flex-col items-center gap-2">
+<span class="font-label-md text-primary text-xs">M</span>
+<div class="w-3 h-3 rounded-full bg-secondary shadow-sm shadow-secondary/30"></div>
+</div>
+<div class="w-full h-px bg-outline-variant/30 mx-1"></div>
+<div class="flex flex-col items-center gap-2">
+<span class="font-label-md text-primary text-xs">T</span>
+<div class="w-3 h-3 rounded-full bg-secondary shadow-sm shadow-secondary/30"></div>
+</div>
+<div class="w-full h-px bg-outline-variant/30 mx-1"></div>
+<div class="flex flex-col items-center gap-2">
+<span class="font-label-md text-primary text-xs">W</span>
+<div class="w-3 h-3 rounded-full bg-secondary shadow-sm shadow-secondary/30"></div>
+</div>
+<div class="w-full h-px bg-outline-variant/30 mx-1"></div>
+<div class="flex flex-col items-center gap-2">
+<span class="font-label-md text-on-surface-variant text-xs">T</span>
+<div class="w-3 h-3 rounded-full border-2 border-primary box-border"></div>
+</div>
+<div class="w-full h-px bg-outline-variant/30 mx-1"></div>
+<div class="flex flex-col items-center gap-2">
+<span class="font-label-md text-on-surface-variant text-xs">F</span>
+<div class="w-3 h-3 rounded-full border-2 border-outline-variant box-border"></div>
+</div>
+<div class="w-full h-px bg-outline-variant/30 mx-1 opacity-50"></div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<span class="font-label-md text-on-surface-variant text-xs">S</span>
+<div class="w-3 h-3 rounded-full bg-surface-variant"></div>
+</div>
+<div class="w-full h-px bg-outline-variant/30 mx-1 opacity-50"></div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<span class="font-label-md text-on-surface-variant text-xs">S</span>
+<div class="w-3 h-3 rounded-full bg-surface-variant"></div>
+</div>
+</div>
+</section>
+<!-- Pantry Status -->
+<section class="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_20px_rgba(32,14,49,0.04)] border border-outline-variant/20 flex items-center justify-between hover:border-primary/20 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-xl text-primary group-hover:bg-primary-container group-hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<div>
+<span class="font-label-md text-on-surface-variant tracking-widest uppercase text-[10px] mb-1 block">PANTRY</span>
+<h3 class="font-headline-md text-primary text-base">12 items on your list</h3>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</section>
+<!-- Big Al Says -->
+<section class="bg-surface-container rounded-2xl p-5 flex items-start gap-4 border border-outline-variant/40 shadow-sm relative overflow-hidden">
+<!-- subtle texture pattern overlay -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#200e31 1px, transparent 1px); background-size: 16px 16px;"></div>
+<div class="w-16 h-16 shrink-0 rounded-full overflow-hidden border-[3px] border-surface-container-lowest shadow-sm bg-white z-10">
+<img class="w-full h-full object-cover" data-alt="A playful, high-quality hand-drawn illustration of a friendly, slightly chubby chef character named Big Al. He has a warm, encouraging smile and wears a classic apron. The art style uses a modern-tactile aesthetic with a paper-and-ink feel, utilizing crisp navy line work and subtle cream shading to fit perfectly within a warm, culinary app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMmgE8N5n9_aLoUkbrgNrvje75zfiXqo_qCCLl1YeN56cq2FnEyljSdvHG2blFv6hclL5djY6vOXeQzDQoMOOa6GzmWHcLL4_msDU-4ib5L8KPwFvmj7gpgaGiGGBwlcqkdp9l0qiXlSD93o6tN2lKlnSxluov7o8VNwGH5ix1Lsvf8CtFez-tzv9npdv2SIEGceJ-_gnaVyeEDkMuZxUcuF1O8gp9V2JVscAw6F0aidztTmkTrHuHdA"/>
+</div>
+<div class="flex-1 pt-1 z-10">
+<span class="font-label-md text-on-surface-variant tracking-widest uppercase text-[10px] mb-1 block">BIG AL SAYS</span>
+<p class="font-accent-hand text-primary text-xl leading-tight">"A good sausage makes everything better."</p>
+</div>
+<div class="w-10 h-10 shrink-0 flex items-center justify-center opacity-80 z-10 mt-2">
+<img class="w-full h-full object-contain" data-alt="A small, whimsical hand-drawn spot illustration of a single, perfectly cooked sausage on a stylized fork. Drawn in a minimalist paper-and-ink style featuring a vibrant pop of tomato-red color against dark navy outlines. It acts as a delightful decorative accent in a soft cream UI layout." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiVzB2L-xmkuvb_zzFuYKenIUwXLKeajcW8e8xr4lrdteG9XPLsRq3rNhEHMX19cyTEOFLyytYrNyReICkIqN2m3eTh_Sp9lCV8KeykVgmZxzINf2rDsGluLagrUPAZ9foyySN8fwWfqt-vNp0CE8OBG5neDoU7Jutp0QLbeij7Oidht7yL3jQII-_yc7tiZzQiPV6muz9lEW7ClyFEPimjDNi5YIp2zviqvm_Z-rqzz9ef3tNMI4PzA"/>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-primary dark:bg-primary-container shadow-[0_-4px_20px_rgba(32,14,49,0.15)] md:hidden rounded-t-[1.5rem]">
+<!-- Kitchen (Active) -->
+<button class="flex flex-col items-center justify-center text-secondary-container dark:text-secondary-fixed-dim rounded-2xl p-2 min-w-[64px] hover:bg-primary-container/20 transition-all active:scale-90 duration-150 ease-in-out group">
+<div class="bg-primary-fixed/10 px-4 py-1 rounded-full mb-1 group-hover:bg-primary-fixed/20 transition-colors">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+<span class="font-label-md text-[11px] font-semibold tracking-wide">Kitchen</span>
+</button>
+<!-- Cookbook -->
+<button class="flex flex-col items-center justify-center text-on-primary/70 dark:text-on-primary-container p-2 min-w-[64px] hover:text-on-primary hover:bg-primary-container/20 transition-all active:scale-90 duration-150 ease-in-out">
+<span class="material-symbols-outlined text-2xl mb-1">menu_book</span>
+<span class="font-label-md text-[11px] tracking-wide">Cookbook</span>
+</button>
+<!-- Specials -->
+<button class="flex flex-col items-center justify-center text-on-primary/70 dark:text-on-primary-container p-2 min-w-[64px] hover:text-on-primary hover:bg-primary-container/20 transition-all active:scale-90 duration-150 ease-in-out">
+<span class="material-symbols-outlined text-2xl mb-1">star</span>
+<span class="font-label-md text-[11px] tracking-wide">Specials</span>
+</button>
+<!-- Menu -->
+<button class="flex flex-col items-center justify-center text-on-primary/70 dark:text-on-primary-container p-2 min-w-[64px] hover:text-on-primary hover:bg-primary-container/20 transition-all active:scale-90 duration-150 ease-in-out">
+<span class="material-symbols-outlined text-2xl mb-1">restaurant_menu</span>
+<span class="font-label-md text-[11px] tracking-wide">Menu</span>
+</button>
+<!-- Pantry -->
+<button class="flex flex-col items-center justify-center text-on-primary/70 dark:text-on-primary-container p-2 min-w-[64px] hover:text-on-primary hover:bg-primary-container/20 transition-all active:scale-90 duration-150 ease-in-out relative">
+<span class="material-symbols-outlined text-2xl mb-1">inventory_2</span>
+<!-- Notification Badge -->
+<span class="absolute top-1.5 right-4 w-2 h-2 bg-secondary rounded-full border border-primary"></span>
+<span class="font-label-md text-[11px] tracking-wide">Pantry</span>
+</button>
+</nav>
+</body></html>

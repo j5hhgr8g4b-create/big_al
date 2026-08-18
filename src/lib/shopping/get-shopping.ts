@@ -275,10 +275,11 @@ function categorizeShoppingItem(name: string): ShoppingCategory {
 export async function getShoppingData(
   supabase: SupabaseClient,
   restaurantId: string,
+  today = new Date(),
 ): Promise<ShoppingData> {
-  const range = getMenuDateRange();
+  const range = getMenuDateRange(today);
 
-  const [{ data: list }, plannedMealsResult] = await Promise.all([
+  const [{ data: list, error: listError }, plannedMealsResult] = await Promise.all([
     supabase
       .from("shopping_lists")
       .select("id, title, source_start_date, source_end_date, generated_at")
@@ -294,7 +295,19 @@ export async function getShoppingData(
       .lte("planned_for", range.nextWeekEnd),
   ]);
 
-  const { data: items } = list
+  if (listError) {
+    throw new Error("Big Al could not load the Shopping list.", {
+      cause: listError,
+    });
+  }
+
+  if (plannedMealsResult.error) {
+    throw new Error("Big Al could not load planned meals for Shopping.", {
+      cause: plannedMealsResult.error,
+    });
+  }
+
+  const { data: items, error: itemsError } = list
     ? await supabase
         .from("shopping_items")
         .select("id, name, quantity, unit, notes, source, is_purchased")
@@ -302,7 +315,13 @@ export async function getShoppingData(
         .order("is_purchased", { ascending: true })
         .order("position", { ascending: true })
         .order("created_at", { ascending: true })
-    : { data: [] };
+    : { data: [], error: null };
+
+  if (itemsError) {
+    throw new Error("Big Al could not load Shopping items.", {
+      cause: itemsError,
+    });
+  }
 
   const shoppingItems = consolidateGeneratedItems((items ?? []) as RawShoppingItem[]).map((item) => ({
     ...item,

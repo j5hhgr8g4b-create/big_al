@@ -290,12 +290,12 @@ export default async function CookbookPage({ searchParams }: CookbookPageProps) 
                 ? "Try a different Recipe title or Ingredient."
                 : "Import your first recipe to start filling it."}
           </p>
-          {searchQuery && (
+          {(searchQuery || houseFavouritesOnly) && (
             <Link
               href="/cookbook"
               className="btn-secondary mt-4 min-h-0 px-3 py-2 text-xs"
             >
-              Clear search
+              {searchQuery ? "Clear search" : "View all Recipes"}
             </Link>
           )}
         </section>

@@ -7,6 +7,7 @@ type MenuRecipeRow = {
   description: string | null;
   difficulty: string | null;
   id: string;
+  image_url: string | null;
   prep_minutes: number | null;
   servings: number | null;
   title: string;
@@ -37,6 +38,12 @@ export type MenuWeek = {
 
 function toDateInputValue(date: Date) {
   return date.toISOString().slice(0, 10);
+}
+
+export function getMenuTodayValue(today = new Date()) {
+  return toDateInputValue(
+    new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())),
+  );
 }
 
 function startOfWeek(date: Date) {
@@ -90,27 +97,34 @@ export function servingsContext(event: Pick<MenuMealEvent, "people_eating" | "se
 export async function getMenuPlanningData(
   supabase: SupabaseClient,
   restaurantId: string,
+  today = new Date(),
 ): Promise<{
   planningRecipes: MenuPlanningRecipe[];
   unplannedRecipes: MenuPlanningRecipe[];
   weeks: [MenuWeek, MenuWeek];
 }> {
-  const range = getMenuDateRange();
-  const { data: cookbook } = await supabase
+  const range = getMenuDateRange(today);
+  const { data: cookbook, error: cookbookError } = await supabase
     .from("cookbooks")
     .select("id")
     .eq("restaurant_id", restaurantId)
     .maybeSingle();
 
+  if (cookbookError) {
+    throw new Error("Big Al could not load the Restaurant Cookbook.", {
+      cause: cookbookError,
+    });
+  }
+
   const [recipesResult, eventsResult] = await Promise.all([
     cookbook
       ? supabase
           .from("recipes")
-          .select("id, title, description, prep_minutes, cook_minutes, servings, difficulty")
+          .select("id, title, description, image_url, prep_minutes, cook_minutes, servings, difficulty")
           .eq("cookbook_id", cookbook.id)
           .is("archived_at", null)
           .order("title")
-      : Promise.resolve({ data: [] }),
+      : Promise.resolve({ data: [] as MenuPlanningRecipe[], error: null }),
     supabase
       .from("meal_events")
       .select("id, recipe_id, planned_for, meal_type, people_eating, servings_estimate, notes")
@@ -121,6 +135,18 @@ export async function getMenuPlanningData(
       .order("planned_for", { ascending: true })
       .order("created_at", { ascending: true }),
   ]);
+
+  if (recipesResult.error) {
+    throw new Error("Big Al could not load Recipes for the Menu.", {
+      cause: recipesResult.error,
+    });
+  }
+
+  if (eventsResult.error) {
+    throw new Error("Big Al could not load planned meals.", {
+      cause: eventsResult.error,
+    });
+  }
 
   const planningRecipes = (recipesResult.data ?? []) as MenuPlanningRecipe[];
   const recipesById = new Map(planningRecipes.map((recipe) => [recipe.id, recipe]));
