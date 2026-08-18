@@ -59,6 +59,8 @@ export type BigAlRecipe = RecipeRow & {
   lastCookedAt: string | null;
   plannedDates: string[];
   steps: string[];
+  houseFavourite: boolean;
+  restaurantId: string;
 };
 
 export type BigAlAnswer = {
@@ -270,6 +272,7 @@ export async function getBigAlData(
     mealEventsResult,
     recipeCooksResult,
     shoppingListsResult,
+    favouritesResult,
   ] = await Promise.all([
     cookbook
       ? supabase
@@ -298,9 +301,14 @@ export async function getBigAlData(
       .eq("restaurant_id", restaurantId)
       .is("archived_at", null)
       .maybeSingle(),
+    supabase
+      .from("house_favourites")
+      .select("recipe_id")
+      .eq("restaurant_id", restaurantId),
   ]);
 
   const recipes = (recipesResult.data ?? []) as RecipeRow[];
+  const favouriteIds = new Set((favouritesResult.data ?? []).map((favourite) => favourite.recipe_id));
   const recipeIds = recipes.map((recipe) => recipe.id);
 
   const [ingredientLinksResult, stepsResult, shoppingItemsResult] = await Promise.all([
@@ -370,6 +378,8 @@ export async function getBigAlData(
       cookedCount: cooks.length,
       ingredients: ingredientsByRecipe.get(recipe.id) ?? [],
       lastCookedAt: cooks[0]?.cooked_at ?? null,
+      houseFavourite: favouriteIds.has(recipe.id),
+      restaurantId,
       plannedDates: plannedByRecipe.get(recipe.id) ?? [],
       steps: stepsByRecipe.get(recipe.id) ?? [],
     };

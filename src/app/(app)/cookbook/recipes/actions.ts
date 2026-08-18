@@ -2,6 +2,7 @@
 
 import { randomUUID } from "node:crypto";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { getSourceUrlDuplicateState } from "@/lib/imports/get-import";
@@ -54,6 +55,38 @@ function descriptionWithCreatorSource(description: string, creatorSource: string
 
 function rpcMissing(error: { code?: string; message?: string }) {
   return error.code === "PGRST202" || error.message?.toLowerCase().includes("function");
+}
+
+function safeReturnPath(value: string, fallback: string) {
+  return value.startsWith("/") && !value.startsWith("//") ? value : fallback;
+}
+
+export async function toggleHouseFavourite(formData: FormData) {
+  const recipeId = field(formData, "recipeId");
+  const restaurantId = field(formData, "restaurantId");
+  const returnPath = safeReturnPath(field(formData, "returnPath"), "/cookbook");
+  const shouldMark = field(formData, "shouldMark") === "true";
+
+  if (!recipeId || !restaurantId) {
+    redirect(returnPath);
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("toggle_house_favourite", {
+    target_recipe_id: recipeId,
+    target_restaurant_id: restaurantId,
+    should_mark: shouldMark,
+  });
+
+  if (error) {
+    redirect(`${returnPath}?${new URLSearchParams({ error: "We could not update House Favourites." }).toString()}`);
+  }
+
+  revalidatePath("/cookbook");
+  revalidatePath(`/cookbook/recipes/${recipeId}`);
+  revalidatePath("/specials");
+  revalidatePath("/cookbook/books", "layout");
+  redirect(returnPath);
 }
 
 export async function saveRecipe(formData: FormData) {

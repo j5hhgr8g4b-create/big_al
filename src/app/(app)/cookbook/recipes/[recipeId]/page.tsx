@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { RecipeBookPicker } from "@/components/recipe-book-picker";
 import { RecipeImage } from "@/components/recipe-image";
+import { HouseFavouriteButton } from "@/components/house-favourite-button";
 import { SubmitButton } from "@/components/submit-button";
 import { saveMealEvent } from "@/app/(app)/menu/actions";
 import { getMenuDateRange } from "@/lib/menu/get-menu";
@@ -67,7 +68,7 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
   const creatorSource = recipe.creator_source ?? description.creatorSource;
   const sourceSite = recipe.source_site ?? "";
   const supabase = await createClient();
-  const [booksResult, membershipsResult, preferences] = await Promise.all([
+  const [booksResult, membershipsResult, favouriteResult, preferences] = await Promise.all([
     supabase
       .from("recipe_books")
       .select("id, title")
@@ -75,6 +76,12 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
       .is("archived_at", null)
       .order("title"),
     supabase.from("recipe_book_recipes").select("recipe_book_id").eq("recipe_id", recipe.id),
+    supabase
+      .from("house_favourites")
+      .select("recipe_id")
+      .eq("restaurant_id", recipe.restaurantId)
+      .eq("recipe_id", recipe.id)
+      .maybeSingle(),
     getRestaurantCookingPreferences(recipe.restaurantId),
   ]);
   const books = booksResult.data ?? [];
@@ -93,7 +100,13 @@ export default async function RecipePage({ params, searchParams }: RecipePagePro
         </p>
         <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <h1 className="text-4xl font-semibold tracking-tight">{recipe.title}</h1>
-          <div className="flex shrink-0 gap-2 sm:flex-col">
+          <div className="flex shrink-0 flex-wrap gap-2 sm:flex-col">
+            <HouseFavouriteButton
+              isFavourite={Boolean(favouriteResult.data)}
+              recipeId={recipe.id}
+              restaurantId={recipe.restaurantId}
+              returnPath={`/cookbook/recipes/${recipe.id}`}
+            />
             <Link
               href={`/cookbook/recipes/${recipe.id}/cook`}
               className="btn-primary flex-1 px-5 py-3 text-sm sm:flex-none"

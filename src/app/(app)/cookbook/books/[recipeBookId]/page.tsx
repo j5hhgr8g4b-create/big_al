@@ -43,7 +43,7 @@ export default async function RecipeBookPage({ params }: RecipeBookPageProps) {
       {recipeBook.recipes.length ? (
         <section className="mt-10 space-y-4" aria-label="Recipes in this Book">
           {recipeBook.recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <RecipeCard key={recipe.id} recipe={recipe} restaurantId={recipeBook.restaurant_id} />
           ))}
         </section>
       ) : (
