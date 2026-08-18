@@ -27,4 +27,12 @@ Reference: Stitch project `16404102405138321464`, screen `6f949b405f7644388a68f7
 | Big Al chef illustration | Circular `BA` mark | Same size/position slot, simpler art | No supported chef asset; avoids inventing unsupported public Chef mechanics. |
 | “5 dinners planned” and pantry count | Current planned events and active shopping items | Truthful values replace reference fixture values | No fake counts. |
 
-The primary implementation target is 320, 375, 390, and 430px. At larger widths the mobile composition scales within the Stitch-style canvas; the mobile bottom bar is hidden at desktop widths as in the reference.
+The primary implementation target is 320, 375, 390, and 430px. At larger widths the mobile composition scales within the Stitch-style canvas. The bottom bar remains rendered at larger widths as well so the shared primary navigation cannot disappear due to viewport media rules.
+
+## Regression audit
+
+| Founder-observed issue | Root cause | Correction |
+| --- | --- | --- |
+| Kitchen bottom navigation absent in Preview | A shared `@media (min-width: 768px)` rule set `.bottom-nav { display: none; }` | Removed the hide rule; the five-item navigation remains rendered and usable at the required widths. |
+| Hero CTA displayed `Let&apos;s Cook` | The apostrophe entity was stored inside a JavaScript string, so it rendered literally | Changed the CTA string to `Let's Cook`. |
+| Kitchen copy diverged from the reference | The Big Al Says copy was an invented substitute | Restored the refined Stitch quote, while keeping recipe and count values truthful to Big Al data. |

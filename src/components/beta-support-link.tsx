@@ -5,6 +5,9 @@ import { usePathname } from "next/navigation";
 
 export function BetaSupportLink() {
   const pathname = usePathname();
+
+  if (pathname === "/") return null;
+
   const href = `/feedback?${new URLSearchParams({ from: pathname }).toString()}`;
 
   return (

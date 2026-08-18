@@ -59,7 +59,7 @@ function KitchenHero({ recipe }: { recipe: MenuPlanningRecipe | null }) {
           <p>{recipe ? recipeMeta(recipe) : "Your Cookbook is ready for a good idea."}</p>
         </div>
         <Link href={recipe ? `/cookbook/recipes/${recipe.id}/cook` : "/cookbook"} className="kitchen-action kitchen-action-dark">
-          {recipe ? "Let&apos;s Cook" : "Browse Cookbook"}
+          {recipe ? "Let's Cook" : "Browse Cookbook"}
           <span className="material-symbols-outlined" aria-hidden="true">chevron_right</span>
         </Link>
       </div>
@@ -129,7 +129,7 @@ export default async function KitchenPage() {
         <div className="kitchen-avatar" aria-hidden="true">BA</div>
         <div className="kitchen-says-copy">
           <span className="kitchen-label">BIG AL SAYS</span>
-          <p>Start with one Recipe you&apos;d genuinely cook tonight.</p>
+          <p>&quot;A good sausage makes everything better.&quot;</p>
         </div>
         <span className="material-symbols-outlined kitchen-says-icon" aria-hidden="true">restaurant</span>
       </section>

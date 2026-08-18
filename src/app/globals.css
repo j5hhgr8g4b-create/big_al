@@ -1106,15 +1106,6 @@ h3.section-kicker {
   }
 }
 
-@media (min-width: 768px) {
-  .bottom-nav {
-    display: none;
-  }
-
-  .app-main {
-    padding-bottom: 32px;
-  }
-}
 
 .specials-prompt-active {
   border-color: var(--color-purple-800);
