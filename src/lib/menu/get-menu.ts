@@ -6,6 +6,7 @@ type MenuRecipeRow = {
   cook_minutes: number | null;
   description: string | null;
   difficulty: string | null;
+  image_url: string | null;
   id: string;
   prep_minutes: number | null;
   servings: number | null;
@@ -106,7 +107,7 @@ export async function getMenuPlanningData(
     cookbook
       ? supabase
           .from("recipes")
-          .select("id, title, description, prep_minutes, cook_minutes, servings, difficulty")
+          .select("id, title, description, prep_minutes, cook_minutes, servings, difficulty, image_url")
           .eq("cookbook_id", cookbook.id)
           .is("archived_at", null)
           .order("title")

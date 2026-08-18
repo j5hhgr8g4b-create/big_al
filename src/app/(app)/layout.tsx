@@ -23,12 +23,16 @@ export default async function AppLayout({ children }: Readonly<{ children: React
   return (
     <div className="app-shell">
       <header className="app-header">
+        <Link href="/" className="topbar-icon" aria-label="Back to Kitchen">
+          <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        </Link>
         <Link href="/" className="brand-wordmark" aria-label="Big Al's Kitchen">
           Big Al&apos;s Kitchen
         </Link>
         <form action={signOut}>
           <button
             type="submit"
+            aria-label="Sign out"
             className="header-action transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
           >
             Sign out

@@ -1,160 +1,138 @@
+/* eslint-disable @next/next/no-img-element */
+
 import Link from "next/link";
 
-import { createClient } from "@/lib/supabase/server";
+import { getMenuPlanningData, type MenuMealEvent, type MenuPlanningRecipe } from "@/lib/menu/get-menu";
+import { getCurrentRestaurant } from "@/lib/restaurants/current";
+import { getShoppingData } from "@/lib/shopping/get-shopping";
 
-export default async function KitchenPage() {
-  const supabase = await createClient();
-  const { data: membership } = await supabase
-    .from("restaurant_members")
-    .select("restaurant_id")
-    .order("created_at", { ascending: true })
-    .limit(1)
-    .maybeSingle();
+function totalMinutes(recipe: MenuPlanningRecipe) {
+  return (recipe.prep_minutes ?? 0) + (recipe.cook_minutes ?? 0);
+}
 
-  const { data: restaurant } = membership
-    ? await supabase
-        .from("restaurants")
-        .select("id, name")
-        .eq("id", membership.restaurant_id)
-        .single()
-    : { data: null };
+function recipeMeta(recipe: MenuPlanningRecipe) {
+  const minutes = totalMinutes(recipe);
+  const details = [
+    minutes ? `${minutes} min` : null,
+    recipe.difficulty ? recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1) : null,
+    recipe.servings ? `Serves ${recipe.servings}` : null,
+  ].filter(Boolean);
+
+  return details.join(" • ") || "Ready when you are";
+}
+
+function weekdayIndex(dateValue: string) {
+  return new Date(`${dateValue}T00:00:00Z`).getUTCDay();
+}
+
+function WeekProgress({ events }: { events: MenuMealEvent[] }) {
+  const plannedDays = new Set(events.map((event) => weekdayIndex(event.planned_for)));
+  const days = [
+    ["M", 1],
+    ["T", 2],
+    ["W", 3],
+    ["T", 4],
+    ["F", 5],
+    ["S", 6],
+    ["S", 0],
+  ] as const;
 
   return (
-    <>
-      <section className="grid grid-cols-[42px_1fr_42px] items-center gap-2 px-0 pb-2">
-        <div aria-hidden="true" />
-        <h1 className="screen-title justify-self-center">Kitchen</h1>
-        <div aria-hidden="true" />
+    <div className="kitchen-week-progress" aria-label={`${events.length} dinners planned this week`}>
+      {days.map(([label, day], index) => (
+        <div className="kitchen-week-day" key={`${label}-${day}`}>
+          <span>{label}</span>
+          <div className={plannedDays.has(day) ? "planned" : index > 4 ? "future" : "open"} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function KitchenHero({ recipe }: { recipe: MenuPlanningRecipe | null }) {
+  return (
+    <section className="kitchen-dinner-card" aria-label="Next Dinner">
+      <div className="kitchen-dinner-copy">
+        <div>
+          <span className="kitchen-label kitchen-label-on-dark">NEXT DINNER</span>
+          <h2>{recipe?.title ?? "Choose your next dinner"}</h2>
+          <p>{recipe ? recipeMeta(recipe) : "Your Cookbook is ready for a good idea."}</p>
+        </div>
+        <Link href={recipe ? `/cookbook/recipes/${recipe.id}/cook` : "/cookbook"} className="kitchen-action kitchen-action-dark">
+          {recipe ? "Let&apos;s Cook" : "Browse Cookbook"}
+          <span className="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+        </Link>
+      </div>
+      <div className="kitchen-dinner-image">
+        {recipe?.image_url ? (
+          <img src={recipe.image_url} alt={recipe.title} referrerPolicy="no-referrer" />
+        ) : (
+          <div className="kitchen-image-placeholder" aria-hidden="true">
+            <span className="material-symbols-outlined">restaurant</span>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+export default async function KitchenPage() {
+  const { restaurant, supabase } = await getCurrentRestaurant();
+
+  if (!restaurant) {
+    return (
+      <section className="kitchen-empty-state">
+        <span className="kitchen-label">YOUR KITCHEN</span>
+        <h1>Create your Restaurant</h1>
+        <p>Your private home for Recipes, Menu planning, and shopping.</p>
+        <Link href="/restaurants/new" className="kitchen-action kitchen-action-light">Create Restaurant</Link>
+      </section>
+    );
+  }
+
+  const [{ weeks }, shopping] = await Promise.all([
+    getMenuPlanningData(supabase, restaurant.id),
+    getShoppingData(supabase, restaurant.id),
+  ]);
+  const thisWeek = weeks[0];
+  const nextDinner = thisWeek.events[0]?.recipe ?? null;
+
+  return (
+    <div className="kitchen-screen">
+      <KitchenHero recipe={nextDinner} />
+
+      <section className="kitchen-surface-card" aria-labelledby="this-week-heading">
+        <div className="kitchen-card-heading">
+          <div>
+            <span className="kitchen-label">THIS WEEK</span>
+            <h2 id="this-week-heading">{thisWeek.events.length} dinners planned</h2>
+          </div>
+          <Link href="/menu" className="kitchen-text-action">
+            View Menu <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          </Link>
+        </div>
+        <WeekProgress events={thisWeek.events} />
       </section>
 
-      <section className="bistro-card" aria-label="Restaurant kitchen">
-        <div className="bistro-badge">{restaurant?.name ?? "Your Restaurant"}</div>
-        <p className="intro-copy-card">
-          Save something you want to cook → plan it → shop for it → cook it.
-        </p>
+      <Link href="/pantry" className="kitchen-surface-card kitchen-pantry-card">
+        <div className="kitchen-pantry-copy">
+          <div className="kitchen-pantry-icon"><span className="material-symbols-outlined" aria-hidden="true">inventory_2</span></div>
+          <div>
+            <span className="kitchen-label">PANTRY</span>
+            <h2>{shopping.activeItems.length} items on your list</h2>
+          </div>
+        </div>
+        <span className="material-symbols-outlined kitchen-chevron" aria-hidden="true">chevron_right</span>
+      </Link>
+
+      <section className="kitchen-says-card" aria-label="Big Al Says">
+        <div className="kitchen-avatar" aria-hidden="true">BA</div>
+        <div className="kitchen-says-copy">
+          <span className="kitchen-label">BIG AL SAYS</span>
+          <p>Start with one Recipe you&apos;d genuinely cook tonight.</p>
+        </div>
+        <span className="material-symbols-outlined kitchen-says-icon" aria-hidden="true">restaurant</span>
       </section>
-
-      {!restaurant && (
-        <section className="visual-card mt-6 p-6">
-          <p className="section-kicker">First things first</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Create your Restaurant</h2>
-          <p className="mt-3 leading-6 text-[var(--color-text-muted)]">
-            Your Restaurant is the private home for your Cookbook, Menu, and shopping list.
-          </p>
-          <Link
-            href="/restaurants/new"
-            className="btn-primary mt-6"
-          >
-            Create Restaurant
-          </Link>
-        </section>
-      )}
-
-      {restaurant && (
-        <section className="hero-card" aria-label="Next Dinner">
-          <div className="hero-grid">
-            <div>
-              <p className="hand-label mb-2 text-base text-[rgba(255,252,246,.82)]">Next Dinner</p>
-              <h2 className="hero-title">Tonight?</h2>
-              <div className="mt-3 flex max-w-40 flex-wrap gap-1.5">
-                <span className="pill">Pick a plate</span>
-                <span className="pill">No faff</span>
-              </div>
-              <div className="mt-4 grid max-w-40 gap-2">
-                <Link href="/cookbook/imports/new" className="btn-primary w-full">
-                  Import Recipe
-                </Link>
-                <Link href="/cookbook" className="btn-ghost w-full">
-                  Browse cookbook
-                </Link>
-                <Link href="/restaurants/preferences" className="btn-ghost w-full">
-                  Cooking prefs
-                </Link>
-              </div>
-            </div>
-            <div className="plate-wrap" aria-hidden="true">
-              <div className="plate">
-                <div className="greens" />
-                <div className="sausage" />
-                <div className="sausage two" />
-              </div>
-              <div className="stamp">
-                Sausage
-                <br />
-                approved
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      <section className="mt-4 grid grid-cols-2 gap-3">
-        <article className="visual-card col-span-2 flex min-h-32 flex-col items-center p-4 text-center">
-          <p className="section-kicker">This week</p>
-          <h2 className="mt-2 max-w-xs text-lg font-extrabold tracking-[-0.028em]">
-            Build a week you’ll actually cook
-          </h2>
-          <p className="mt-2 max-w-xs text-sm leading-6 text-[var(--color-text-muted)]">
-            Plan a few dinners, leave room for leftovers, and let the shopping list do the boring
-            bits.
-          </p>
-          <div className="mt-3 flex justify-center gap-1.5" aria-label="Week overview">
-            {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
-              <span
-                key={`${day}-${index}`}
-                className={`grid size-6 place-items-center rounded-full border text-[0.65rem] font-extrabold ${
-                  index < 2
-                    ? "border-[var(--color-green-600)] bg-[var(--color-green-600)] text-[var(--color-text-inverse)]"
-                    : "border-[var(--color-border)] bg-[var(--color-surface-warm)] text-[var(--color-text-muted)]"
-                }`}
-              >
-                {day}
-              </span>
-            ))}
-          </div>
-          <Link href="/menu" className="btn-secondary mt-3 min-h-0 px-3 py-2 text-xs">
-            View Menu
-          </Link>
-        </article>
-
-        <article className="visual-card flex min-h-32 flex-col items-center bg-[var(--color-surface-warm)] p-4 text-center">
-          <p className="section-kicker">Pantry</p>
-          <h2 className="mt-2 text-lg font-extrabold tracking-[-0.028em]">
-            Shopping, not stock control
-          </h2>
-          <p className="mt-2 text-sm leading-5 text-[var(--color-text-muted)]">
-            A simple list from your menu.
-          </p>
-          <Link href="/pantry" className="btn-secondary mt-auto min-h-0 px-3 py-2 text-xs">
-            View Pantry
-          </Link>
-        </article>
-
-        <article className="visual-card flex min-h-32 flex-col items-center p-4 text-center">
-          <p className="section-kicker">Cookbook</p>
-          <h2 className="mt-2 text-lg font-extrabold tracking-[-0.028em]">Save the good stuff</h2>
-          <p className="mt-2 text-sm leading-5 text-[var(--color-text-muted)]">
-            Recipes belong here before dinner.
-          </p>
-          <Link href="/cookbook" className="btn-secondary mt-auto min-h-0 px-3 py-2 text-xs">
-            Open Cookbook
-          </Link>
-        </article>
-
-        <article className="note-card col-span-2 p-4 text-center">
-          <div className="flex flex-col items-center gap-2">
-            <div className="grid size-9 place-items-center rounded-[13px] bg-[var(--color-purple-800)] text-xs font-extrabold text-[var(--color-text-inverse)] shadow-[0_3px_8px_rgba(43,23,65,.18)]">
-              BA
-            </div>
-            <div>
-              <h2 className="font-[var(--font-hand)] text-2xl font-bold">Big Al Says</h2>
-              <p className="mt-1 max-w-xs text-sm leading-6 text-[var(--color-text-soft)]">
-                Start with one recipe you’d genuinely cook tonight. Fancy systems can wait.
-              </p>
-            </div>
-          </div>
-        </article>
-      </section>
-    </>
+    </div>
   );
 }
